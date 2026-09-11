@@ -1,0 +1,23 @@
+{
+  "id": "L1-budget-empty-single-quotes",
+  "level": 1,
+  "kind": "budget",
+  "description": "'' is an empty budget, as a child process receives it",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS empty-single-quotes",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "''"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [],
+      "counts": {}
+    }
+  }
+}

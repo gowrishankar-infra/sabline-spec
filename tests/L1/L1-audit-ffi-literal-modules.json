@@ -1,0 +1,53 @@
+{
+  "id": "L1-audit-ffi-literal-modules",
+  "level": 1,
+  "kind": "audit",
+  "description": "literal modules are listed up to their first dot, and safe_command scopes ffi to them",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS ffi-literal-modules",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn main() uses io, ffi {\n    check py(\"math\", \"sqrt\", [\"16\"]) {\n        ok r {\n            print(r)\n        }\n        fail w {\n            print(w)\n        }\n    }\n    check py_json(\"json\", \"dumps\", \"[1]\") {\n        ok j {\n            print(j)\n        }\n        fail w {\n            print(w)\n        }\n    }\n    check py(\"os.path\", \"basename\", [\"a/b\"]) {\n        ok b {\n            print(b)\n        }\n        fail w {\n            print(w)\n        }\n    }\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": true,
+    "effects": [
+      "ffi",
+      "io"
+    ],
+    "functions": [
+      {
+        "name": "main",
+        "effects": [
+          "ffi",
+          "io"
+        ],
+        "can_fail": false
+      }
+    ],
+    "ffi_modules": [
+      "json",
+      "math",
+      "os"
+    ],
+    "ffi_any": false,
+    "fs_paths": {
+      "read": [],
+      "write": [],
+      "read_any": false,
+      "write_any": false
+    },
+    "net_hosts": {
+      "hosts": [],
+      "any": false
+    },
+    "safe_command": "velaris <file> --allow ffi:json,math,os,io"
+  }
+}

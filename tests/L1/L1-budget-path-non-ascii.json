@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-path-non-ascii",
+  "level": 1,
+  "kind": "budget",
+  "description": "a path with a non-ASCII letter",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS path-non-ascii",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./café"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "./café"
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

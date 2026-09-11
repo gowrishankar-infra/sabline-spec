@@ -1,0 +1,72 @@
+{
+  "id": "L3-derive-surface-union-and-no-bound",
+  "level": 3,
+  "kind": "derive",
+  "description": "the surface is the union of the programs' grants, and a program with no bound makes the surface's count null",
+  "spec": [
+    "9.3",
+    "9.4"
+  ],
+  "from": "check_ratchet.py DERIVE surface-union-and-no-bound",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "a.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n",
+      "b.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://cdn.example.org/ping\")\n}\n\nfn main() uses io, net {\n    for h in args() {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "io",
+        "net:api.example.com",
+        "net:cdn.example.org"
+      ],
+      "counts": {
+        "net": null
+      }
+    },
+    "programs": [
+      {
+        "file": "a.vel",
+        "grants": [
+          "io",
+          "net:api.example.com"
+        ],
+        "counts": {
+          "net": 3
+        },
+        "functions": {
+          "main": [
+            "io",
+            "net"
+          ],
+          "ping": [
+            "net"
+          ]
+        }
+      },
+      {
+        "file": "b.vel",
+        "grants": [
+          "io",
+          "net:cdn.example.org"
+        ],
+        "counts": {
+          "net": null
+        },
+        "functions": {
+          "main": [
+            "io",
+            "net"
+          ],
+          "ping": [
+            "net"
+          ]
+        }
+      }
+    ]
+  }
+}

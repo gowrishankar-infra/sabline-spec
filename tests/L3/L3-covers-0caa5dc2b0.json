@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-0caa5dc2b0",
+  "level": 3,
+  "kind": "covers",
+  "description": "fs:read:data does not cover fs:write:data",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "fs:read:data",
+    "other": "fs:write:data"
+  },
+  "expect": {
+    "covers": false
+  }
+}

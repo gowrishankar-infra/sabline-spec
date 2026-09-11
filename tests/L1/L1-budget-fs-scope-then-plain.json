@@ -1,0 +1,26 @@
+{
+  "id": "L1-budget-fs-scope-then-plain",
+  "level": 1,
+  "kind": "budget",
+  "description": "a plain fs after a scoped one makes fs unscoped",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS fs-scope-then-plain",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./a,fs"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": "any",
+      "counts": {}
+    }
+  }
+}

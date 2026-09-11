@@ -1,0 +1,29 @@
+{
+  "id": "L3-check-port-under-portless-grant",
+  "level": 3,
+  "kind": "check",
+  "description": "a URL writing a port, where the baseline holds the host without one",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py CHECKS port-under-portless-grant",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com:443/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

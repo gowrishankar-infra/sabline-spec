@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-path-two-escapes",
+  "level": 1,
+  "kind": "budget",
+  "description": "an @ and a comma in one path",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS path-two-escapes",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./a%40b%2Cc"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "./a@b,c"
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

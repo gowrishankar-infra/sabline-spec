@@ -1,0 +1,42 @@
+{
+  "id": "L3-check-module-built-while-running",
+  "level": 3,
+  "kind": "check",
+  "description": "a module named by a value built while running (ffi_any, 4.0) makes ffi unscoped, and does not pass a baseline listing ffi:math",
+  "spec": [
+    "8.2 ffi_any",
+    "9.3"
+  ],
+  "from": "check_ratchet.py CHECKS module-built-while-running",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "root.vel": "fn root(n: Text) -> Text uses ffi or fail {\n    let args = [n]\n    return try py(\"math\", \"sqrt\", args)\n}\n\nfn main() uses io, ffi {\n    check root(\"16\") {\n        ok v {\n            print(v)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "root.vel": "fn root(n: Text) -> Text uses ffi or fail {\n    let args = [n]\n    return try py(lower(\"MATH\"), \"sqrt\", args)\n}\n\nfn main() uses io, ffi {\n    check root(\"16\") {\n        ok v {\n            print(v)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "ffi",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "root.vel"
+        ]
+      }
+    ]
+  }
+}

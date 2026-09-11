@@ -1,0 +1,47 @@
+{
+  "id": "L3-derive-unwritable-path-is-unscoped",
+  "level": 3,
+  "kind": "derive",
+  "description": "a path holding a comma cannot be a baseline grant, so the direction is recorded unscoped",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py DERIVE unwritable-path-is-unscoped",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"a,b.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "fs:read",
+        "io"
+      ],
+      "counts": {
+        "fs": 1
+      }
+    },
+    "programs": [
+      {
+        "file": "read.vel",
+        "grants": [
+          "fs:read",
+          "io"
+        ],
+        "counts": {
+          "fs": 1
+        },
+        "functions": {
+          "main": [
+            "fs",
+            "io"
+          ]
+        }
+      }
+    ]
+  }
+}

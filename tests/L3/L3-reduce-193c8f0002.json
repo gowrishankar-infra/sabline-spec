@@ -1,0 +1,26 @@
+{
+  "id": "L3-reduce-193c8f0002",
+  "level": 3,
+  "kind": "reduce",
+  "description": "ffi:math, ffi, fs:write:out, fs reduced is ffi, fs",
+  "spec": [
+    "9.2"
+  ],
+  "from": "check_ratchet.py REDUCE",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grants": [
+      "ffi:math",
+      "ffi",
+      "fs:write:out",
+      "fs"
+    ]
+  },
+  "expect": {
+    "grants": [
+      "ffi",
+      "fs"
+    ]
+  }
+}

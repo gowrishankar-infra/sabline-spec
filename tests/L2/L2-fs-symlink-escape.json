@@ -1,0 +1,37 @@
+{
+  "id": "L2-fs-symlink-escape",
+  "level": 2,
+  "kind": "run",
+  "description": "escaping the prefix through a symlink",
+  "spec": [
+    "5.1"
+  ],
+  "from": "check_sandbox.py ESCAPES fs-symlink-escape",
+  "requires": [
+    "symlink"
+  ],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, fs {\n    check read_file(\"{DATA}/link.txt\") {\n        ok t {\n            print(\"READ IT\")\n        }\n        fail w {\n            print(\"failed\")\n        }\n    }\n}\n",
+    "allow": "io,fs:read:{DATA}",
+    "args": []
+  },
+  "expect": {
+    "outcome": "refused",
+    "code": "E313",
+    "stdout_includes": [],
+    "stdout_excludes": [
+      "READ IT",
+      "WROTE IT",
+      "REACHED IT",
+      "CALLED IT",
+      "OPENED IT",
+      "GOT THROUGH",
+      "CARRIED ON",
+      "SWALLOWED THE REFUSAL",
+      "FOLLOWED IT"
+    ],
+    "must_not_exist": []
+  }
+}

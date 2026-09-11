@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-ipv6-words",
+  "level": 1,
+  "kind": "budget",
+  "description": "an IPv6 address holding hex words",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ipv6-words",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "net:[2001:db8::dead:beef]"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "net"
+      ],
+      "net": [
+        {
+          "host": "2001:db8::dead:beef",
+          "port": null
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

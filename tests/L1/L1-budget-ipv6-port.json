@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-ipv6-port",
+  "level": 1,
+  "kind": "budget",
+  "description": "an IPv6 address with a port",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ipv6-port",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "net:[::1]:443"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "net"
+      ],
+      "net": [
+        {
+          "host": "::1",
+          "port": 443
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

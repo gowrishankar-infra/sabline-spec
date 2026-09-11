@@ -1,0 +1,48 @@
+{
+  "id": "L3-derive-grants-reduced",
+  "level": 3,
+  "kind": "derive",
+  "description": "a path under another named path is dropped, and of two spellings of one path the first in code-point order is kept",
+  "spec": [
+    "9.2",
+    "9.3"
+  ],
+  "from": "check_ratchet.py DERIVE grants-reduced",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    print(to_text(file_exists(\"data\")))\n    print(to_text(file_exists(\"./data\")))\n    print(to_text(file_exists(\"data/x.csv\")))\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "fs:read:./data",
+        "io"
+      ],
+      "counts": {
+        "fs": 3
+      }
+    },
+    "programs": [
+      {
+        "file": "read.vel",
+        "grants": [
+          "fs:read:./data",
+          "io"
+        ],
+        "counts": {
+          "fs": 3
+        },
+        "functions": {
+          "main": [
+            "fs",
+            "io"
+          ]
+        }
+      }
+    ]
+  }
+}

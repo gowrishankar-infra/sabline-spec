@@ -1,0 +1,23 @@
+{
+  "id": "L1-budget-empty",
+  "level": 1,
+  "kind": "budget",
+  "description": "an empty budget grants nothing",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS empty",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": ""
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [],
+      "counts": {}
+    }
+  }
+}

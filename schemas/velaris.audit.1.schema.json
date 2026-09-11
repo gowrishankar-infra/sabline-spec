@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.3/schemas/velaris.audit.1.schema.json",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.4/schemas/velaris.audit.1.schema.json",
   "title": "velaris.audit/1",
   "description": "What a Velaris program declares, names and promises, before it runs: velaris-spec SPEC.md section 8. Within version 1 fields may be added and consumers must ignore fields they do not know, so no object here forbids other properties; fields added after version 1 was first released (2.52) are optional. This schema checks shape. It does not check the rules of SPEC.md section 8 that JSON Schema cannot state - for example that effects is sorted, or that it is the union of the functions' effects.",
   "type": "object",
@@ -147,7 +147,7 @@
   },
   "$defs": {
     "effect_name": {
-      "description": "One of io, env, fs, net, clock, rand, ffi. From velaris-lang 3.3.0 the reference rejects any other identifier in a uses clause (SPEC.md 3.2, Q1 resolved in spec 0.2), so a 3.3+ producer's effects are always a subset of the seven; the schema still accepts any identifier so that documents from earlier producers (2.52 onward), which could carry an unknown name, remain valid.",
+      "description": "One of io, env, fs, net, clock, rand, ffi. From velaris-lang 3.3.0 the reference rejects any other identifier in a uses clause (SPEC.md 3.2, Q1 resolved in spec 0.2), and from 4.1.0 it leaves such a name out of the audit that reports the rejection too (SPEC.md 3.2, resolved in spec 0.4), so a 4.1+ producer's effects are always a subset of the seven; the schema still accepts any identifier so that documents from earlier producers (2.52 onward), which could carry an unknown name, remain valid.",
       "type": "string",
       "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
     },

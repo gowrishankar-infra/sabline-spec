@@ -1,0 +1,31 @@
+{
+  "id": "L3-check-literal-into-variable",
+  "level": 3,
+  "kind": "check",
+  "description": "a literal URL or path moved into a variable bound once is still a fixed host and path",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py CHECKS literal-into-variable",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n",
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    let base = \"https://api.example.com\"\n    let url = base + \"/ping\"\n    return try fetch_status(url)\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n",
+      "read.vel": "fn main() uses io, fs {\n    let where = \"data/in.csv\"\n    check read_file(where) {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-fs-literal-percent-2c",
+  "level": 1,
+  "kind": "budget",
+  "description": "%252C is the literal text %2C",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS fs-literal-percent-2c",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./x%252C"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "./x%2C"
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

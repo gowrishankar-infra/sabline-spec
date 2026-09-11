@@ -1,0 +1,37 @@
+{
+  "id": "L1-budget-fs-smallest-count",
+  "level": 1,
+  "kind": "budget",
+  "description": "the smallest count given for an effect is its count",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS fs-smallest-count",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./a@5,fs:write:./b@3"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "./a"
+        },
+        {
+          "direction": "write",
+          "path": "./b"
+        }
+      ],
+      "counts": {
+        "fs": 3
+      }
+    }
+  }
+}

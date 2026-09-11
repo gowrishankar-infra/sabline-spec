@@ -1,0 +1,29 @@
+{
+  "id": "L3-check-loop-over-list-variable",
+  "level": 3,
+  "kind": "check",
+  "description": "a loop over a list held in a variable keeps its bound of 3",
+  "spec": [
+    "9.4"
+  ],
+  "from": "check_ratchet.py CHECKS loop-over-list-variable",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    let hosts = [\"a\", \"b\", \"c\"]\n    for h in hosts {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

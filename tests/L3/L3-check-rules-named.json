@@ -1,0 +1,41 @@
+{
+  "id": "L3-check-rules-named",
+  "level": 3,
+  "kind": "check",
+  "description": "each widening names the rules it fails: a new host is outside the surface (W1) and the program's entry (W3)",
+  "spec": [
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS rules-named",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://evil.example.net/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "net:evil.example.net",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "poll.vel"
+        ]
+      }
+    ]
+  }
+}

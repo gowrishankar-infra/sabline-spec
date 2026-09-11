@@ -1,0 +1,37 @@
+{
+  "id": "L2-net-count-reached",
+  "level": 2,
+  "kind": "run",
+  "description": "the network operation count reached",
+  "spec": [
+    "5.4"
+  ],
+  "from": "check_sandbox.py ESCAPES net-count-reached",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, net {\n    let i = 0\n    while i < 3 {\n        check fetch_status(\"http://127.0.0.1:{PORT_A}/\") {\n            ok c {\n                print(\"asked\")\n            }\n            fail w {\n                print(\"failed\")\n            }\n        }\n        i = i + 1\n    }\n    print(\"GOT THROUGH\")\n}\n",
+    "allow": "io,net:127.0.0.1:{PORT_A}@2",
+    "args": []
+  },
+  "expect": {
+    "outcome": "refused",
+    "code": "E315",
+    "stdout_includes": [
+      "asked"
+    ],
+    "stdout_excludes": [
+      "READ IT",
+      "WROTE IT",
+      "REACHED IT",
+      "CALLED IT",
+      "OPENED IT",
+      "GOT THROUGH",
+      "CARRIED ON",
+      "SWALLOWED THE REFUSAL",
+      "FOLLOWED IT"
+    ],
+    "must_not_exist": []
+  }
+}

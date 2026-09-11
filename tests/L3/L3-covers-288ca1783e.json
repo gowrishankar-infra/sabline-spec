@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-288ca1783e",
+  "level": 3,
+  "kind": "covers",
+  "description": "net:*.example.com does not cover net:*.b.example.com",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "net:*.example.com",
+    "other": "net:*.b.example.com"
+  },
+  "expect": {
+    "covers": false
+  }
+}

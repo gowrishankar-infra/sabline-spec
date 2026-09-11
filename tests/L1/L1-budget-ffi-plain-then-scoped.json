@@ -1,0 +1,26 @@
+{
+  "id": "L1-budget-ffi-plain-then-scoped",
+  "level": 1,
+  "kind": "budget",
+  "description": "ffi,ffi:math grants every module: the wider grant wins",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ffi-plain-then-scoped",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi,ffi:math"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "ffi"
+      ],
+      "ffi": "any",
+      "counts": {}
+    }
+  }
+}

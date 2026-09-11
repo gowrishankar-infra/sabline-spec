@@ -1,0 +1,36 @@
+{
+  "id": "L2-effect-behind-two-helpers",
+  "level": 2,
+  "kind": "run",
+  "description": "hiding the effect behind a helper",
+  "spec": [
+    "6 G2",
+    "6 G5"
+  ],
+  "from": "check_sandbox.py ESCAPES effect-behind-two-helpers",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn helper(path: Text) -> Int uses fs or fail {\n    let body = try read_file(path)\n    return length(body)\n}\n\nfn wrapper(path: Text) -> Int uses fs or fail {\n    return try helper(path)\n}\n\nfn main() uses io, fs {\n    check wrapper(\"{DATA}/a.txt\") {\n        ok n {\n            print(\"GOT THROUGH\")\n        }\n        fail why {\n            print(\"failed\")\n        }\n    }\n}\n",
+    "allow": "io",
+    "args": []
+  },
+  "expect": {
+    "outcome": "refused",
+    "code": "E310",
+    "stdout_includes": [],
+    "stdout_excludes": [
+      "READ IT",
+      "WROTE IT",
+      "REACHED IT",
+      "CALLED IT",
+      "OPENED IT",
+      "GOT THROUGH",
+      "CARRIED ON",
+      "SWALLOWED THE REFUSAL",
+      "FOLLOWED IT"
+    ],
+    "must_not_exist": []
+  }
+}

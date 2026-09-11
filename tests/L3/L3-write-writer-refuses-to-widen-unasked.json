@@ -1,0 +1,25 @@
+{
+  "id": "L3-write-writer-refuses-to-widen-unasked",
+  "level": 3,
+  "kind": "write-guard",
+  "description": "asked to write the baseline again where one exists and the tree now needs more, without being told in so many words to replace it, the writer refuses and leaves the file as it was",
+  "spec": [
+    "9.6"
+  ],
+  "from": "check_ratchet.py WRITE_GUARD writer-refuses-to-widen-unasked",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "change": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 4 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "refuses": true,
+    "unchanged": true
+  }
+}

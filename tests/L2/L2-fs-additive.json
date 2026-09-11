@@ -1,0 +1,24 @@
+{
+  "id": "L2-fs-additive",
+  "level": 2,
+  "kind": "run",
+  "description": "additive fs: read and write grants both apply",
+  "spec": [
+    "4.3"
+  ],
+  "from": "check_sandbox.py HONEST fs-additive",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, fs {\n    check read_file(\"{DATA}/a.txt\") {\n        ok t {\n            write_file(\"{OUT}/copy.txt\", t)\n            print(\"fs additive ok\")\n        }\n        fail w { print(\"read failed: \" + w) }\n    }\n}\n",
+    "allow": "io,fs:read:{DATA},fs:write:{OUT}",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": [
+      "fs additive ok"
+    ]
+  }
+}

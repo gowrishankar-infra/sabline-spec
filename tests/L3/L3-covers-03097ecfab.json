@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-03097ecfab",
+  "level": 3,
+  "kind": "covers",
+  "description": "env does not cover io",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "env",
+    "other": "io"
+  },
+  "expect": {
+    "covers": false
+  }
+}

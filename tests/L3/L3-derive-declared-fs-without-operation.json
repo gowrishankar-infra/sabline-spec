@@ -1,0 +1,47 @@
+{
+  "id": "L3-derive-declared-fs-without-operation",
+  "level": 3,
+  "kind": "derive",
+  "description": "fs declared and no file named is plain fs; the count is 0",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py DERIVE declared-fs-without-operation",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    print(\"no file\")\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "fs",
+        "io"
+      ],
+      "counts": {
+        "fs": 0
+      }
+    },
+    "programs": [
+      {
+        "file": "read.vel",
+        "grants": [
+          "fs",
+          "io"
+        ],
+        "counts": {
+          "fs": 0
+        },
+        "functions": {
+          "main": [
+            "fs",
+            "io"
+          ]
+        }
+      }
+    ]
+  }
+}

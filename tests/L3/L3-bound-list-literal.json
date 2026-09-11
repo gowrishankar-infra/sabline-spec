@@ -1,0 +1,20 @@
+{
+  "id": "L3-bound-list-literal",
+  "level": 3,
+  "kind": "bound",
+  "description": "a loop over a list literal turns once per item",
+  "spec": [
+    "9.4"
+  ],
+  "from": "check_ratchet.py BOUNDS list-literal",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "source": "fn main() uses fs {\n    for p in [\"a\", \"b\", \"c\"] {\n        let e = file_exists(p)\n    }\n}\n",
+    "function": "main"
+  },
+  "expect": {
+    "fs": 3,
+    "net": 0
+  }
+}

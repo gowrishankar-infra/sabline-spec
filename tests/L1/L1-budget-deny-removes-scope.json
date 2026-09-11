@@ -1,0 +1,25 @@
+{
+  "id": "L1-budget-deny-removes-scope",
+  "level": 1,
+  "kind": "budget",
+  "description": "a denial removes the effect with its scope and count",
+  "spec": [
+    "4.4"
+  ],
+  "from": "check_library.py BUDGETS deny-removes-scope",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "io,fs:read:./a@5",
+    "deny": "fs"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "io"
+      ],
+      "counts": {}
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "L2-clock-under-io",
+  "level": 2,
+  "kind": "run",
+  "description": "asking the clock",
+  "spec": [
+    "6 G2"
+  ],
+  "from": "check_sandbox.py ESCAPES clock-under-io",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, clock {\n    print(now())\n}\n",
+    "allow": "io",
+    "args": []
+  },
+  "expect": {
+    "outcome": "refused",
+    "code": "E310",
+    "stdout_includes": [],
+    "stdout_excludes": [
+      "READ IT",
+      "WROTE IT",
+      "REACHED IT",
+      "CALLED IT",
+      "OPENED IT",
+      "GOT THROUGH",
+      "CARRIED ON",
+      "SWALLOWED THE REFUSAL",
+      "FOLLOWED IT"
+    ],
+    "must_not_exist": []
+  }
+}

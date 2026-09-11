@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-c295ba64ae",
+  "level": 3,
+  "kind": "covers",
+  "description": "ffi:math does not cover ffi:os",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "ffi:math",
+    "other": "ffi:os"
+  },
+  "expect": {
+    "covers": false
+  }
+}

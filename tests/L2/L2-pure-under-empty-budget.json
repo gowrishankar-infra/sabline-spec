@@ -1,0 +1,24 @@
+{
+  "id": "L2-pure-under-empty-budget",
+  "level": 2,
+  "kind": "run",
+  "description": "pure work with no permission at all",
+  "spec": [
+    "6 G5"
+  ],
+  "from": "check_sandbox.py HONEST pure-under-empty-budget",
+  "requires": [
+    "stdlib"
+  ],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "import \"std.vel\"\n\nfn total(n: Int) -> Int\n    requires n >= 0\n    ensures result >= 0\n{\n    let sum = 0\n    for i in 0 to n {\n        sum = sum + i\n    }\n    return sum\n}\n\nfn main() {\n    let answer = total(10)\n    let sorted = sort([3, 1, 2])\n}\n",
+    "allow": "",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": []
+  }
+}

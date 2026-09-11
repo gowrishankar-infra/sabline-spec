@@ -1,0 +1,51 @@
+{
+  "id": "L3-check-new-direction",
+  "level": 3,
+  "kind": "check",
+  "description": "a write added to a path that was only read fails, naming fs:write:data/in.csv, and the second operation raises the count",
+  "spec": [
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS new-direction",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "read.vel": "fn main() uses io, fs {\n    write_file(\"data/in.csv\", \"x\")\n    check read_file(\"data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "fs:write:data/in.csv",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "read.vel"
+        ]
+      },
+      {
+        "kind": "count",
+        "effect": "fs",
+        "program": "read.vel",
+        "current": 2,
+        "rules": [
+          "W2",
+          "W4"
+        ]
+      }
+    ]
+  }
+}

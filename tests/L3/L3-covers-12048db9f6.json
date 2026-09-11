@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-12048db9f6",
+  "level": 3,
+  "kind": "covers",
+  "description": "fs:read:data\\x covers fs:read:data\\x",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "fs:read:data\\x",
+    "other": "fs:read:data\\x"
+  },
+  "expect": {
+    "covers": true
+  }
+}

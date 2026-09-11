@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-path-space",
+  "level": 1,
+  "kind": "budget",
+  "description": "a space in a path",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS path-space",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./with a space"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "./with a space"
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

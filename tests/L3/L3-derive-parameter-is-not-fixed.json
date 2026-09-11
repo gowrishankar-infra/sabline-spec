@@ -1,0 +1,52 @@
+{
+  "id": "L3-derive-parameter-is-not-fixed",
+  "level": 3,
+  "kind": "derive",
+  "description": "a path that arrives as a parameter is built while running: the direction, any path",
+  "spec": [
+    "9.3",
+    "9.4"
+  ],
+  "from": "check_ratchet.py DERIVE parameter-is-not-fixed",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "cat.vel": "fn load(path: Text) -> Text uses fs or fail {\n    return try read_file(path)\n}\n\nfn show(line: Text) -> Text {\n    return \"> \" + line\n}\n\nfn main() uses io, fs {\n    for a in args() {\n        check load(a) {\n            ok text {\n                print(show(text))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "fs:read",
+        "io"
+      ],
+      "counts": {
+        "fs": null
+      }
+    },
+    "programs": [
+      {
+        "file": "cat.vel",
+        "grants": [
+          "fs:read",
+          "io"
+        ],
+        "counts": {
+          "fs": null
+        },
+        "functions": {
+          "load": [
+            "fs"
+          ],
+          "main": [
+            "fs",
+            "io"
+          ],
+          "show": []
+        }
+      }
+    ]
+  }
+}

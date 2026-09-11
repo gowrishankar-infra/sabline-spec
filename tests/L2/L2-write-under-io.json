@@ -1,0 +1,37 @@
+{
+  "id": "L2-write-under-io",
+  "level": 2,
+  "kind": "run",
+  "description": "writing a file",
+  "spec": [
+    "6 G2"
+  ],
+  "from": "check_sandbox.py ESCAPES write-under-io",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, fs {\n    write_file(\"{ROOT}/wrote.txt\", \"escaped\")\n    print(\"WROTE IT\")\n}\n",
+    "allow": "io",
+    "args": []
+  },
+  "expect": {
+    "outcome": "refused",
+    "code": "E310",
+    "stdout_includes": [],
+    "stdout_excludes": [
+      "READ IT",
+      "WROTE IT",
+      "REACHED IT",
+      "CALLED IT",
+      "OPENED IT",
+      "GOT THROUGH",
+      "CARRIED ON",
+      "SWALLOWED THE REFUSAL",
+      "FOLLOWED IT"
+    ],
+    "must_not_exist": [
+      "{ROOT}/wrote.txt"
+    ]
+  }
+}

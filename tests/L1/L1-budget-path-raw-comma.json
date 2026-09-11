@@ -1,0 +1,19 @@
+{
+  "id": "L1-budget-path-raw-comma",
+  "level": 1,
+  "kind": "budget",
+  "description": "a raw comma ends an item: fs:read:./a,b.txt holds b.txt, which is not an effect",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS path-raw-comma",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./a,b.txt"
+  },
+  "expect": {
+    "valid": false
+  }
+}

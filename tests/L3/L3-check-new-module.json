@@ -1,0 +1,41 @@
+{
+  "id": "L3-check-new-module",
+  "level": 3,
+  "kind": "check",
+  "description": "a new Python module fails, naming ffi:cmath",
+  "spec": [
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS new-module",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "root.vel": "fn root(n: Text) -> Text uses ffi or fail {\n    let args = [n]\n    return try py(\"math\", \"sqrt\", args)\n}\n\nfn main() uses io, ffi {\n    check root(\"16\") {\n        ok v {\n            print(v)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "root.vel": "fn root(n: Text) -> Text uses ffi or fail {\n    let args = [n]\n    return try py(\"cmath\", \"sqrt\", args)\n}\n\nfn main() uses io, ffi {\n    check root(\"16\") {\n        ok v {\n            print(v)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "ffi:cmath",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "root.vel"
+        ]
+      }
+    ]
+  }
+}

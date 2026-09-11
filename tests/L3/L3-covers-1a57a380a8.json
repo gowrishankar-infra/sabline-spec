@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-1a57a380a8",
+  "level": 3,
+  "kind": "covers",
+  "description": "fs covers fs:write:x",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "fs",
+    "other": "fs:write:x"
+  },
+  "expect": {
+    "covers": true
+  }
+}

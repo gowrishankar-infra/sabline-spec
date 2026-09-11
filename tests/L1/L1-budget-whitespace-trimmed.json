@@ -1,0 +1,26 @@
+{
+  "id": "L1-budget-whitespace-trimmed",
+  "level": 1,
+  "kind": "budget",
+  "description": "whitespace around an item is removed",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS whitespace-trimmed",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": " io , env "
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "env",
+        "io"
+      ],
+      "counts": {}
+    }
+  }
+}

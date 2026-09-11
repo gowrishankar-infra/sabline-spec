@@ -1,0 +1,18 @@
+{
+  "id": "L1-budget-malformed-248e001ac1",
+  "level": 1,
+  "kind": "budget",
+  "description": "refused whole: \"clockk\"",
+  "spec": [
+    "4.2"
+  ],
+  "from": "check_library.py malformed_budgets()",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "clockk"
+  },
+  "expect": {
+    "valid": false
+  }
+}

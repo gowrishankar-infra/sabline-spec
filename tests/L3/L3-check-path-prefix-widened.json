@@ -1,0 +1,42 @@
+{
+  "id": "L3-check-path-prefix-widened",
+  "level": 3,
+  "kind": "check",
+  "description": "a path widened from ./data to ./ fails, naming fs:read:./",
+  "spec": [
+    "9.5",
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS path-prefix-widened",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "peek.vel": "fn main() uses io, fs {\n    print(to_text(file_exists(\"./data\")))\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "peek.vel": "fn main() uses io, fs {\n    print(to_text(file_exists(\"./\")))\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "fs:read:./",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "peek.vel"
+        ]
+      }
+    ]
+  }
+}

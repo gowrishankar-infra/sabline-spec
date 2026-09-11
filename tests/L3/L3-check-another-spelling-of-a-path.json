@@ -1,0 +1,29 @@
+{
+  "id": "L3-check-another-spelling-of-a-path",
+  "level": 3,
+  "kind": "check",
+  "description": "./data/in.csv is data/in.csv",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py CHECKS another-spelling-of-a-path",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"./data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

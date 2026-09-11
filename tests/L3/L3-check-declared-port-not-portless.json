@@ -1,0 +1,54 @@
+{
+  "id": "L3-check-declared-port-not-portless",
+  "level": 3,
+  "kind": "check",
+  "description": "a grant with a port does not cover a URL that writes none",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py CHECKS declared-port-not-portless",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": {
+        "surface": {
+          "grants": [
+            "io",
+            "net:api.example.com:443"
+          ]
+        },
+        "programs": {
+          "poll.vel": {
+            "grants": [
+              "io",
+              "net:api.example.com:443"
+            ]
+          }
+        }
+      }
+    },
+    "change": {}
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "net:api.example.com",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "poll.vel"
+        ]
+      }
+    ]
+  }
+}

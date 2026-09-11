@@ -1,0 +1,53 @@
+{
+  "id": "L1-audit-read-and-write-literals",
+  "level": 1,
+  "kind": "audit",
+  "description": "file_exists reads, write_file writes; both paths are listed as written",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS read-and-write-literals",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn main() uses io, fs {\n    if file_exists(\"data/flag\") {\n        write_file(\"out/report.txt\", \"done\")\n        print(\"wrote\")\n    }\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": true,
+    "effects": [
+      "fs",
+      "io"
+    ],
+    "functions": [
+      {
+        "name": "main",
+        "effects": [
+          "fs",
+          "io"
+        ],
+        "can_fail": false
+      }
+    ],
+    "ffi_modules": [],
+    "ffi_any": false,
+    "fs_paths": {
+      "read": [
+        "data/flag"
+      ],
+      "write": [
+        "out/report.txt"
+      ],
+      "read_any": false,
+      "write_any": false
+    },
+    "net_hosts": {
+      "hosts": [],
+      "any": false
+    },
+    "safe_command": "velaris <file> --allow fs:read:data/flag,fs:write:out/report.txt,io"
+  }
+}

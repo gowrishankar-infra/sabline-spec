@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: >-
+  If you use the Velaris capability format, please cite this repository
+  as below. A preprint describing Velaris and this format is
+  forthcoming; until it is published, this entry is the citation.
+title: "velaris-spec: the Velaris capability format"
+abstract: >-
+  A specification of the effects a Velaris program may declare, the
+  grammar an operator uses to grant them, what a runtime must refuse,
+  the velaris.audit/1 and velaris.capabilities/1 JSON documents, an
+  in-toto predicate type for the audit, and a language-independent
+  conformance corpus at three levels. Its reference implementation is
+  velaris-lang.
+type: software
+authors:
+  - given-names: Gowri
+    family-names: Shankar
+repository-code: "https://github.com/gowrishankar-infra/velaris-spec"
+license: CC0-1.0
+version: "0.4"
+date-released: "2026-09-11"
+keywords:
+  - specification
+  - effect system
+  - capabilities
+  - conformance
+  - in-toto
+references:
+  - type: software
+    title: "Velaris"
+    authors:
+      - given-names: Gowri
+        family-names: Shankar
+    repository-code: "https://github.com/gowrishankar-infra/velaris-lang"
+    version: 4.1.0
+    notes: "The reference implementation."

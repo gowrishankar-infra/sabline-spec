@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-host-percent",
+  "level": 1,
+  "kind": "budget",
+  "description": "a % in a host written %25",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS host-percent",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "net:%25pct"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "net"
+      ],
+      "net": [
+        {
+          "host": "%pct",
+          "port": null
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "L1-budget-ffi-scoped-then-plain",
+  "level": 1,
+  "kind": "budget",
+  "description": "ffi:math,ffi grants every module, in either order",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ffi-scoped-then-plain",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi:math,ffi"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "ffi"
+      ],
+      "ffi": "any",
+      "counts": {}
+    }
+  }
+}

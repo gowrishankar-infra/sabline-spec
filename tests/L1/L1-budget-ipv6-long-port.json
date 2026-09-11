@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-ipv6-long-port",
+  "level": 1,
+  "kind": "budget",
+  "description": "a longer IPv6 address with a port",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ipv6-long-port",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "net:[2001:db8::1]:8080"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "net"
+      ],
+      "net": [
+        {
+          "host": "2001:db8::1",
+          "port": 8080
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

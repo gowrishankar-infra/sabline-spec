@@ -1,0 +1,35 @@
+{
+  "id": "L2-refusal-cannot-be-caught",
+  "level": 2,
+  "kind": "run",
+  "description": "catching the refusal to carry on anyway",
+  "spec": [
+    "6 G3"
+  ],
+  "from": "check_sandbox.py ESCAPES refusal-cannot-be-caught",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn peek(path: Text) -> Text uses fs or fail {\n    return try read_file(path)\n}\n\nfn main() uses io, fs {\n    check peek(\"{DATA}/a.txt\") {\n        ok body {\n            print(\"READ IT\")\n        }\n        fail why {\n            print(\"SWALLOWED THE REFUSAL\")\n        }\n    }\n    print(\"CARRIED ON\")\n}\n",
+    "allow": "io",
+    "args": []
+  },
+  "expect": {
+    "outcome": "refused",
+    "code": "E310",
+    "stdout_includes": [],
+    "stdout_excludes": [
+      "READ IT",
+      "WROTE IT",
+      "REACHED IT",
+      "CALLED IT",
+      "OPENED IT",
+      "GOT THROUGH",
+      "CARRIED ON",
+      "SWALLOWED THE REFUSAL",
+      "FOLLOWED IT"
+    ],
+    "must_not_exist": []
+  }
+}

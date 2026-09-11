@@ -1,0 +1,29 @@
+{
+  "id": "L1-budget-ffi-continuation-stops-at-effect",
+  "level": 1,
+  "kind": "budget",
+  "description": "ffi:math,io names one module and grants io",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ffi-continuation-stops-at-effect",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi:math,io"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "ffi",
+        "io"
+      ],
+      "ffi": [
+        "math"
+      ],
+      "counts": {}
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "L3-derive-library-file-is-a-program",
+  "level": 3,
+  "kind": "derive",
+  "description": "every .vel file is a program; one with no main and no effects needs nothing",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py DERIVE library-file-is-a-program",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "app.vel": "import \"lib/text.vel\"\n\nfn main() uses io {\n    print(greeting(\"world\"))\n}\n",
+      "lib/text.vel": "fn greeting(who: Text) -> Text {\n    return \"hello, \" + who\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "io"
+      ],
+      "counts": {}
+    },
+    "programs": [
+      {
+        "file": "app.vel",
+        "grants": [
+          "io"
+        ],
+        "counts": {},
+        "functions": {
+          "main": [
+            "io"
+          ]
+        }
+      },
+      {
+        "file": "lib/text.vel",
+        "grants": [],
+        "counts": {},
+        "functions": {
+          "greeting": []
+        }
+      }
+    ]
+  }
+}

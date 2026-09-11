@@ -1,0 +1,54 @@
+{
+  "id": "L3-check-import-widens-entry-not-surface",
+  "level": 3,
+  "kind": "check",
+  "description": "app.vel now writes through lib/store.vel: the surface already had that write, app.vel's entry did not, so it fails under W3 and not W1, and main is named as the function that gained fs",
+  "spec": [
+    "9.6 W3",
+    "W5"
+  ],
+  "from": "check_ratchet.py CHECKS import-widens-entry-not-surface",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "app.vel": "import \"lib/text.vel\"\n\nfn main() uses io {\n    print(greeting(\"world\"))\n}\n",
+      "lib/text.vel": "fn greeting(who: Text) -> Text {\n    return \"hello, \" + who\n}\n",
+      "lib/store.vel": "fn save(line: Text) uses fs {\n    write_file(\"out/log.txt\", line)\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "app.vel": "import \"lib/text.vel\"\nimport \"lib/store.vel\"\n\nfn main() uses io, fs {\n    let g = greeting(\"world\")\n    save(g)\n    print(g)\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "fs:write:out/log.txt",
+        "rules": [
+          "W3"
+        ],
+        "programs": [
+          "app.vel"
+        ]
+      },
+      {
+        "kind": "function",
+        "program": "app.vel",
+        "function": "main",
+        "gained": [
+          "fs"
+        ],
+        "rules": [
+          "W5"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "L1-audit-net-literals",
+  "level": 1,
+  "kind": "audit",
+  "description": "a host lower-cased with its trailing dot removed, an IPv6 host bracketed with its port, and request's URL as its second argument",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS net-literals",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn main() uses io, net {\n    check fetch(\"https://API.Example.com./v1\") {\n        ok a {\n            print(a)\n        }\n        fail w {\n            print(w)\n        }\n    }\n    check fetch_status(\"http://[::1]:8080/x\") {\n        ok s {\n            print(to_text(s))\n        }\n        fail w {\n            print(w)\n        }\n    }\n    check request(\"GET\", \"api.example.com:8443/y\", \"\", \"{}\") {\n        ok r {\n            print(r)\n        }\n        fail w {\n            print(w)\n        }\n    }\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": true,
+    "effects": [
+      "io",
+      "net"
+    ],
+    "functions": [
+      {
+        "name": "main",
+        "effects": [
+          "io",
+          "net"
+        ],
+        "can_fail": false
+      }
+    ],
+    "ffi_modules": [],
+    "ffi_any": false,
+    "fs_paths": {
+      "read": [],
+      "write": [],
+      "read_any": false,
+      "write_any": false
+    },
+    "net_hosts": {
+      "hosts": [
+        "[::1]:8080",
+        "api.example.com",
+        "api.example.com:8443"
+      ],
+      "any": false
+    },
+    "safe_command": "velaris <file> --allow io,net:[::1]:8080,net:api.example.com,net:api.example.com:8443"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "L2-clock-under-clock",
+  "level": 2,
+  "kind": "run",
+  "description": "the clock when clock is allowed",
+  "spec": [
+    "4.1"
+  ],
+  "from": "check_sandbox.py HONEST clock-under-clock",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, clock {\n    if now() > 0 {\n        print(\"time moves\")\n    }\n}\n",
+    "allow": "io,clock",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": [
+      "time moves"
+    ]
+  }
+}

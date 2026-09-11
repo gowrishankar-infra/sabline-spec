@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-path-percent",
+  "level": 1,
+  "kind": "budget",
+  "description": "a % in a path written %25",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS path-percent",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./100%25.txt"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "./100%.txt"
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

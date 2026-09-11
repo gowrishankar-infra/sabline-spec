@@ -1,0 +1,25 @@
+{
+  "id": "L2-fs-exists-under-write-grant",
+  "level": 2,
+  "kind": "run",
+  "description": "an existence check is permitted by a write grant alone",
+  "spec": [
+    "5.1",
+    "7"
+  ],
+  "from": "check_sandbox.py HONEST fs-exists-under-write-grant",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, fs {\n    print(format(\"exists: {}\", file_exists(\"{DATA}/a.txt\")))\n}\n",
+    "allow": "io,fs:write:{DATA}",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": [
+      "exists: true"
+    ]
+  }
+}

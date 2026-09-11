@@ -1,0 +1,43 @@
+{
+  "id": "L3-derive-dotted-module",
+  "level": 3,
+  "kind": "derive",
+  "description": "a module named with a dot is recorded up to its first dot",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py DERIVE dotted-module",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "base.vel": "fn main() uses io, ffi {\n    check py(\"os.path\", \"basename\", [\"a/b\"]) {\n        ok b {\n            print(b)\n        }\n        fail w {\n            print(w)\n        }\n    }\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "ffi:os",
+        "io"
+      ],
+      "counts": {}
+    },
+    "programs": [
+      {
+        "file": "base.vel",
+        "grants": [
+          "ffi:os",
+          "io"
+        ],
+        "counts": {},
+        "functions": {
+          "main": [
+            "ffi",
+            "io"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "L3-check-count-raised",
+  "level": 3,
+  "kind": "check",
+  "description": "a count raised from 10 to 1000 fails under W2 and W4",
+  "spec": [
+    "9.4",
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS count-raised",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 10 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 1000 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "count",
+        "effect": "net",
+        "program": "poll.vel",
+        "current": 1000,
+        "rules": [
+          "W2",
+          "W4"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "L3-check-function-gains-effect-grants-unchanged",
+  "level": 3,
+  "kind": "check",
+  "description": "an effect added to a function that had none, while the program's grants and counts stay exactly as they were, is still reported (W5)",
+  "spec": [
+    "9.6 W5"
+  ],
+  "from": "check_ratchet.py CHECKS function-gains-effect-grants-unchanged",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "cat.vel": "fn load(path: Text) -> Text uses fs or fail {\n    return try read_file(path)\n}\n\nfn show(line: Text) -> Text {\n    return \"> \" + line\n}\n\nfn main() uses io, fs {\n    for a in args() {\n        check load(a) {\n            ok text {\n                print(show(text))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "cat.vel": "fn load(path: Text) -> Text uses fs or fail {\n    return try read_file(path)\n}\n\nfn show(line: Text) -> Text uses fs {\n    if file_exists(line) {\n        return \"> \" + line\n    }\n    return line\n}\n\nfn main() uses io, fs {\n    for a in args() {\n        check load(a) {\n            ok text {\n                print(show(text))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "function",
+        "program": "cat.vel",
+        "function": "show",
+        "gained": [
+          "fs"
+        ],
+        "rules": [
+          "W5"
+        ]
+      }
+    ]
+  }
+}

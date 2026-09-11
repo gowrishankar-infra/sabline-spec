@@ -1,0 +1,28 @@
+{
+  "id": "L1-budget-fs-count-zero",
+  "level": 1,
+  "kind": "budget",
+  "description": "@0 grants the effect and no operation",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS fs-count-zero",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs@0"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": "any",
+      "counts": {
+        "fs": 0
+      }
+    }
+  }
+}

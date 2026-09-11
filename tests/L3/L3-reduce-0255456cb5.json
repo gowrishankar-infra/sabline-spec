@@ -1,0 +1,27 @@
+{
+  "id": "L3-reduce-0255456cb5",
+  "level": 3,
+  "kind": "reduce",
+  "description": "fs:read:./data/, fs:read:data, fs:read:data/x, io, io reduced is fs:read:./data/, io",
+  "spec": [
+    "9.2"
+  ],
+  "from": "check_ratchet.py REDUCE",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grants": [
+      "fs:read:./data/",
+      "fs:read:data",
+      "fs:read:data/x",
+      "io",
+      "io"
+    ]
+  },
+  "expect": {
+    "grants": [
+      "fs:read:./data/",
+      "io"
+    ]
+  }
+}

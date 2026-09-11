@@ -1,0 +1,52 @@
+{
+  "id": "L3-check-hidden-directory",
+  "level": 3,
+  "kind": "check",
+  "description": "a program in a hidden directory is part of the repository, and its widening fails",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py CHECKS hidden-directory",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      ".ci/deploy.vel": "fn main() uses io {\n    print(\"hi\")\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      ".ci/deploy.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 1 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "net:api.example.com",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          ".ci/deploy.vel"
+        ]
+      },
+      {
+        "kind": "function",
+        "program": ".ci/deploy.vel",
+        "function": "main",
+        "gained": [
+          "net"
+        ],
+        "rules": [
+          "W5"
+        ]
+      }
+    ]
+  }
+}

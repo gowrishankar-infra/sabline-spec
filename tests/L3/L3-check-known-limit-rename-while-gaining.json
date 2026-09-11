@@ -1,0 +1,29 @@
+{
+  "id": "L3-check-known-limit-rename-while-gaining",
+  "level": 3,
+  "kind": "check",
+  "description": "a pure helper renamed in the same change that gives it an effect its program already had passes: the renamed function is new to the baseline",
+  "spec": [
+    "9.8"
+  ],
+  "from": "check_ratchet.py CHECKS known-limit-rename-while-gaining",
+  "requires": [],
+  "known_limit": "A widening that passes. The declared surface did not widen - the program's grants and count are what they were - but a function that declared nothing now declares fs, and W5 does not see it: a function is known by its file and name, so tidy2 is a new function, held to its program's entry and the surface, not to what tidy declared.",
+  "input": {
+    "tree": {
+      "app.vel": "fn tidy(t: Text) -> Text {\n    return lower(t)\n}\n\nfn main() uses io, fs {\n    print(tidy(\"A\"))\n    print(to_text(file_exists(\"data/x\")))\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "app.vel": "fn tidy2(t: Text) -> Text uses fs {\n    if file_exists(\"data/x\") {\n        return lower(t)\n    }\n    return t\n}\n\nfn main() uses io, fs {\n    print(tidy2(\"A\"))\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

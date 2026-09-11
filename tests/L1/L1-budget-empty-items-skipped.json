@@ -1,0 +1,26 @@
+{
+  "id": "L1-budget-empty-items-skipped",
+  "level": 1,
+  "kind": "budget",
+  "description": "an empty item between commas is skipped",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS empty-items-skipped",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "io,,env"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "env",
+        "io"
+      ],
+      "counts": {}
+    }
+  }
+}

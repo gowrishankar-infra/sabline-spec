@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
-"""Check the schemas, and the examples against them.
+"""Check the schemas, the examples, and the conformance corpus.
 
 usage: python tools/validate.py [--audits DIR] [--capabilities FILE]
 
 - every file in schemas/ must be a valid JSON Schema (draft 2020-12);
 - every examples/**/*.audit.json must validate as velaris.audit/1;
+- every examples/*statement.json must be an in-toto Statement v1 of the
+  capability/v1 predicate type (SPEC.md 8.5), its predicate valid
+  against schemas/capability-predicate.v1.schema.json and its audit
+  against the velaris.audit/1 schema;
 - every examples/*.capabilities.json must validate as
   velaris.capabilities/1, with its programs sorted by file and unique,
   and every grant list sorted and reduced - rules of SPEC.md section
   9.2 that JSON Schema cannot state. Reduction is checked with the
-  covering rule of section 9.5, written out below from the text.
+  covering rule of section 9.5, written out below from the text;
+- the conformance corpus in tests/: every case file validates against
+  tests/case.schema.json, is listed in tests/index.json under its own
+  id, level and kind, and no two cases share an id; the index's counts
+  are the cases' counts; and every baseline a derive case expects is
+  held to the rules above, as velaris.capabilities/1.
 
 With --audits DIR, every *.json directly in DIR is validated as
 velaris.audit/1 as well: the way to hold the schema against a
@@ -26,6 +35,7 @@ from pathlib import Path
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parent.parent
+PREDICATE_TYPE = "https://gowrishankar-infra.github.io/velaris-lang/capability/v1"
 
 
 def load(path: Path):
@@ -156,6 +166,63 @@ def capabilities_problems(caps, doc) -> list:
     return problems
 
 
+def corpus_problems(caps) -> list:
+    """What is wrong with tests/: see the module docstring."""
+    tests = ROOT / "tests"
+    schema = load(tests / "case.schema.json")
+    try:
+        Draft202012Validator.check_schema(schema)
+    except Exception as e:
+        return [f"tests/case.schema.json is not a valid schema: {e}"]
+    cases = Draft202012Validator(schema)
+    index = load(tests / "index.json")
+    problems = []
+    if index.get("format") != "velaris.conformance-corpus/1":
+        problems.append("index.json: format is not "
+                        "velaris.conformance-corpus/1")
+    listed = {}
+    for e in index.get("cases", []):
+        if e["id"] in listed:
+            problems.append(f"index.json lists {e['id']} twice")
+        listed[e["id"]] = e
+    on_disk = sorted(p for level in ("L1", "L2", "L3")
+                     for p in (tests / level).glob("*.json"))
+    seen, per_level = set(), {"1": 0, "2": 0, "3": 0}
+    for path in on_disk:
+        rel = path.relative_to(tests).as_posix()
+        doc = load(path)
+        errs = errors_of(cases, doc)
+        if errs:
+            problems.append(f"{rel}: {errs[0]}")
+            continue
+        entry = listed.get(doc["id"])
+        if path.stem != doc["id"]:
+            problems.append(f"{rel}: its id is {doc['id']}")
+        if f"L{doc['level']}" != path.parent.name:
+            problems.append(f"{rel}: level {doc['level']} in {path.parent.name}")
+        if entry is None:
+            problems.append(f"{rel} is not in index.json")
+        elif (entry["file"], entry["level"], entry["kind"]) != (
+                rel, doc["level"], doc["kind"]):
+            problems.append(f"index.json disagrees with {rel}")
+        if doc["id"].lower() in seen:
+            problems.append(f"{rel}: another case has the id {doc['id']}")
+        seen.add(doc["id"].lower())
+        per_level[str(doc["level"])] += 1
+        if doc["kind"] == "derive":
+            body = dict(doc["expect"], schema="velaris.capabilities/1",
+                        velaris_version="0", date="2026-01-01")
+            problems += [f"{rel}: {p}" for p in capabilities_problems(caps, body)]
+    problems += [f"index.json lists {i}, which has no file"
+                 for i in sorted(set(listed) - {p.stem for p in on_disk})]
+    for level, n in per_level.items():
+        said = index.get("levels", {}).get(level, {}).get("cases")
+        if said != n:
+            problems.append(f"index.json says level {level} has {said} "
+                            f"cases; there are {n}")
+    return problems
+
+
 def main(argv: list) -> int:
     failed = 0
 
@@ -192,6 +259,34 @@ def main(argv: list) -> int:
     for path in sorted((ROOT / "examples").glob("*.capabilities.json")):
         report(f"{path.relative_to(ROOT).as_posix()} is velaris.capabilities/1",
                capabilities_problems(caps, load(path)))
+
+    predicate = schemas.get("capability-predicate.v1.schema.json")
+    for path in sorted((ROOT / "examples").glob("*statement.json")):
+        doc = load(path)
+        problems = []
+        if doc.get("_type") != "https://in-toto.io/Statement/v1":
+            problems.append("_type is not https://in-toto.io/Statement/v1")
+        if doc.get("predicateType") != PREDICATE_TYPE:
+            problems.append(f"predicateType is not {PREDICATE_TYPE}")
+        subjects = doc.get("subject") or []
+        if not subjects or not all(
+                isinstance(s.get("name"), str) and len(
+                    (s.get("digest") or {}).get("sha256", "")) == 64
+                for s in subjects):
+            problems.append("every subject needs a name and a sha256 digest")
+        if predicate is None:
+            problems.append("schemas/capability-predicate.v1.schema.json "
+                            "is missing")
+        else:
+            problems += errors_of(predicate, doc.get("predicate"))
+            problems += [f"audit: {p}" for p in errors_of(
+                audit, (doc.get("predicate") or {}).get("audit"))]
+        report(f"{path.relative_to(ROOT).as_posix()} is an in-toto Statement "
+               f"of the capability/v1 predicate", problems)
+
+    index = load(ROOT / "tests" / "index.json")
+    report(f"tests/: {len(index.get('cases', []))} conformance cases, each "
+           f"valid, listed and unique", corpus_problems(caps))
 
     if "--audits" in argv:
         where = Path(argv[argv.index("--audits") + 1])

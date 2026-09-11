@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-db6f7af576",
+  "level": 3,
+  "kind": "covers",
+  "description": "ffi covers ffi:os",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "ffi",
+    "other": "ffi:os"
+  },
+  "expect": {
+    "covers": true
+  }
+}

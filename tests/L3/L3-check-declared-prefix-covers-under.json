@@ -1,0 +1,44 @@
+{
+  "id": "L3-check-declared-prefix-covers-under",
+  "level": 3,
+  "kind": "check",
+  "description": "a hand-written prefix covers any path under it",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py CHECKS declared-prefix-covers-under",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/sub/x.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": {
+        "surface": {
+          "grants": [
+            "fs:read:data",
+            "io"
+          ]
+        },
+        "programs": {
+          "read.vel": {
+            "grants": [
+              "fs:read:data",
+              "io"
+            ]
+          }
+        }
+      }
+    },
+    "change": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/other/y.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

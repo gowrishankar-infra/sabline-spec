@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-path-at",
+  "level": 1,
+  "kind": "budget",
+  "description": "an @ in a path written %40",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS path-at",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:write:./mail%40host"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "write",
+          "path": "./mail@host"
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

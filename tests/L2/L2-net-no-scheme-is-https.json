@@ -1,0 +1,35 @@
+{
+  "id": "L2-net-no-scheme-is-https",
+  "level": 2,
+  "kind": "run",
+  "description": "a URL with no scheme is HTTPS at port 443, outside a port-80 grant",
+  "spec": [
+    "5.2"
+  ],
+  "from": "check_sandbox.py ESCAPES net-no-scheme-is-https",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, net {\n    check fetch(\"example.com/\") {\n        ok b {\n            print(\"REACHED IT\")\n        }\n        fail w {\n            print(\"failed\")\n        }\n    }\n}\n",
+    "allow": "io,net:example.com:80",
+    "args": []
+  },
+  "expect": {
+    "outcome": "refused",
+    "code": "E314",
+    "stdout_includes": [],
+    "stdout_excludes": [
+      "READ IT",
+      "WROTE IT",
+      "REACHED IT",
+      "CALLED IT",
+      "OPENED IT",
+      "GOT THROUGH",
+      "CARRIED ON",
+      "SWALLOWED THE REFUSAL",
+      "FOLLOWED IT"
+    ],
+    "must_not_exist": []
+  }
+}

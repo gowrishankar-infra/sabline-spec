@@ -1,0 +1,18 @@
+{
+  "id": "L1-budget-malformed-9a7e22984a",
+  "level": 1,
+  "kind": "budget",
+  "description": "refused whole: \"host\"",
+  "spec": [
+    "4.2"
+  ],
+  "from": "check_library.py malformed_budgets()",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "host"
+  },
+  "expect": {
+    "valid": false
+  }
+}

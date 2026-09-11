@@ -1,0 +1,18 @@
+{
+  "id": "L1-budget-deny-unknown-refused",
+  "level": 1,
+  "kind": "budget",
+  "description": "a denial names one of the seven effects",
+  "spec": [
+    "4.4"
+  ],
+  "from": "check_library.py BUDGETS deny-unknown-refused",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "deny": "banana"
+  },
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "id": "L3-derive-imports-and-counts",
+  "level": 3,
+  "kind": "derive",
+  "description": "fs operations through an import and a loop add up; the imported library files are programs of their own",
+  "spec": [
+    "9.3",
+    "9.4"
+  ],
+  "from": "check_ratchet.py DERIVE imports-and-counts",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "app.vel": "import \"lib/text.vel\"\nimport \"lib/store.vel\"\n\nfn helper(n: Int) -> Int {\n    return n + 1\n}\n\nfn main() uses io, fs {\n    let total = helper(1)\n    let g = greeting(\"x\")\n    save(g)\n    for i in 0 to 4 {\n        print(to_text(file_exists(\"data/in.csv\")))\n    }\n    print(to_text(total))\n}\n",
+      "lib/text.vel": "fn greeting(who: Text) -> Text {\n    return \"hello, \" + who\n}\n",
+      "lib/store.vel": "fn save(line: Text) uses fs {\n    write_file(\"out/log.txt\", line)\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "fs:read:data/in.csv",
+        "fs:write:out/log.txt",
+        "io"
+      ],
+      "counts": {
+        "fs": 5
+      }
+    },
+    "programs": [
+      {
+        "file": "app.vel",
+        "grants": [
+          "fs:read:data/in.csv",
+          "fs:write:out/log.txt",
+          "io"
+        ],
+        "counts": {
+          "fs": 5
+        },
+        "functions": {
+          "helper": [],
+          "main": [
+            "fs",
+            "io"
+          ]
+        }
+      },
+      {
+        "file": "lib/store.vel",
+        "grants": [
+          "fs:write:out/log.txt"
+        ],
+        "counts": {
+          "fs": 1
+        },
+        "functions": {
+          "save": [
+            "fs"
+          ]
+        }
+      },
+      {
+        "file": "lib/text.vel",
+        "grants": [],
+        "counts": {},
+        "functions": {
+          "greeting": []
+        }
+      }
+    ]
+  }
+}

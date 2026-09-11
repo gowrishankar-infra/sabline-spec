@@ -1,0 +1,25 @@
+{
+  "id": "L3-check-baseline-not-json",
+  "level": 3,
+  "kind": "check",
+  "description": "a baseline that is not JSON cannot be compared",
+  "spec": [
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS baseline-not-json",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "text": "{ not json\n"
+    },
+    "change": {}
+  },
+  "expect": {
+    "verdict": "cannot-compare"
+  }
+}

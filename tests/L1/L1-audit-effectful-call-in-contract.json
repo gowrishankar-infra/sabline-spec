@@ -1,0 +1,25 @@
+{
+  "id": "L1-audit-effectful-call-in-contract",
+  "level": 1,
+  "kind": "audit",
+  "description": "a promise may call only pure functions (T5, E310 at compile time)",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS effectful-call-in-contract",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn stamp() -> Int uses clock {\n    return now()\n}\n\nfn later(t: Int) -> Int\n    requires t > stamp()\n{\n    return t\n}\n\nfn main() uses io {\n    print(later(5))\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": false,
+    "problems_include": [
+      "E310"
+    ]
+  }
+}

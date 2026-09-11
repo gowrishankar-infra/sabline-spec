@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-8799dc3cf7",
+  "level": 3,
+  "kind": "covers",
+  "description": "net:h.example covers net:h.example:443",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "net:h.example",
+    "other": "net:h.example:443"
+  },
+  "expect": {
+    "covers": true
+  }
+}

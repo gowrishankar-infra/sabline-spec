@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-b028d43c5d",
+  "level": 3,
+  "kind": "covers",
+  "description": "fs:write:out does not cover fs:write",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "fs:write:out",
+    "other": "fs:write"
+  },
+  "expect": {
+    "covers": false
+  }
+}

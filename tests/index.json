@@ -1,0 +1,3645 @@
+{
+  "format": "velaris.conformance-corpus/1",
+  "generated_by": "velaris-lang build_conformance.py, from check_sandbox.py, check_library.py and check_ratchet.py",
+  "levels": {
+    "1": {
+      "name": "Declaration",
+      "cases": 298
+    },
+    "2": {
+      "name": "Enforcement",
+      "cases": 37
+    },
+    "3": {
+      "name": "Ratchet",
+      "cases": 109
+    }
+  },
+  "cases": [
+    {
+      "id": "L1-budget-spec-example",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-spec-example.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-all-seven",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-all-seven.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-empty",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-empty.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-empty-single-quotes",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-empty-single-quotes.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-empty-double-quotes",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-empty-double-quotes.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-empty-items-skipped",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-empty-items-skipped.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-whitespace-trimmed",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-whitespace-trimmed.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ffi-continuation",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ffi-continuation.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ffi-continuation-stops-at-effect",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ffi-continuation-stops-at-effect.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ffi-module-named-random",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ffi-module-named-random.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ffi-effect-rand-after-module",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ffi-effect-rand-after-module.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ffi-two-items",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ffi-two-items.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ffi-plain-then-scoped",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ffi-plain-then-scoped.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ffi-scoped-then-plain",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ffi-scoped-then-plain.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ffi-dotted-module",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ffi-dotted-module.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-fs-plain-absorbs-scope",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-fs-plain-absorbs-scope.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-fs-scope-then-plain",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-fs-scope-then-plain.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-fs-smallest-count",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-fs-smallest-count.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-fs-direction-any-path",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-fs-direction-any-path.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-fs-both-directions-scoped",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-fs-both-directions-scoped.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-fs-count-on-path",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-fs-count-on-path.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-fs-count-zero",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-fs-count-zero.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-fs-windows-drive-path",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-fs-windows-drive-path.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-fs-literal-percent-2c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-fs-literal-percent-2c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-net-count-only",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-net-count-only.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-net-host-lowercased",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-net-host-lowercased.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-net-wildcard-with-port",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-net-wildcard-with-port.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ipv6",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ipv6.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ipv6-port",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ipv6-port.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ipv6-long-port",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ipv6-long-port.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ipv6-zone",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ipv6-zone.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ipv6-count",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ipv6-count.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ipv6-words",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ipv6-words.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-comma",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-comma.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-at",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-at.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-space",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-space.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-non-ascii",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-non-ascii.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-trailing-slash",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-trailing-slash.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-parent",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-parent.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-percent",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-percent.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-two-escapes",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-two-escapes.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-count",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-count.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-tab",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-tab.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-host-comma",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-host-comma.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-host-at",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-host-at.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-host-percent",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-host-percent.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-host-port",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-host-port.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-host-wildcard",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-host-wildcard.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-mixed-awkward",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-mixed-awkward.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-ffi-continuation-after-effect",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-ffi-continuation-after-effect.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-path-raw-comma",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-path-raw-comma.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-deny-from-all-seven",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-deny-from-all-seven.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-deny-removes-scope",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-deny-removes-scope.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-deny-scoped-refused",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-deny-scoped-refused.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-deny-unknown-refused",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-deny-unknown-refused.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-0ad4fe72db",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-0ad4fe72db.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-572961881e",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-572961881e.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2c347475a5",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2c347475a5.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-86f1d0f240",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-86f1d0f240.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-abcd3e2257",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-abcd3e2257.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-361e4465b7",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-361e4465b7.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f08c9439bf",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f08c9439bf.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-39f97874bc",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-39f97874bc.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-ee4c1f6984",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-ee4c1f6984.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-743d7472e3",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-743d7472e3.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-498dddb761",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-498dddb761.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-645a16cc48",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-645a16cc48.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-5972395a81",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-5972395a81.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-71f726a68f",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-71f726a68f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-d0e09e3aac",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-d0e09e3aac.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-1d74e7b17a",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-1d74e7b17a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-852509db9c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-852509db9c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2f8b08ca85",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2f8b08ca85.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-248e001ac1",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-248e001ac1.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-7999983afe",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-7999983afe.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f829276228",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f829276228.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-866cc71151",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-866cc71151.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-faeb2812b4",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-faeb2812b4.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-5e3d3664fb",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-5e3d3664fb.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-6b97a9c0b8",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-6b97a9c0b8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-7a31bceaa0",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-7a31bceaa0.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-35f8901e33",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-35f8901e33.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e17fb1d312",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e17fb1d312.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2027b80eb4",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2027b80eb4.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e2005295fb",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e2005295fb.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-235d824e85",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-235d824e85.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-09b5f78431",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-09b5f78431.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-333f683567",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-333f683567.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f62599813a",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f62599813a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-6056ab670c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-6056ab670c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-b27e3ce9cd",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-b27e3ce9cd.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-dd161a3678",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-dd161a3678.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-a04877f113",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-a04877f113.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-31eebf8abd",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-31eebf8abd.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-faea3306db",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-faea3306db.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-32d984c6dc",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-32d984c6dc.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-d6fda47732",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-d6fda47732.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-10bdb098cf",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-10bdb098cf.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-17aecce768",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-17aecce768.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f3c54dba73",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f3c54dba73.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-017a617d56",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-017a617d56.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f9616c5bba",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f9616c5bba.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-9bfd43cd20",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-9bfd43cd20.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-60991ab639",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-60991ab639.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-34169bc279",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-34169bc279.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-b294448bcf",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-b294448bcf.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-b6c5446e52",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-b6c5446e52.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-dd977f3424",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-dd977f3424.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-6fcaf3a6a0",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-6fcaf3a6a0.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-22b92b8ee7",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-22b92b8ee7.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-df8fcb18d9",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-df8fcb18d9.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-6d7bf5f3e6",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-6d7bf5f3e6.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-58af31b77f",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-58af31b77f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-19f2bffc9f",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-19f2bffc9f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-390c80e4a3",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-390c80e4a3.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-cb15861ed0",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-cb15861ed0.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-ec0e36ea95",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-ec0e36ea95.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-67bc98e7b7",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-67bc98e7b7.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-7febb5fe6c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-7febb5fe6c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-3c92cae195",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-3c92cae195.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-bcb99ac230",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-bcb99ac230.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-7cb9ffb877",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-7cb9ffb877.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-8f99420e29",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-8f99420e29.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-c82d53b4b9",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-c82d53b4b9.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-8929497beb",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-8929497beb.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-fd3f0a28b6",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-fd3f0a28b6.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-ea645ff360",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-ea645ff360.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-14fa700103",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-14fa700103.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-15c6752dcf",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-15c6752dcf.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-21c4eceb4e",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-21c4eceb4e.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e278fc8214",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e278fc8214.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-87db652662",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-87db652662.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-3b76e8d7cc",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-3b76e8d7cc.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-16fe77a88a",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-16fe77a88a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-c98c6b6dfe",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-c98c6b6dfe.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-4c0777a5fe",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-4c0777a5fe.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-88bac853b7",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-88bac853b7.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-efa2b74b94",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-efa2b74b94.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-72be387733",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-72be387733.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-1ed0d29c15",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-1ed0d29c15.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-d10d7e9c9c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-d10d7e9c9c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-ba1d9725ed",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-ba1d9725ed.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2218382b39",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2218382b39.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-4ac98fa6a6",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-4ac98fa6a6.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-8edd294a30",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-8edd294a30.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-4d84dc2180",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-4d84dc2180.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-adacf7b669",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-adacf7b669.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-91380305d5",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-91380305d5.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-573f7f70c5",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-573f7f70c5.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-a7c7193d09",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-a7c7193d09.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-467df101bf",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-467df101bf.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-64bbec6272",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-64bbec6272.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e8f7296000",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e8f7296000.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e74fb768ff",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e74fb768ff.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-98f1223b97",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-98f1223b97.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-bb028b50df",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-bb028b50df.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f583d27001",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f583d27001.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-3e03f8b12b",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-3e03f8b12b.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-110fb1da6c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-110fb1da6c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-3875a878dc",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-3875a878dc.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e70b8955f0",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e70b8955f0.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f8b19cb864",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f8b19cb864.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-9a7e22984a",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-9a7e22984a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-9243307ff5",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-9243307ff5.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-4f33b46935",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-4f33b46935.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-8f24a81903",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-8f24a81903.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-0767fdc914",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-0767fdc914.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-7c5a3ba22d",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-7c5a3ba22d.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-9199fefc0b",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-9199fefc0b.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-67f6bacef4",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-67f6bacef4.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-44c76781c6",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-44c76781c6.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-744f4b474b",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-744f4b474b.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e57d17415a",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e57d17415a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-7b4ebb2691",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-7b4ebb2691.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-b081115ed1",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-b081115ed1.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e00e71c16c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e00e71c16c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-51b4658238",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-51b4658238.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-163e6d9af0",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-163e6d9af0.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-ad70d909fc",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-ad70d909fc.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-b13858aeb3",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-b13858aeb3.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-7f897cf820",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-7f897cf820.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-161240bdc3",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-161240bdc3.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f8db37665e",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f8db37665e.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-d252feb5e3",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-d252feb5e3.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-9ed71eebaf",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-9ed71eebaf.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-ffafcbe165",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-ffafcbe165.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-bb2a91ab4c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-bb2a91ab4c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-5f9a525de8",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-5f9a525de8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-c2f2c66712",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-c2f2c66712.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f5cd276900",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f5cd276900.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-856114a8e8",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-856114a8e8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-fa0fff80b7",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-fa0fff80b7.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-21614c6d79",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-21614c6d79.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-a19746e89f",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-a19746e89f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-77321f1e8d",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-77321f1e8d.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f8c734e1f4",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f8c734e1f4.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-3e7ee0e7e9",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-3e7ee0e7e9.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-34adf14ba0",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-34adf14ba0.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-df12e46151",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-df12e46151.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e99c1640b7",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e99c1640b7.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-0950fdca4f",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-0950fdca4f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-6dee8899f3",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-6dee8899f3.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-7247b32e3d",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-7247b32e3d.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-91b6d49e00",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-91b6d49e00.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2f636847f8",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2f636847f8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-cf9fb48f30",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-cf9fb48f30.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-efd5e2c72c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-efd5e2c72c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-858a3152e2",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-858a3152e2.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2242a2a727",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2242a2a727.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2590b97665",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2590b97665.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-df20b3a5e1",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-df20b3a5e1.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-d6b2cbf3a1",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-d6b2cbf3a1.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-fd766ee4d9",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-fd766ee4d9.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-4772b73b9a",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-4772b73b9a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-9d16dbf3cf",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-9d16dbf3cf.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-3d73b3f3c1",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-3d73b3f3c1.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-1ec8fc7d06",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-1ec8fc7d06.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-c69d21826e",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-c69d21826e.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-0d44c0269f",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-0d44c0269f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-a4c0e5c6aa",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-a4c0e5c6aa.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-cde2ced94b",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-cde2ced94b.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-eef52e620f",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-eef52e620f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-eeb5305cab",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-eeb5305cab.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-68030b36c8",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-68030b36c8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-92e0dcc361",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-92e0dcc361.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f60e1648d5",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f60e1648d5.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-4972e25d44",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-4972e25d44.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-e8e2e8ba08",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-e8e2e8ba08.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-d570c6e8ad",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-d570c6e8ad.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-0c2e10f30a",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-0c2e10f30a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-31e38643c8",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-31e38643c8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-3f9160798b",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-3f9160798b.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-cb6cbc99cf",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-cb6cbc99cf.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f02baba690",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f02baba690.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-baf3ff4ee5",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-baf3ff4ee5.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-cdd8a59c5f",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-cdd8a59c5f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-d1cb4b1c6b",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-d1cb4b1c6b.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-706e73771c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-706e73771c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-90a3e06b31",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-90a3e06b31.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-c6bc317dac",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-c6bc317dac.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f61e227d05",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f61e227d05.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-cdee6c9884",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-cdee6c9884.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-fdd8dafcce",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-fdd8dafcce.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-44c2205e00",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-44c2205e00.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-cffdd1c2fc",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-cffdd1c2fc.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-4fee79ecd2",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-4fee79ecd2.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-fef78da057",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-fef78da057.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-55bfcf19a8",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-55bfcf19a8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-84540562af",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-84540562af.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-6e41145dcb",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-6e41145dcb.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2f38c1bcd9",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2f38c1bcd9.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2df843e43f",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2df843e43f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-c2c9caa8e2",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-c2c9caa8e2.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-d66eff621e",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-d66eff621e.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-46209adcf0",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-46209adcf0.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-074307b38c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-074307b38c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-037ac2dc21",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-037ac2dc21.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-8965639250",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-8965639250.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-5f6614c15a",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-5f6614c15a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-1e92e57d6c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-1e92e57d6c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-7e3e7937e7",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-7e3e7937e7.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-df49575378",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-df49575378.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-61842eee9d",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-61842eee9d.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-39f0d1a2ed",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-39f0d1a2ed.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-1476a94ecb",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-1476a94ecb.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-df248bbebd",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-df248bbebd.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-41d2e6a18b",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-41d2e6a18b.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-45ebe7c256",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-45ebe7c256.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-b13b20ec26",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-b13b20ec26.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-d85a42785a",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-d85a42785a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-91f60de308",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-91f60de308.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-acbddb2779",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-acbddb2779.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-62ebf9528b",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-62ebf9528b.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-8a2d0b87e8",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-8a2d0b87e8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-21c239c34b",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-21c239c34b.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-f313dd54ab",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-f313dd54ab.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-64aa3c3f38",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-64aa3c3f38.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-2a0d5e566c",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-2a0d5e566c.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-55f7cf80ed",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-55f7cf80ed.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-budget-malformed-73093131ee",
+      "level": 1,
+      "kind": "budget",
+      "file": "L1/L1-budget-malformed-73093131ee.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-pure",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-pure.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-transitive",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-transitive.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-undeclared-effect",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-undeclared-effect.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-declaration-propagates",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-declaration-propagates.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-unknown-effect-name",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-unknown-effect-name.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-effectful-function-as-value",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-effectful-function-as-value.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-effectful-call-in-contract",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-effectful-call-in-contract.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-declared-not-used",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-declared-not-used.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-path-built-while-running",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-path-built-while-running.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-read-and-write-literals",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-read-and-write-literals.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-net-literals",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-net-literals.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-url-built-while-running",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-url-built-while-running.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-url-without-scheme",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-url-without-scheme.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-ffi-literal-modules",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-ffi-literal-modules.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-ffi-module-built-while-running",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-ffi-module-built-while-running.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-path-with-comma",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-path-with-comma.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-library-without-main",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-library-without-main.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-two-scopes",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-two-scopes.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-read-under-io",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-read-under-io.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-write-under-io",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-write-under-io.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-net-under-io",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-net-under-io.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-ffi-under-io",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-ffi-under-io.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-ffi-handle-under-io",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-ffi-handle-under-io.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-clock-under-io",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-clock-under-io.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-rand-under-io",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-rand-under-io.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-effect-behind-two-helpers",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-effect-behind-two-helpers.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-refusal-cannot-be-caught",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-refusal-cannot-be-caught.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-deny-one",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-deny-one.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-ffi-module-outside-list",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-ffi-module-outside-list.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-ffi-submodule-path",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-ffi-submodule-path.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-ffi-through-py-json",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-ffi-through-py-json.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-ffi-through-handle",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-ffi-through-handle.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-deny-several",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-deny-several.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-fs-read-outside-prefix",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-fs-read-outside-prefix.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-fs-write-under-read-grant",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-fs-write-under-read-grant.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-fs-dotdot-escape",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-fs-dotdot-escape.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-net-host-not-in-list",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-net-host-not-in-list.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-net-wildcard-parent-domain",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-net-wildcard-parent-domain.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-net-port-not-in-list",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-net-port-not-in-list.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-fs-count-reached",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-fs-count-reached.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-net-count-reached",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-net-count-reached.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-env-under-io",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-env-under-io.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-fs-symlink-escape",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-fs-symlink-escape.json",
+      "known_limit": false,
+      "requires": [
+        "symlink"
+      ]
+    },
+    {
+      "id": "L2-fs-count-zero",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-fs-count-zero.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-fs-count-spent-by-failed-operation",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-fs-count-spent-by-failed-operation.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-net-no-scheme-is-https",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-net-no-scheme-is-https.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-pure-under-empty-budget",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-pure-under-empty-budget.json",
+      "known_limit": false,
+      "requires": [
+        "stdlib"
+      ]
+    },
+    {
+      "id": "L2-io-under-io",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-io-under-io.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-clock-under-clock",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-clock-under-clock.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-scoped-exact-grants",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-scoped-exact-grants.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-redirect-to-ungranted-host-is-a-failure",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-redirect-to-ungranted-host-is-a-failure.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-redirect-to-granted-host-is-followed",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-redirect-to-granted-host-is-followed.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-fs-additive",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-fs-additive.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-net-additive",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-net-additive.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-fs-exists-under-write-grant",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-fs-exists-under-write-grant.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-library-file-is-a-program",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-library-file-is-a-program.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-host-and-count",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-host-and-count.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-imports-and-counts",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-imports-and-counts.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-rearranged-is-identical",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-rearranged-is-identical.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-fixed-text",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-fixed-text.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-parameter-is-not-fixed",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-parameter-is-not-fixed.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-does-not-compile",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-does-not-compile.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-imported-main",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-imported-main.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-surface-union-and-no-bound",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-surface-union-and-no-bound.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-grants-reduced",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-grants-reduced.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-unwritable-path-is-unscoped",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-unwritable-path-is-unscoped.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-declared-fs-without-operation",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-declared-fs-without-operation.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-dotted-module",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-dotted-module.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-derive-counter-bound",
+      "level": 3,
+      "kind": "derive",
+      "file": "L3/L3-derive-counter-bound.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-import-widens-entry-not-surface",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-import-widens-entry-not-surface.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-stdlib-module-brings-net",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-stdlib-module-brings-net.json",
+      "known_limit": false,
+      "requires": [
+        "stdlib"
+      ]
+    },
+    {
+      "id": "L3-check-path-prefix-widened",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-path-prefix-widened.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-count-raised",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-count-raised.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-url-star-is-any-host",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-url-star-is-any-host.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-function-gains-effect-grants-unchanged",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-function-gains-effect-grants-unchanged.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-url-built-while-running",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-url-built-while-running.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-path-built-while-running",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-path-built-while-running.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-new-direction",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-new-direction.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-new-module",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-new-module.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-module-built-while-running",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-module-built-while-running.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-entry-narrower-than-surface",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-entry-narrower-than-surface.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-loop-without-fixed-turns",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-loop-without-fixed-turns.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-recursion-has-no-bound",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-recursion-has-no-bound.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-main-imported-from-outside",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-main-imported-from-outside.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-hidden-directory",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-hidden-directory.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-backslash-climbs-out",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-backslash-climbs-out.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-new-effect",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-new-effect.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-new-program-outside-surface",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-new-program-outside-surface.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-fs-declared-without-operation",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-fs-declared-without-operation.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-rules-named",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-rules-named.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-literal-into-variable",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-literal-into-variable.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-loop-over-list-variable",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-loop-over-list-variable.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-narrowing",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-narrowing.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-reorder-and-reformat",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-reorder-and-reformat.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-file-without-effects",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-file-without-effects.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-new-program-inside-surface",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-new-program-inside-surface.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-statements-before-loop",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-statements-before-loop.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-function-renamed",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-function-renamed.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-function-moved",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-function-moved.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-stops-compiling",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-stops-compiling.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-another-spelling-of-a-path",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-another-spelling-of-a-path.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-port-under-portless-grant",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-port-under-portless-grant.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-declared-prefix-covers-under",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-declared-prefix-covers-under.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-declared-prefix-not-outside",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-declared-prefix-not-outside.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-declared-wildcard-covers-label",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-declared-wildcard-covers-label.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-declared-wildcard-not-parent",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-declared-wildcard-not-parent.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-declared-port-not-portless",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-declared-port-not-portless.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-declared-port-covers-port",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-declared-port-covers-port.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-older-baseline-version",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-older-baseline-version.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-newer-baseline-version",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-newer-baseline-version.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-version-never-hides-widening",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-version-never-hides-widening.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-baseline-deleted",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-baseline-deleted.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-baseline-provisional-v0",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-baseline-provisional-v0.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-baseline-not-json",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-baseline-not-json.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-baseline-count-in-grant",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-baseline-count-in-grant.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-check-known-limit-rename-while-gaining",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-known-limit-rename-while-gaining.json",
+      "known_limit": true,
+      "requires": []
+    },
+    {
+      "id": "L3-check-known-limit-granted-module-behaviour",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-known-limit-granted-module-behaviour.json",
+      "known_limit": true,
+      "requires": []
+    },
+    {
+      "id": "L3-check-known-limit-bound-behind-call",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-known-limit-bound-behind-call.json",
+      "known_limit": true,
+      "requires": []
+    },
+    {
+      "id": "L3-check-known-limit-path-as-parameter",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-known-limit-path-as-parameter.json",
+      "known_limit": true,
+      "requires": []
+    },
+    {
+      "id": "L3-check-known-limit-backslash-path",
+      "level": 3,
+      "kind": "check",
+      "file": "L3/L3-check-known-limit-backslash-path.json",
+      "known_limit": true,
+      "requires": []
+    },
+    {
+      "id": "L3-sequence-gradual-widening",
+      "level": 3,
+      "kind": "sequence",
+      "file": "L3/L3-sequence-gradual-widening.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-sequence-merged-widening-keeps-failing",
+      "level": 3,
+      "kind": "sequence",
+      "file": "L3/L3-sequence-merged-widening-keeps-failing.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-write-writer-refuses-to-widen-unasked",
+      "level": 3,
+      "kind": "write-guard",
+      "file": "L3/L3-write-writer-refuses-to-widen-unasked.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-5f5609c4fc",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-5f5609c4fc.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-7d22453e16",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-7d22453e16.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-73f38132c6",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-73f38132c6.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-a2717ce622",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-a2717ce622.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-6e63fa932a",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-6e63fa932a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-b2b61daca6",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-b2b61daca6.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-bc4c917cf1",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-bc4c917cf1.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-ef4a6cc7d6",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-ef4a6cc7d6.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-40cf44d236",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-40cf44d236.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-aeb2ee97d8",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-aeb2ee97d8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-12048db9f6",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-12048db9f6.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-0d7ca17192",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-0d7ca17192.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-883ee35900",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-883ee35900.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-0caa5dc2b0",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-0caa5dc2b0.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-1a57a380a8",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-1a57a380a8.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-b028d43c5d",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-b028d43c5d.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-6303a486c7",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-6303a486c7.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-e642bbf715",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-e642bbf715.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-cd3b61622a",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-cd3b61622a.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-f3dc5ac2ca",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-f3dc5ac2ca.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-288ca1783e",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-288ca1783e.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-d32e35731f",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-d32e35731f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-d9e234a7be",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-d9e234a7be.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-b6b1442229",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-b6b1442229.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-8799dc3cf7",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-8799dc3cf7.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-791ce6c0e2",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-791ce6c0e2.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-189d4cd069",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-189d4cd069.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-db6f7af576",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-db6f7af576.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-c295ba64ae",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-c295ba64ae.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-c7ac98f93f",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-c7ac98f93f.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-605ab36402",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-605ab36402.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-covers-03097ecfab",
+      "level": 3,
+      "kind": "covers",
+      "file": "L3/L3-covers-03097ecfab.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-reduce-0255456cb5",
+      "level": 3,
+      "kind": "reduce",
+      "file": "L3/L3-reduce-0255456cb5.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-reduce-9dc7eb3854",
+      "level": 3,
+      "kind": "reduce",
+      "file": "L3/L3-reduce-9dc7eb3854.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-reduce-193c8f0002",
+      "level": 3,
+      "kind": "reduce",
+      "file": "L3/L3-reduce-193c8f0002.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-bound-nested-loops-multiply",
+      "level": 3,
+      "kind": "bound",
+      "file": "L3/L3-bound-nested-loops-multiply.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-bound-larger-branch",
+      "level": 3,
+      "kind": "bound",
+      "file": "L3/L3-bound-larger-branch.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-bound-list-literal",
+      "level": 3,
+      "kind": "bound",
+      "file": "L3/L3-bound-list-literal.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-bound-counter-from-let",
+      "level": 3,
+      "kind": "bound",
+      "file": "L3/L3-bound-counter-from-let.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-bound-called-twice",
+      "level": 3,
+      "kind": "bound",
+      "file": "L3/L3-bound-called-twice.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L3-bound-counter-changed-by-loop",
+      "level": 3,
+      "kind": "bound",
+      "file": "L3/L3-bound-counter-changed-by-loop.json",
+      "known_limit": false,
+      "requires": []
+    }
+  ],
+  "excluded": [
+    {
+      "from": "check_sandbox.py ESCAPES ffi-reach-codecs-through-json",
+      "description": "reaching codecs through a granted json",
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+    },
+    {
+      "from": "check_sandbox.py ESCAPES ffi-reach-os-system-through-os",
+      "description": "reaching os.system through a granted os, subprocess-free",
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+    },
+    {
+      "from": "check_sandbox.py ESCAPES ffi-reach-importlib",
+      "description": "using a granted importlib to reach another module",
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+    },
+    {
+      "from": "check_sandbox.py ESCAPES ffi-reach-builtins-type",
+      "description": "reaching a builtins type through a granted module's value",
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+    },
+    {
+      "from": "check_sandbox.py ESCAPES ffi-reach-globals",
+      "description": "laundering through __globals__ to reach builtins",
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+    },
+    {
+      "from": "check_sandbox.py ESCAPES ffi-reach-handle-foreign-object",
+      "description": "a handle exposing an object from another module",
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+    },
+    {
+      "from": "check_sandbox.py HONEST ffi-granted-module",
+      "description": "an allowed module works under the allow-list",
+      "reason": "needs a Python host to run the granted call; the corpus runs no host code"
+    },
+    {
+      "from": "check_sandbox.py HONEST no-budget-given",
+      "description": "everything when nothing is restricted",
+      "reason": "a run given no budget is outside the format (velaris-spec 4.6); what it grants is the reference's choice, not a rule"
+    },
+    {
+      "from": "check_sandbox.py HONEST ffi-deep-attribute-inside-grant",
+      "description": "a legitimate deep attribute inside the granted module still works",
+      "reason": "needs a Python host to run the granted call; the corpus runs no host code"
+    },
+    {
+      "from": "check_sandbox.py HONEST ffi-two-module-grant",
+      "description": "a two-module grant, each module used correctly",
+      "reason": "needs a Python host to run the granted call; the corpus runs no host code"
+    },
+    {
+      "from": "check_sandbox.py HONEST ffi-additive",
+      "description": "additive ffi: a plain ffi widens a named-module grant",
+      "reason": "needs a Python host to run the granted call; the corpus runs no host code; velaris-spec tests/L1 holds the parse of io,ffi,ffi:math"
+    },
+    {
+      "from": "check_sandbox.py HONEST args-not-budget",
+      "description": "args() carries the program's arguments, not the budget",
+      "reason": "about this command line's flags: the corpus gives a run its budget and its arguments separately"
+    },
+    {
+      "from": "check_sandbox.py HONEST args-not-deny",
+      "description": "args() is clean under --deny as well",
+      "reason": "about this command line's flags: the corpus gives a run its budget and its arguments separately"
+    }
+  ]
+}

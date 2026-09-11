@@ -1,0 +1,18 @@
+{
+  "id": "L1-budget-deny-scoped-refused",
+  "level": 1,
+  "kind": "budget",
+  "description": "a denial cannot be scoped: fs:write is not an effect",
+  "spec": [
+    "4.4"
+  ],
+  "from": "check_library.py BUDGETS deny-scoped-refused",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "deny": "fs:write"
+  },
+  "expect": {
+    "valid": false
+  }
+}

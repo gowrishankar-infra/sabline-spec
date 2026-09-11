@@ -1,0 +1,34 @@
+{
+  "id": "L1-budget-all-seven",
+  "level": 1,
+  "kind": "budget",
+  "description": "every effect, unscoped",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS all-seven",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "io,env,fs,net,clock,rand,ffi"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "clock",
+        "env",
+        "ffi",
+        "fs",
+        "io",
+        "net",
+        "rand"
+      ],
+      "ffi": "any",
+      "fs": "any",
+      "net": "any",
+      "counts": {}
+    }
+  }
+}

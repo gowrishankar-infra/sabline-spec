@@ -1,0 +1,48 @@
+{
+  "id": "L1-audit-pure",
+  "level": 1,
+  "kind": "audit",
+  "description": "a program with no uses clause declares nothing, and its safe_command grants nothing",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS pure",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn add(a: Int, b: Int) -> Int {\n    return a + b\n}\n\nfn main() {\n    let x = add(1, 2)\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": true,
+    "effects": [],
+    "functions": [
+      {
+        "name": "add",
+        "effects": [],
+        "can_fail": false
+      },
+      {
+        "name": "main",
+        "effects": [],
+        "can_fail": false
+      }
+    ],
+    "ffi_modules": [],
+    "ffi_any": false,
+    "fs_paths": {
+      "read": [],
+      "write": [],
+      "read_any": false,
+      "write_any": false
+    },
+    "net_hosts": {
+      "hosts": [],
+      "any": false
+    },
+    "safe_command": "velaris <file> --allow ''"
+  }
+}

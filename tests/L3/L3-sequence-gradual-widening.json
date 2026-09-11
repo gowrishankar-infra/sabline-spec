@@ -1,0 +1,142 @@
+{
+  "id": "L3-sequence-gradual-widening",
+  "level": 3,
+  "kind": "sequence",
+  "description": "six changes, each harmless on its own: the first five pass, the sixth sends a summary to a host three calls below main and fails, and the check passes again once the baseline is written again from the tree",
+  "spec": [
+    "9.1",
+    "9.6"
+  ],
+  "from": "check_ratchet.py SEQUENCES gradual-widening",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "app.vel": "import \"lib/text.vel\"\n\nfn main() uses io {\n    print(greeting(\"world\"))\n}\n",
+      "lib/text.vel": "fn greeting(who: Text) -> Text {\n    return \"hello, \" + who\n}\n"
+    },
+    "root": ".",
+    "steps": [
+      {
+        "description": "1: a text helper, pure",
+        "change": {
+          "lib/tidy.vel": "fn tidy(t: Text) -> Text {\n    return lower(t)\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "2: the greeting uses it",
+        "change": {
+          "lib/text.vel": "import \"tidy.vel\"\n\nfn greeting(who: Text) -> Text {\n    return \"hello, \" + tidy(who)\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "3: a summary of lines, pure",
+        "change": {
+          "lib/summary.vel": "fn summary(lines: List of Text) -> Text {\n    return to_text(length(lines)) + \" lines\"\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "4: main prints a summary",
+        "change": {
+          "app.vel": "import \"lib/text.vel\"\nimport \"lib/summary.vel\"\n\nfn main() uses io {\n    print(greeting(\"world\"))\n    print(summary([\"a\", \"b\"]))\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "5: an address, as text",
+        "change": {
+          "lib/summary.vel": "fn summary(lines: List of Text) -> Text {\n    return to_text(length(lines)) + \" lines\"\n}\n\nfn endpoint() -> Text {\n    return \"https://collector.example.net/v1\"\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "6: the summary is delivered, three calls down",
+        "change": {
+          "lib/deliver.vel": "fn send(body: Text) -> Text uses net or fail {\n    return try post(\"https://collector.example.net/v1\", body)\n}\n\nfn deliver(body: Text) -> Text uses net {\n    check send(body) {\n        ok r {\n            return r\n        }\n        fail why {\n            return why\n        }\n    }\n}\n",
+          "lib/summary.vel": "import \"deliver.vel\"\n\nfn summary(lines: List of Text) -> Text uses net {\n    return deliver(to_text(length(lines)))\n}\n\nfn endpoint() -> Text {\n    return \"https://collector.example.net/v1\"\n}\n",
+          "app.vel": "import \"lib/text.vel\"\nimport \"lib/summary.vel\"\n\nfn main() uses io, net {\n    print(greeting(\"world\"))\n    print(summary([\"a\", \"b\"]))\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "7: the baseline written again from this tree, as a change of its own",
+        "change": {},
+        "edit": null,
+        "rewrite": true,
+        "delete_baseline": false
+      }
+    ]
+  },
+  "expect": {
+    "steps": [
+      {
+        "verdict": "pass",
+        "widenings": []
+      },
+      {
+        "verdict": "pass",
+        "widenings": []
+      },
+      {
+        "verdict": "pass",
+        "widenings": []
+      },
+      {
+        "verdict": "pass",
+        "widenings": []
+      },
+      {
+        "verdict": "pass",
+        "widenings": []
+      },
+      {
+        "verdict": "widened",
+        "widenings": [
+          {
+            "kind": "grant",
+            "grant": "net:collector.example.net",
+            "rules": [
+              "W1",
+              "W3"
+            ],
+            "programs": [
+              "app.vel",
+              "lib/deliver.vel",
+              "lib/summary.vel"
+            ]
+          },
+          {
+            "kind": "function",
+            "program": "app.vel",
+            "function": "main",
+            "gained": [
+              "net"
+            ],
+            "rules": [
+              "W5"
+            ]
+          }
+        ]
+      },
+      {
+        "verdict": "pass",
+        "widenings": []
+      }
+    ]
+  }
+}

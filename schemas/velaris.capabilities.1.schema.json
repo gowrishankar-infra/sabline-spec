@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.3/schemas/velaris.capabilities.1.schema.json",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.4/schemas/velaris.capabilities.1.schema.json",
   "title": "velaris.capabilities/1",
   "description": "The capability surface a repository declares its programs may have (velaris-spec SPEC.md section 9): the union of every program's grants and a bound on its fs and net operations, and for each program its own grants, counts and functions' effects. A check derives the same from the working tree and fails when the tree needs more - compared with this document, never with a previous commit. Written and read by velaris-lang from 4.0.0. Within version 1 fields may be added and a consumer must ignore those it does not know, so objects here do not forbid other properties. This schema checks shape. SPEC.md section 9 states what it cannot: that programs are sorted by file, that grants are sorted and reduced (no grant covered by another in the same list), that a port is between 1 and 65535, and how paths are normalised before comparison.",
   "type": "object",

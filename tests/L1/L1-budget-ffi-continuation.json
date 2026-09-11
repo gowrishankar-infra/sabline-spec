@@ -1,0 +1,29 @@
+{
+  "id": "L1-budget-ffi-continuation",
+  "level": 1,
+  "kind": "budget",
+  "description": "ffi:math,json names two modules",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ffi-continuation",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi:math,json"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "ffi"
+      ],
+      "ffi": [
+        "json",
+        "math"
+      ],
+      "counts": {}
+    }
+  }
+}

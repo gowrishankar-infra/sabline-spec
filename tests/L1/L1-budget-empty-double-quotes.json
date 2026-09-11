@@ -1,0 +1,23 @@
+{
+  "id": "L1-budget-empty-double-quotes",
+  "level": 1,
+  "kind": "budget",
+  "description": "\"\" is an empty budget",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS empty-double-quotes",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "\"\""
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [],
+      "counts": {}
+    }
+  }
+}

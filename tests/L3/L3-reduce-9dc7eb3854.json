@@ -1,0 +1,25 @@
+{
+  "id": "L3-reduce-9dc7eb3854",
+  "level": 3,
+  "kind": "reduce",
+  "description": "net:*.example.com, net:a.example.com, net:b.example.org reduced is net:*.example.com, net:b.example.org",
+  "spec": [
+    "9.2"
+  ],
+  "from": "check_ratchet.py REDUCE",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grants": [
+      "net:*.example.com",
+      "net:a.example.com",
+      "net:b.example.org"
+    ]
+  },
+  "expect": {
+    "grants": [
+      "net:*.example.com",
+      "net:b.example.org"
+    ]
+  }
+}

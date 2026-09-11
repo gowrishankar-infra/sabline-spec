@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-path-comma",
+  "level": 1,
+  "kind": "budget",
+  "description": "a comma in a path written %2C",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS path-comma",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./a%2Cb.txt"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "./a,b.txt"
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

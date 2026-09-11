@@ -1,0 +1,41 @@
+{
+  "id": "L3-check-fs-declared-without-operation",
+  "level": 3,
+  "kind": "check",
+  "description": "a program that declares fs and names no file needs plain fs, which a baseline of paths does not cover",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py CHECKS fs-declared-without-operation",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "read.vel": "fn main() uses io, fs {\n    print(\"no file\")\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "fs",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "read.vel"
+        ]
+      }
+    ]
+  }
+}

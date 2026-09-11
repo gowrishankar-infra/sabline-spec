@@ -1,0 +1,56 @@
+{
+  "id": "L3-check-declared-wildcard-not-parent",
+  "level": 3,
+  "kind": "check",
+  "description": "...not the domain itself",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py CHECKS declared-wildcard-not-parent",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": {
+        "surface": {
+          "grants": [
+            "io",
+            "net:*.example.com"
+          ]
+        },
+        "programs": {
+          "poll.vel": {
+            "grants": [
+              "io",
+              "net:*.example.com"
+            ]
+          }
+        }
+      }
+    },
+    "change": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "net:example.com",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "poll.vel"
+        ]
+      }
+    ]
+  }
+}

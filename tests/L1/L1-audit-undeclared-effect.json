@@ -1,0 +1,25 @@
+{
+  "id": "L1-audit-undeclared-effect",
+  "level": 1,
+  "kind": "audit",
+  "description": "an operation in a function that declares nothing is refused before running (T1, E300)",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS undeclared-effect",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn main() {\n    print(\"x\")\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": false,
+    "problems_include": [
+      "E300"
+    ]
+  }
+}

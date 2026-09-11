@@ -1,0 +1,29 @@
+{
+  "id": "L3-check-statements-before-loop",
+  "level": 3,
+  "kind": "check",
+  "description": "statements added between a counter's start and its loop keep the bound of 4",
+  "spec": [
+    "9.4"
+  ],
+  "from": "check_ratchet.py CHECKS statements-before-loop",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "count.vel": "fn main() uses io, fs {\n    let i = 0\n    while i < 4 {\n        print(to_text(file_exists(\"data/in.csv\")))\n        i = i + 1\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "count.vel": "fn main() uses io, fs {\n    let i = 0\n    let noise = 2 * 3\n    print(\"starting\")\n    print(to_text(noise))\n    while i < 4 {\n        print(to_text(file_exists(\"data/in.csv\")))\n        i = i + 1\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "L3-check-main-imported-from-outside",
+  "level": 3,
+  "kind": "check",
+  "description": "a program whose main is imported from outside the checked directory needs what that main does, and fails when that widens",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py CHECKS main-imported-from-outside",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "repo/run.vel": "import \"../ext/app.vel\"\n",
+      "ext/app.vel": "fn main() uses io {\n    print(\"hi\")\n}\n"
+    },
+    "root": "repo",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "ext/app.vel": "fn main() uses io, net {\n    check fetch(\"https://x.example.org\") {\n        ok b {\n            print(b)\n        }\n        fail w {\n            print(w)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "net:x.example.org",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "run.vel"
+        ]
+      }
+    ]
+  }
+}

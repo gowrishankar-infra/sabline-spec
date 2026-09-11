@@ -1,0 +1,65 @@
+{
+  "id": "L1-audit-transitive",
+  "level": 1,
+  "kind": "audit",
+  "description": "effects is the union of the functions' declarations; a helper's fs reaches main's signature",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS transitive",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn load() -> Text uses fs or fail {\n    return try read_file(\"data/in.csv\")\n}\n\nfn show() -> Text uses fs {\n    check load() {\n        ok t {\n            return t\n        }\n        fail w {\n            return w\n        }\n    }\n}\n\nfn main() uses io, fs {\n    print(show())\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": true,
+    "effects": [
+      "fs",
+      "io"
+    ],
+    "functions": [
+      {
+        "name": "load",
+        "effects": [
+          "fs"
+        ],
+        "can_fail": true
+      },
+      {
+        "name": "show",
+        "effects": [
+          "fs"
+        ],
+        "can_fail": false
+      },
+      {
+        "name": "main",
+        "effects": [
+          "fs",
+          "io"
+        ],
+        "can_fail": false
+      }
+    ],
+    "ffi_modules": [],
+    "ffi_any": false,
+    "fs_paths": {
+      "read": [
+        "data/in.csv"
+      ],
+      "write": [],
+      "read_any": false,
+      "write_any": false
+    },
+    "net_hosts": {
+      "hosts": [],
+      "any": false
+    },
+    "safe_command": "velaris <file> --allow fs:read:data/in.csv,io"
+  }
+}

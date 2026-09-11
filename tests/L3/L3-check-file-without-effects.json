@@ -1,0 +1,29 @@
+{
+  "id": "L3-check-file-without-effects",
+  "level": 3,
+  "kind": "check",
+  "description": "a file added with no effects",
+  "spec": [
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS file-without-effects",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "lib/math.vel": "fn twice(n: Int) -> Int {\n    return n * 2\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

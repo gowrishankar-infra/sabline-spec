@@ -95,10 +95,15 @@ Software Artifacts, <https://slsa.dev>, and its provenance predicate.
   digest, and SLSA defines levels of build integrity and a provenance
   predicate that records how an artifact was built.
 - **How this differs:** `velaris.audit/1` and `velaris.capabilities/1`
-  are unsigned, name no artifact digest, and describe what a source
-  text declares rather than how or by whom an artifact was built;
-  nothing here makes them attestations, and carrying an audit as an
-  in-toto predicate is an open question (SPEC.md Q11).
+  describe what a source text declares rather than how or by whom an
+  artifact was built, and on their own they are unsigned and name no
+  artifact digest. From 0.4, SPEC.md section 8.5 defines an in-toto
+  predicate type that carries an audit with the digests of the files
+  audited; in-toto supplies the Statement, the envelope and the
+  signing, and this format only the predicate. SLSA has no counterpart
+  here: nothing in this format says how an artifact was built. The
+  reference implementation publishes the predicate type and does not
+  yet write Statements of it.
 
 ## SARIF
 
@@ -110,8 +115,36 @@ OASIS. *Static Analysis Results Interchange Format (SARIF) Version
   or code-scanning service can read the output of many analysers.
 - **How this differs:** `velaris.audit/1` describes a program - what
   it declares, names and promises - rather than listing findings; its
-  `problems` resemble SARIF results but are not SARIF, and the
-  reference implementation emits no SARIF.
+  `problems` resemble SARIF results but are not SARIF. SARIF is not
+  part of this format. The reference implementation also writes its
+  findings as SARIF 2.1.0, from velaris-lang 3.4; until 0.4 this file
+  said it emitted none, which was true of 3.1.1, the version it was
+  first written against.
+
+## Distributed attacks in persistent-state AI control
+
+Hills, J., Caspary, I. and Cooper Stickland, A. "Distributed Attacks in
+Persistent-State AI Control." arXiv:2607.02514, 2026.
+
+- **What it does:** introduces Iterative VibeCoding, a setting in which
+  a coding agent builds software over a sequence of pull requests in a
+  persistent codebase while pursuing a covert side task, and compares
+  gradual attacks, which spread the side task across pull requests,
+  with attacks concentrated in one. It reports that no single monitor
+  it tested is robust to both, that gradual attacks evade diff monitors
+  at high rates, and that a stateful monitor tracking suspicious
+  buildup across pull requests detects them better.
+- **How this differs:** the capability ratchet of section 9 is not a
+  monitor of intent. It is a deterministic comparison of what a
+  repository's Velaris programs need - effects, paths, hosts, modules,
+  operation counts, each function's effects - with a baseline the
+  repository declared, at every change and never against the change
+  before. It sees the part of a gradual attack that needs capability
+  the baseline did not declare, and nothing else: a side task that
+  stays inside the declared surface, or is not written in Velaris, is
+  outside it. It has not been measured on that paper's benchmark. The
+  record does not say the paper influenced the ratchet, which shipped
+  in velaris-lang 4.0.0 after it was posted.
 
 ## Also close
 

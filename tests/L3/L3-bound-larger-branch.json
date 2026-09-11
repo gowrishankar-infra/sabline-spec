@@ -1,0 +1,20 @@
+{
+  "id": "L3-bound-larger-branch",
+  "level": 3,
+  "kind": "bound",
+  "description": "the larger branch of an if counts",
+  "spec": [
+    "9.4"
+  ],
+  "from": "check_ratchet.py BOUNDS larger-branch",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "source": "fn main() uses fs {\n    if file_exists(\"a\") {\n        let x = file_exists(\"b\")\n        let y = file_exists(\"c\")\n    } else {\n        let z = file_exists(\"d\")\n    }\n}\n",
+    "function": "main"
+  },
+  "expect": {
+    "fs": 3,
+    "net": 0
+  }
+}

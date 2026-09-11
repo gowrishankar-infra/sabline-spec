@@ -1,0 +1,24 @@
+{
+  "id": "L2-io-under-io",
+  "level": 2,
+  "kind": "run",
+  "description": "printing when io is allowed",
+  "spec": [
+    "4.1"
+  ],
+  "from": "check_sandbox.py HONEST io-under-io",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io {\n    print(\"hello\")\n}\n",
+    "allow": "io",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": [
+      "hello"
+    ]
+  }
+}

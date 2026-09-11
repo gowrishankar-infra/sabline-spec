@@ -1,16 +1,18 @@
 # The Velaris capability format
 
-Version 0.3, 2026-09-11. Dedicated to the public domain under CC0 1.0;
+Version 0.4, 2026-09-11. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
 <https://github.com/gowrishankar-infra/velaris-lang>. This text was
 first extracted from velaris-lang 3.1.1 (commit `25d2c05`); version 0.2
 tracked velaris-lang 3.3.0, which fixed the five defects the extraction
-found; version 0.3 tracks velaris-lang 4.0.0, which reads and writes
-the baseline of section 9, so that section is no longer provisional.
-Conformance is defined by the suite in that repository (section 10),
-not by this text.
+found; version 0.3 tracked velaris-lang 4.0.0, which reads and writes
+the baseline of section 9; version 0.4 tracks velaris-lang 4.1.0, and
+adds a conformance corpus any implementation can run, in
+[tests/](tests), with the levels of conformance in
+[CONFORMANCE.md](CONFORMANCE.md). Conformance is defined by that
+corpus (section 10), not by this text.
 
 ## 0. About this document
 
@@ -27,7 +29,9 @@ This document specifies:
   names (section 8);
 - `velaris.capabilities/1`, the JSON baseline in which a repository
   declares the capability surface its programs may have, and the
-  comparison that fails a change which widens it (section 9).
+  comparison that fails a change which widens it (section 9);
+- an in-toto predicate type that carries `velaris.audit/1` with the
+  digests of the files audited (section 8.5).
 
 It does not specify the rest of the Velaris language - types,
 contracts, proofs, failure - or the time and memory limits a runtime
@@ -37,16 +41,17 @@ SPEC.md, EMBEDDING.md and THREAT_MODEL.md cover those.
 
 **Conventions.** MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
 read as described in RFC 2119 and RFC 8174 when, and only when, they
-appear in capitals. "The reference" means velaris-lang 4.0.0. A
+appear in capitals. "The reference" means velaris-lang 4.1.0. A
 paragraph marked *Reference behaviour* records what the reference does
 at a point this document does not yet settle; each such point is also
-an open question in section 11. A paragraph marked *Resolved in 0.2* or
-*Resolved in 0.3* records a point that an earlier version left open and
-that version settles, naming the velaris-lang release that made the
-reference match.
+an open question in section 11. A paragraph marked *Resolved in 0.2*,
+*0.3* or *0.4* records a point that an earlier version left open, or
+stated wrongly, and that version settles, naming the velaris-lang
+release that made the reference match.
 
 Where this document and the reference disagree, that is a bug in one of
-them. Until it is resolved, the conformance suite decides.
+them. Until it is resolved, the conformance corpus decides (section
+10).
 
 ## 1. Terms
 
@@ -237,9 +242,19 @@ before running the program, naming the seven.
 reference accepted any identifier in a `uses` clause: `uses io, teleport`
 compiled, `velaris.audit/1` listed `teleport` among the effects, and the
 audit's `safe_command` became a budget that does not parse. From 3.3.0
-the reference rejects an unknown name with E300, naming the seven, so
-`velaris.audit/1`'s `effects` is always a subset of them. This closes
-open question Q1.
+the reference rejects an unknown name with E300, naming the seven. This
+closes open question Q1.
+
+*Resolved in 0.4 (velaris-lang 4.1.0).* Versions 0.2 and 0.3 concluded
+from that rejection that `velaris.audit/1`'s `effects` is always a
+subset of the seven. That was true of a document whose `ok` is true,
+and not of the document that reports the E300: from 3.3.0 to 4.0.1 the
+reference still listed `teleport` in that document's `effects`,
+`functions[].effects` and `safe_command`, which then did not parse.
+Writing the conformance corpus found it. From 4.1.0 an audit leaves a
+name that is not an effect out of all three, whether or not `ok` is
+true; the E300 problem still names it. A producer MUST NOT put any name
+but the seven in `effects` or `functions[].effects`.
 
 ## 4. The grant grammar
 
@@ -741,7 +756,7 @@ was added.
 | `velaris_version` | string | the version of the producer | |
 | `ok` | boolean | true when the program compiled: it parsed, and the checks the reference makes before running - of `main`, effects, types and proofs - reported no problem. A file with no `main` is audited as a library and is not a problem. A proof that a promise is false (E700) makes `ok` false. | |
 | `problems` | array | one object per problem: `code` (`E` and three digits), `message`, `line` (integer), `file`, `fixes` (array of strings). Empty when `ok` is true. | |
-| `effects` | array of strings | the union of the declarations of every function defined in the audited file, sorted, without repeats. Through the transitive rule it includes everything those functions can reach in imported files. When `ok` is true, it is an upper bound on the effects a run can attempt. When `ok` is false it is whatever could be read - not a bound - and may be empty. | |
+| `effects` | array of strings | the union of the declarations of every function defined in the audited file, sorted, without repeats. Through the transitive rule it includes everything those functions can reach in imported files. When `ok` is true, it is an upper bound on the effects a run can attempt. When `ok` is false it is whatever could be read - not a bound - and may be empty. Either way it holds only names of the seven effects: a name in a `uses` clause that is not an effect is left out (section 3.2, resolved in 0.4). | |
 | `functions` | array | one object per function defined in the audited file, in source order (inline function values are not listed): `name`; `effects`, its own declaration, sorted; `can_fail`, true when declared `or fail`; `requires` and `ensures`, each contract expression as text; `status`; `loops_unshown` (integer, added 2.62). | |
 | `functions[].status` | string | `"proven"`: every promise was proven before running, which happens only when a prover ran. `"checked at runtime"`: it has promises, not all proven. `"no promises"`: no `requires` or `ensures`. `"error"`: a problem was reported on the function's line. | |
 | `proven_share` | number or null | 100 × (functions with a promise whose status is `"proven"`) ÷ (functions with at least one `requires` or `ensures`), rounded to one decimal place; null when no function has one | |
@@ -776,12 +791,13 @@ For each name in `effects`, in order:
   `net:E` for each entry E of `hosts`, an IPv6 host bracketed and any
   `, @ [ ] %` in a host percent-encoded (section 5.2). Each `net_hosts`
   entry is already in this form.
-- any other name: the name itself (always one of the seven, since a
-  `uses` clause naming anything else no longer compiles, section 3.2).
+- any other name: the name itself (always one of the seven, since
+  `effects` holds no other name, section 3.2).
 
 The results are joined with commas. Because the paths and hosts are
-escaped, `safe_command` always parses, and `parse_budget` of it
-reproduces the grants it was built from.
+escaped and every name is an effect, `safe_command` always parses,
+whether or not `ok` is true, and `parse_budget` of it reproduces the
+grants it was built from.
 
 ### 8.4 What an audit does not tell you
 
@@ -811,9 +827,91 @@ reproduces the grants it was built from.
   in a declaration was copied into it. From 3.3.0 IPv6 hosts are
   bracketed and `, @ [ ] %` are percent-encoded in paths and hosts
   (sections 5.1, 5.2), so `safe_command` round-trips; and an unknown
-  name in a `uses` clause no longer compiles (section 3.2), so none
-  reaches the audit. This closes open question Q5.
+  name in a `uses` clause no longer compiles (section 3.2). This closes
+  open question Q5. It left one case, found in 0.4: the audit that
+  reports that E300 still copied the name into `safe_command` until
+  velaris-lang 4.1.0 (section 3.2).
 - **When `ok` is false, no field bounds anything.**
+
+### 8.5 The audit as an in-toto predicate
+
+*New in 0.4.* A `velaris.audit/1` document names no artifact and
+carries no signature, so on its own it cannot say which source file it
+describes or who says so. This section defines an in-toto attestation
+predicate type that binds an audit to the digests of the files audited,
+so that a signed in-toto Statement can say it. It closes open question
+Q11.
+
+**Predicate type:**
+<https://gowrishankar-infra.github.io/velaris-lang/capability/v1>. That
+URL is where the type's description and schema are published, on the
+reference's documentation site, and it resolves to them.
+
+A Statement of this type is an in-toto Statement v1
+(<https://github.com/in-toto/attestation>):
+
+```json
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {"name": "examples/effects.vel", "digest": {"sha256": "..."}}
+  ],
+  "predicateType": "https://gowrishankar-infra.github.io/velaris-lang/capability/v1",
+  "predicate": {
+    "producer": {"name": "velaris-lang",
+                 "uri": "https://github.com/gowrishankar-infra/velaris-lang"},
+    "specification": "velaris-spec 0.4",
+    "auditedAt": "2026-09-11T00:00:00Z",
+    "audit": {"schema": "velaris.audit/1", "...": "..."}
+  }
+}
+```
+
+- **`subject`.** The first subject MUST be the file audited: its `name`
+  is its path as the producer was given it, `/`-separated, and its
+  `digest` MUST include `sha256` of its bytes. The files it imports
+  SHOULD follow, one subject each, since `ffi_modules`, `ffi_any`,
+  `fs_paths` and `net_hosts` read them too (section 8.2). A producer
+  MUST produce the audit from exactly the bytes the digests name.
+- **`predicate.audit`** (required): a `velaris.audit/1` document, as
+  section 8 defines it and
+  [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json)
+  checks.
+- **`predicate.producer`** (required): `name`, the implementation that
+  wrote the audit, and optionally `uri`. Its version is the audit's
+  `velaris_version`.
+- **`predicate.specification`** (optional): the version of this
+  document the producer followed, as `velaris-spec 0.4`.
+- **`predicate.auditedAt`** (optional): when the audit was made, RFC
+  3339 in UTC, as the producer's clock says.
+- **`predicate.conformance`** (optional): `levels`, the levels of
+  [CONFORMANCE.md](CONFORMANCE.md) the producer claims, and `corpus`,
+  the corpus it ran. A claim, not evidence.
+
+The predicate's schema is
+[schemas/capability-predicate.v1.schema.json](schemas/capability-predicate.v1.schema.json);
+the reference publishes the same file at the predicate type's URL, and
+`tools/check_sync.py` fails if the two differ.
+
+**Parsing rules.** In-toto's standard parsing rules apply, the
+monotonic principle included. A consumer MUST ignore a field it does
+not know, in the predicate and in the audit (section 8.1). Fields may
+be added within v1; a change of meaning is a new predicate type,
+`.../capability/v2`. A consumer MUST check that the first subject's
+digest is the digest of the file it means to trust.
+
+**What a Statement of this type says**, when its signature verifies:
+that the signer ran the named producer on the bytes the subjects name
+and got this audit. It does not say that the audit is right, that the
+program is safe to run, or that any runtime will enforce the budget in
+`safe_command`; and when `audit.ok` is false it says nothing about what
+the program may do (section 8.4).
+
+velaris-lang 4.1.0 publishes the predicate type and its schema, and
+does not yet write Statements of it. One can be assembled from
+`velaris audit FILE --json` and the file's digest;
+[examples/capability-statement.json](examples/capability-statement.json)
+was assembled that way.
 
 ## 9. velaris.capabilities/1
 
@@ -1177,45 +1275,44 @@ its report twice, its `fs` count would be 3: W2 and W4 fail.
 
 ## 10. Conformance
 
-Conformance is defined by the suite in the reference implementation's
-repository, not by this text. From velaris-lang 3.2.0, its
-ARCHITECTURE.md names that suite: `check_termination.py`,
-`check_sandbox.py`, `check_refusals.py`, `check_fallible.py` and
-`check_library.py`, and from velaris-lang 4.0.0 `check_ratchet.py`. An
-implementation claiming velaris.capabilities compliance must pass the
-subset of those six that does not require the prover - that is, each
-suite as it runs when the Z3 prover is not installed. Each suite
-detects the prover and, without it, skips the checks that need it or
-asserts the runtime fallback instead; `check_ratchet.py` needs none.
+Conformance is defined by the conformance corpus in [tests/](tests),
+not by this text. [CONFORMANCE.md](CONFORMANCE.md) defines three
+levels - L1 Declaration, L2 Enforcement, L3 Ratchet - and names, for
+each, the behaviours of sections 3 to 9 an implementation must have
+and the cases that test them; [tests/README.md](tests/README.md) is
+the contract for running the cases. The corpus is JSON, and runnable
+by an implementation in any language that has never seen the
+reference: 444 cases, 298 at L1, 37 at L2 and 109 at L3, 5 of them
+recording the ratchet's known limits. No level requires a theorem
+prover.
 
-The claim covers sections 3 to 9: the effects and the transitive rule,
-the grant grammar, scoped grants and counts, enforcement,
-`velaris.audit/1`, and from 0.3 `velaris.capabilities/1` and its
-comparison.
+*Resolved in 0.4 (velaris-lang 4.1.0).* Versions 0.1 to 0.3 defined
+conformance as passing six of the reference's own suites without the
+prover - suites written against the reference's command line and
+Python library, which an implementation in another language could run
+only through an adapter (open question Q8). The corpus replaces that
+definition. It is written from three of those suites' tables by
+velaris-lang's `build_conformance.py`, and a drift test in both
+repositories fails when the committed corpus is not what the suites
+say. What it leaves out, and why, is in `tests/index.json` and
+CONFORMANCE.md: the cases that depend on Python's object model, and a
+few rules no case yet tests.
+
+The table below is the reference's suites as they stand; they test the
+reference, beyond the corpus.
 
 | Suite | What it holds | Sections |
 |---|---|---|
-| `check_sandbox.py` | escape attempts against a budget given on the command line: each effect refused; an effect hidden two helpers down; a refusal caught and carried on; the module list through `py`, `py_json`, `py_new` and a submodule path; the attribute-chain bound of section 5.3 - codecs through json, os.system through os, importlib to another module, a builtins type through a value, a `__globals__`/`__class__` traversal, a foreign object through a handle - with a deep attribute inside the granted module and a two-module grant still running; additive `fs`, `net` and `ffi`; a path outside a prefix, a write under a read grant, `..`, and a symbolic link (POSIX only); a host outside the list, including a name when an address was granted; a port; a wildcard's parent domain; redirects to a granted and to an ungranted host; counts on `fs` and `net`; `env` under `io` | 4, 5, 6 |
-| `check_library.py` | the same through the reference's library, its HTTP door's ceiling (section 5.5) and its MCP server; that the library and the server report the same audit; that `safe_command` round-trips for awkward paths and hosts (section 8.3); that every malformed budget raises a readable budget error and never a traceback (section 4.2); that the command line's `audit --json` is `velaris.audit/1` and validates against the schema (section 8) | 4, 5, 6, 8 |
+| `check_sandbox.py` | escape attempts against a budget given on the command line, each refused with the code it must carry (from 4.1): each effect refused; an effect hidden two helpers down; a refusal caught and carried on; the module list through `py`, `py_json`, `py_new` and a submodule path; the attribute-chain bound of section 5.3 - codecs through json, os.system through os, importlib to another module, a builtins type through a value, a `__globals__`/`__class__` traversal, a foreign object through a handle - with a deep attribute inside the granted module and a two-module grant still running; additive `fs`, `net` and `ffi`; a path outside a prefix, a write under a read grant, `..`, and a symbolic link (where the system will make one); a host outside the list, including a name when an address was granted; a port; a wildcard's parent domain; redirects to a granted and to an ungranted host; counts on `fs` and `net`; `env` under `io`; and from 4.1 `@0`, a count spent by an operation that then fails, a URL with no scheme taken as HTTPS, and an existence check under a write grant. The corpus's level 2 is written from it | 4, 5, 6 |
+| `check_library.py` | the same through the reference's library, its HTTP door's ceiling (section 5.5) and its MCP server; that the library and the server report the same audit; that `safe_command` round-trips for awkward paths and hosts (section 8.3); that every malformed budget raises a readable budget error and never a traceback (section 4.2); from 4.1, 55 budgets each held to the grants sections 4 and 5 give it, or to its refusal, and 18 programs each audited to the effect surface section 8 gives it; that the command line's `audit --json` is `velaris.audit/1` and validates against the schema (section 8). The corpus's level 1 is written from its tables | 3.2, 4, 5, 6, 8 |
 | `check_refusals.py` | wrong programs refused with the right code, among them an undeclared effect (E300) | 3.2 |
 | `check_fallible.py` | every fallible builtin refused when its failure is ignored, and its failure catchable - the redirect failure of G4 among them | 6, 8 |
 | `check_termination.py` | the termination verdict for each of 44 adversarial loops, which `velaris.audit/1` reports as `loops_unshown` | 8 |
-| `check_ratchet.py` | the comparison of section 9.6, through the reference's command line, in scratch trees and real git histories: a six-commit history whose sixth commit reaches a new host three calls down, failing at that commit only, with the file, function, line and call chain named; a widening merged once and still failing against the baseline at every later commit, where a comparison with the previous commit reports nothing; widenings through an import, the standard library, a path prefix, a count, a wildcard host, a URL, path or module built while running, a new module, a new direction, and a program whose `main` is imported from outside the tree; an effect added to a function while its program's grants stay the same (W5); and changes that must pass - narrowing, reordering and reformatting, a file with no effects, a new program inside the surface, a literal moved into a variable, a function renamed or moved; the covering relation (9.5) and the operation bound (9.4) case by case; a baseline from another version (a warning), and baselines that cannot be read (exit 2) | 9 |
+| `check_ratchet.py` | the comparison of section 9.6, through the reference's command line, in scratch trees and real git histories: a six-commit history whose sixth commit reaches a new host three calls down, failing at that commit only, with the file, function, line and call chain named; a widening merged once and still failing against the baseline at every later commit, where a comparison with the previous commit reports nothing; widenings through an import, the standard library, a path prefix, a count, a wildcard host, a URL, path or module built while running, a new module, a new direction, and a program whose `main` is imported from outside the tree; an effect added to a function while its program's grants stay the same (W5); and changes that must pass - narrowing, reordering and reformatting, a file with no effects, a new program inside the surface, a literal moved into a variable, a function renamed or moved; the covering relation (9.5) and the operation bound (9.4) case by case; a baseline from another version (a warning), and baselines that cannot be read (exit 2); from 4.1, the baseline written for each of 14 trees, the writer refusing to replace a baseline unasked, and the five known limits of 9.8, each with the outcome the reference gives. The corpus's level 3 is written from its tables | 9 |
 
-What the suite cannot yet do as a conformance suite:
-
-- **It is written against the reference's interfaces.** It runs
-  `python velaris.py` and imports the `velaris` module. An
-  implementation in another language must be driven through an adapter
-  that offers the same command line and library calls. No
-  language-neutral harness exists in this version (open question Q8).
-- **It does not test every rule stated here.** A reading of
-  `check_sandbox.py` and `check_library.py` at 3.1.1 found no case for
-  the points listed in open question Q9. From velaris-lang 3.3.0 several
-  of them have cases - the attribute chain through a granted module,
-  `ffi` together with `ffi:M`, IPv6 grants bracketed and not - added
-  with the fixes; the rest remain untested. Passing the suite is
-  evidence about the cases it holds, and no more.
+Neither the suites nor the corpus test every rule stated here;
+CONFORMANCE.md lists the rules no case tests. Passing the corpus is
+evidence about the cases it holds, and no more.
 
 ## 11. Open questions
 
@@ -1223,14 +1320,16 @@ Each question is a point where this document records the reference's
 behaviour, or where the reference's own text and behaviour disagree,
 without settling what is right. Q1, Q2, Q3, Q5 and Q6 were open in
 version 0.1 and are **resolved in 0.2** (velaris-lang 3.3.0); Q4 is
-**resolved in 0.3** (velaris-lang 4.0.0). They are kept here, marked
+**resolved in 0.3** (velaris-lang 4.0.0); Q8, Q9 and Q11 are
+**resolved in 0.4** (velaris-lang 4.1.0). They are kept here, marked
 resolved, so the record of what changed stays with the question.
 
 - **Q1. Unknown names in declarations. Resolved in 0.2.** Version 0.1
   asked whether a checker should reject a `uses` name that is not one of
   the seven. From velaris-lang 3.3.0 it does, with E300 naming the
-  seven, so `velaris.audit/1`'s `effects` is always a subset of them
-  (section 3.2).
+  seven; from 4.1.0 the audit reporting that E300 lists only the seven
+  too, so `velaris.audit/1`'s `effects` is always a subset of them
+  (section 3.2, resolved in 0.4).
 - **Q2. "Grants are additive" and `ffi`. Resolved in 0.2.** Version 0.1
   followed the parser, which restricted `ffi` to the named modules when
   both `ffi` and `ffi:M` appeared, against the reference text's "Grants
@@ -1266,29 +1365,36 @@ resolved, so the record of what changed stays with the question.
   Windows `data/..\..\x` lies outside `data`: the version 0.2 rule
   would have let a recorded prefix cover it. Whether a baseline should
   instead normalise `\` on every platform is still open.
-- **Q8. A conformance harness for other languages.** The suite drives
-  the reference's command line and Python library (section 10). What
-  would an implementation in another language run?
-- **Q9. Rules stated here and not yet tested by the suite.** Partly
-  addressed in 0.2. From velaris-lang 3.3.0 the suite covers a function
-  argument that is a dotted path through a granted module's attributes
-  (section 5.3), `ffi` together with `ffi:M` (section 4.3), and IPv6
-  grants bracketed and not (section 5.2). Still untested: a URL without
-  a scheme taken as HTTPS (section 5.2); an existence check under a
-  write-only grant (section 5.1); `@0`, and a count spent by an
-  operation that then fails (section 5.4).
+- **Q8. A conformance harness for other languages. Resolved in 0.4.**
+  Versions 0.1 to 0.3 defined conformance by suites that drive the
+  reference's command line and Python library. From 0.4 conformance is
+  the corpus in `tests/`, JSON cases with a runner contract
+  (`tests/README.md`), at three levels (CONFORMANCE.md), which an
+  implementation in any language runs its own way (section 10).
+- **Q9. Rules stated here and not yet tested by the suite. Resolved in
+  0.4.** From velaris-lang 3.3.0 the suite covers a function argument
+  that is a dotted path through a granted module's attributes (section
+  5.3), `ffi` together with `ffi:M` (section 4.3), and IPv6 grants
+  bracketed and not (section 5.2). From 4.1.0 it covers the four 0.3
+  listed as untested - a URL without a scheme taken as HTTPS (5.2), an
+  existence check under a write-only grant (5.1), `@0`, and a count
+  spent by an operation that then fails (5.4) - and each is a case of
+  the corpus. The rules still without a case are listed in
+  CONFORMANCE.md, and belong there rather than here.
 - **Q10. The reference text's table.** Its row `...@N` reads as if a
   count could follow any grant; the reference accepts counts only on
   `fs` and `net` (section 4.2).
-- **Q11. Attestation.** `velaris.audit/1` is unsigned and names no
-  artifact digest. Carrying it as an in-toto predicate, with a
-  predicate type of its own, would let a signed statement say which
-  source file was audited (see PRIOR_ART.md). This version defines no
-  predicate type.
+- **Q11. Attestation. Resolved in 0.4.** Version 0.3 recorded that
+  `velaris.audit/1` is unsigned and names no artifact digest. Section
+  8.5 defines an in-toto predicate type,
+  `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`,
+  that carries an audit with the digests of the files audited, so a
+  signed Statement can say which source it describes. The reference
+  publishes the type; it does not yet write Statements of it.
 
 ## Appendix A. The reference binding
 
-Informative: which builtins of velaris-lang 4.0.0 perform which
+Informative: which builtins of velaris-lang 4.1.0 perform which
 operations. They are unchanged since 3.3.0.
 
 | Builtins | Effect | Operation | Checked beyond the effect |
@@ -1328,6 +1434,20 @@ E310 (T5).
 
 ## Appendix C. Changes
 
+- **0.4**, 2026-09-11: tracks velaris-lang 4.1.0. Conformance is a
+  corpus any implementation can run: `tests/`, 444 JSON cases written
+  from three of the reference's suites and held to them by a drift test,
+  with a runner contract (`tests/README.md`) and three levels, L1
+  Declaration, L2 Enforcement and L3 Ratchet (CONFORMANCE.md); section
+  10 is rewritten around it, and Q8 and Q9 are resolved. Section 8.5
+  defines an in-toto predicate type for `velaris.audit/1`, resolving
+  Q11. Sections 3.2, 8.2 and 8.3 are corrected: they said an audit's
+  `effects` is always a subset of the seven and its `safe_command`
+  always parses, which was false, until velaris-lang 4.1.0, for the
+  audit of a program refused for naming an unknown effect. Section 2
+  still quotes velaris-lang SPEC.md sections 6, 7 and 7.1 word for word -
+  those sections did not change in 4.1 - so `tools/check_sync.py` still
+  passes.
 - **0.3**, 2026-09-11: tracks velaris-lang 4.0.0, which reads and writes
   baselines. Section 9 is no longer provisional: `velaris.capabilities/0`
   is replaced by `velaris.capabilities/1`, which records the

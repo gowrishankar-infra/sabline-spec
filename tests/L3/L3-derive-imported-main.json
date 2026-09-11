@@ -1,0 +1,37 @@
+{
+  "id": "L3-derive-imported-main",
+  "level": 3,
+  "kind": "derive",
+  "description": "a file that imports its main needs what that main does, and records no functions of its own",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py DERIVE imported-main",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "repo/run.vel": "import \"../ext/app.vel\"\n",
+      "ext/app.vel": "fn main() uses io {\n    print(\"hi\")\n}\n"
+    },
+    "root": "repo"
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "io"
+      ],
+      "counts": {}
+    },
+    "programs": [
+      {
+        "file": "run.vel",
+        "grants": [
+          "io"
+        ],
+        "counts": {},
+        "functions": {}
+      }
+    ]
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "examples/effects.vel",
+      "digest": {
+        "sha256": "e483365ce74a20770a1ef503f185f4de2c16b0524797408784a235e78b6baafb"
+      }
+    }
+  ],
+  "predicateType": "https://gowrishankar-infra.github.io/velaris-lang/capability/v1",
+  "predicate": {
+    "producer": {
+      "name": "velaris-lang",
+      "uri": "https://github.com/gowrishankar-infra/velaris-lang"
+    },
+    "specification": "velaris-spec 0.4",
+    "auditedAt": "2026-09-11T10:07:06Z",
+    "conformance": {
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "corpus": "velaris-spec 0.4 tests/, 444 cases"
+    },
+    "audit": {
+      "schema": "velaris.audit/1",
+      "velaris_version": "4.1.0",
+      "ok": true,
+      "problems": [],
+      "effects": [
+        "clock",
+        "fs",
+        "io",
+        "rand"
+      ],
+      "functions": [
+        {
+          "name": "dice",
+          "effects": [
+            "rand"
+          ],
+          "can_fail": false,
+          "requires": [],
+          "ensures": [],
+          "status": "no promises",
+          "loops_unshown": 0
+        },
+        {
+          "name": "timestamp",
+          "effects": [
+            "clock"
+          ],
+          "can_fail": false,
+          "requires": [],
+          "ensures": [],
+          "status": "no promises",
+          "loops_unshown": 0
+        },
+        {
+          "name": "save_report",
+          "effects": [
+            "fs"
+          ],
+          "can_fail": false,
+          "requires": [],
+          "ensures": [],
+          "status": "no promises",
+          "loops_unshown": 0
+        },
+        {
+          "name": "main",
+          "effects": [
+            "clock",
+            "fs",
+            "io",
+            "rand"
+          ],
+          "can_fail": false,
+          "requires": [],
+          "ensures": [],
+          "status": "no promises",
+          "loops_unshown": 0
+        }
+      ],
+      "proven_share": null,
+      "safe_command": "velaris <file> --allow clock,fs:read:report.txt,fs:write:report.txt,io,rand",
+      "warnings": [],
+      "ffi_modules": [],
+      "loops_unshown": 0,
+      "contract_coverage": [],
+      "fs_paths": {
+        "read": [
+          "report.txt"
+        ],
+        "write": [
+          "report.txt"
+        ],
+        "read_any": false,
+        "write_any": false
+      },
+      "net_hosts": {
+        "hosts": [],
+        "any": false
+      },
+      "ffi_any": false
+    }
+  }
+}

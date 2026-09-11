@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-ef4a6cc7d6",
+  "level": 3,
+  "kind": "covers",
+  "description": "fs:read:/ covers fs:read:/etc/passwd",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "fs:read:/",
+    "other": "fs:read:/etc/passwd"
+  },
+  "expect": {
+    "covers": true
+  }
+}

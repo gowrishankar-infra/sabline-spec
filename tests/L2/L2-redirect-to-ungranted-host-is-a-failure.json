@@ -1,0 +1,26 @@
+{
+  "id": "L2-redirect-to-ungranted-host-is-a-failure",
+  "level": 2,
+  "kind": "run",
+  "description": "a redirect to an ungranted host is a failure the program sees",
+  "spec": [
+    "5.2",
+    "6 G4"
+  ],
+  "from": "check_sandbox.py HONEST redirect-to-ungranted-host-is-a-failure",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, net {\n    check fetch(\"http://127.0.0.1:{PORT_A}/go\") {\n        ok b {\n            print(\"FOLLOWED IT\")\n        }\n        fail w {\n            print(\"caught: \" + w)\n        }\n    }\n}\n",
+    "allow": "io,net:127.0.0.1:{PORT_A}",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": [
+      "caught: ",
+      "localhost:{PORT_B}"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "L1-budget-mixed-awkward",
+  "level": 1,
+  "kind": "budget",
+  "description": "an escaped path, an IPv6 host with a port and a module in one budget",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS mixed-awkward",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "io,fs:read:./x%2Cy,net:[::1]:8443,ffi:math"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "ffi",
+        "fs",
+        "io",
+        "net"
+      ],
+      "ffi": [
+        "math"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "./x,y"
+        }
+      ],
+      "net": [
+        {
+          "host": "::1",
+          "port": 8443
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

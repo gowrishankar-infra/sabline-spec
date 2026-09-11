@@ -1,5 +1,64 @@
 # Changelog
 
+## 0.4 - 2026-09-11
+
+Tracks velaris-lang 4.1.0. Conformance becomes something an
+implementation can run, and the audit gets a predicate type.
+
+- **CONFORMANCE.md** defines three levels. L1 Declaration: parse the
+  budget grammar, check declarations, compute a program's effect
+  surface and emit `velaris.audit/1` that validates. L2 Enforcement:
+  refuse at run time every operation outside the budget, with the code
+  G2 gives it, uncatchably. L3 Ratchet: write and read
+  `velaris.capabilities/1` and classify widening and narrowing for every
+  kind of scope. L2 and L3 each need L1; L3 does not need L2. No level
+  needs a theorem prover. Each level lists the behaviours it requires
+  and the cases that test them, and says what no case tests yet.
+- **tests/** is the conformance corpus: 444 JSON cases - 298 at L1
+  (280 budgets, 18 audits), 37 at L2 (runs under a budget, with a
+  fixture of files and two local HTTP servers) and 109 at L3
+  (derivations, checks, two sequences, the write guard, the covering
+  rule, reduction, operation bounds), 5 of them recording the ratchet's
+  known limits with the outcome the reference gives today.
+  `tests/README.md` is the runner contract; `tests/case.schema.json`
+  checks a case's shape; `tests/index.json` lists every case and the 13
+  scenarios left out, with why - six that depend on Python's object
+  model, four that need a Python host, a run given no budget, and two
+  about the reference's command line.
+- The corpus is **written by velaris-lang's `build_conformance.py`** from
+  the tables of `check_sandbox.py`, `check_library.py` and
+  `check_ratchet.py`, which assert the same entries against velaris-lang.
+  CI here, and in velaris-lang, regenerates it and fails when it
+  differs from what is committed, and runs velaris-lang against it.
+- **Section 10** is rewritten around the corpus; **Q8** (a harness for
+  other languages) and **Q9** (rules the suite did not test) are
+  resolved - the four rules 0.3 listed as untested are cases now.
+- **Section 8.5** defines an in-toto predicate type,
+  `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`,
+  for `velaris.audit/1` bound to the digests of the files audited,
+  with `schemas/capability-predicate.v1.schema.json` and an example
+  Statement in `examples/`. The URL resolves: velaris-lang publishes the
+  description and the same schema there, and `tools/check_sync.py` fails
+  if the two schemas differ. **Q11** is resolved. REGISTRY_SUBMISSION.md
+  holds a pull request, prepared and not sent, listing the type with
+  in-toto.
+- **Corrected: sections 3.2, 8.2 and 8.3** said that an audit's
+  `effects` is always a subset of the seven effects and that
+  `safe_command` always parses. Neither was true of the audit of a
+  program refused for naming an unknown effect: from velaris-lang
+  3.3.0 to 4.0.1 it listed the name in `effects` and in `safe_command`.
+  Writing the corpus found it; velaris-lang 4.1.0 leaves the name out,
+  and the sections now say what holds, and require it.
+- PRIOR_ART.md: the SARIF entry said the reference emits no SARIF,
+  which stopped being true in velaris-lang 3.4; the in-toto entry
+  describes the predicate type; a new entry places the ratchet beside
+  Hills, Caspary and Cooper Stickland's "Distributed Attacks in
+  Persistent-State AI Control" (2026), without claiming it as a source.
+- CITATION.cff and PROVENANCE.md are added; NOTICE covers the corpus.
+- The JSON Schemas' `$id` values point at the `v0.4` tag. Section 2
+  still quotes velaris-lang SPEC.md sections 6, 7 and 7.1 word for
+  word - they did not change in 4.1 - so `tools/check_sync.py` passes.
+
 ## 0.3 - 2026-09-11
 
 Tracks velaris-lang 4.0.0, which reads and writes the baseline of

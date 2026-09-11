@@ -1,0 +1,20 @@
+{
+  "id": "L3-bound-nested-loops-multiply",
+  "level": 3,
+  "kind": "bound",
+  "description": "nested loops multiply",
+  "spec": [
+    "9.4"
+  ],
+  "from": "check_ratchet.py BOUNDS nested-loops-multiply",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "source": "fn main() uses fs {\n    for i in 0 to 3 {\n        for j in 1 to 5 {\n            let e = file_exists(\"x\")\n        }\n    }\n}\n",
+    "function": "main"
+  },
+  "expect": {
+    "fs": 12,
+    "net": 0
+  }
+}

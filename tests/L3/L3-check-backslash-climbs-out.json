@@ -1,0 +1,56 @@
+{
+  "id": "L3-check-backslash-climbs-out",
+  "level": 3,
+  "kind": "check",
+  "description": "a path that climbs out with backslashes is not taken as inside a prefix: on Windows data/..\\..\\x leaves data",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py CHECKS backslash-climbs-out",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": {
+        "surface": {
+          "grants": [
+            "fs:read:data",
+            "io"
+          ]
+        },
+        "programs": {
+          "read.vel": {
+            "grants": [
+              "fs:read:data",
+              "io"
+            ]
+          }
+        }
+      }
+    },
+    "change": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/..\\\\..\\\\secret.txt\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "fs:read:data/..\\..\\secret.txt",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "read.vel"
+        ]
+      }
+    ]
+  }
+}

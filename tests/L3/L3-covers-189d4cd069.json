@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-189d4cd069",
+  "level": 3,
+  "kind": "covers",
+  "description": "net:[::1]:8080 does not cover net:[::1]",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "net:[::1]:8080",
+    "other": "net:[::1]"
+  },
+  "expect": {
+    "covers": false
+  }
+}

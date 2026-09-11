@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-fs-direction-any-path",
+  "level": 1,
+  "kind": "budget",
+  "description": "fs:read is one direction, any path",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS fs-direction-any-path",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": null
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

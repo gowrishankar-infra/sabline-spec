@@ -1,0 +1,19 @@
+{
+  "id": "L3-covers-b6b1442229",
+  "level": 3,
+  "kind": "covers",
+  "description": "net:h.example:443 does not cover net:h.example",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py COVERING",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "grant": "net:h.example:443",
+    "other": "net:h.example"
+  },
+  "expect": {
+    "covers": false
+  }
+}

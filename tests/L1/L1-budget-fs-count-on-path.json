@@ -1,0 +1,33 @@
+{
+  "id": "L1-budget-fs-count-on-path",
+  "level": 1,
+  "kind": "budget",
+  "description": "a path whose last @ is followed by digits has a count",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS fs-count-on-path",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:./x@2"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "./x"
+        }
+      ],
+      "counts": {
+        "fs": 2
+      }
+    }
+  }
+}

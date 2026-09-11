@@ -1,0 +1,37 @@
+{
+  "id": "L2-fs-count-spent-by-failed-operation",
+  "level": 2,
+  "kind": "run",
+  "description": "an operation that fails has still spent its count",
+  "spec": [
+    "5.4"
+  ],
+  "from": "check_sandbox.py ESCAPES fs-count-spent-by-failed-operation",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, fs {\n    check read_file(\"{DATA}/missing.txt\") {\n        ok t {\n            print(\"READ IT\")\n        }\n        fail w {\n            print(\"missing\")\n        }\n    }\n    if file_exists(\"{DATA}/a.txt\") {\n        print(\"GOT THROUGH\")\n    }\n}\n",
+    "allow": "io,fs:read:{DATA}@1",
+    "args": []
+  },
+  "expect": {
+    "outcome": "refused",
+    "code": "E315",
+    "stdout_includes": [
+      "missing"
+    ],
+    "stdout_excludes": [
+      "READ IT",
+      "WROTE IT",
+      "REACHED IT",
+      "CALLED IT",
+      "OPENED IT",
+      "GOT THROUGH",
+      "CARRIED ON",
+      "SWALLOWED THE REFUSAL",
+      "FOLLOWED IT"
+    ],
+    "must_not_exist": []
+  }
+}

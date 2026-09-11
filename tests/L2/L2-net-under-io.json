@@ -1,0 +1,35 @@
+{
+  "id": "L2-net-under-io",
+  "level": 2,
+  "kind": "run",
+  "description": "reaching the network",
+  "spec": [
+    "6 G2"
+  ],
+  "from": "check_sandbox.py ESCAPES net-under-io",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, net {\n    check fetch_status(\"https://example.com\") {\n        ok code {\n            print(\"REACHED IT\")\n        }\n        fail why {\n            print(\"failed\")\n        }\n    }\n}\n",
+    "allow": "io",
+    "args": []
+  },
+  "expect": {
+    "outcome": "refused",
+    "code": "E310",
+    "stdout_includes": [],
+    "stdout_excludes": [
+      "READ IT",
+      "WROTE IT",
+      "REACHED IT",
+      "CALLED IT",
+      "OPENED IT",
+      "GOT THROUGH",
+      "CARRIED ON",
+      "SWALLOWED THE REFUSAL",
+      "FOLLOWED IT"
+    ],
+    "must_not_exist": []
+  }
+}

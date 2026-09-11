@@ -1,0 +1,30 @@
+{
+  "id": "L3-check-older-baseline-version",
+  "level": 3,
+  "kind": "check",
+  "description": "a baseline from an older producer is compared, not refused",
+  "spec": [
+    "9.2",
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS older-baseline-version",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": {
+        "velaris_version": "1.0.0"
+      }
+    },
+    "change": {}
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

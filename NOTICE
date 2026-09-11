@@ -1,10 +1,11 @@
 velaris-spec
 https://github.com/gowrishankar-infra/velaris-spec
 
-The specification text (SPEC.md), the JSON Schemas (schemas/), and
-everything else in this repository - the examples, the two scripts in
-tools/ and the CI workflow - are dedicated to the public domain under
-CC0 1.0 Universal. The full legal code is in LICENSE.
+The specification text (SPEC.md, CONFORMANCE.md), the JSON Schemas
+(schemas/), the conformance corpus (tests/), and everything else in
+this repository - the examples, the two scripts in tools/ and the CI
+workflow - are dedicated to the public domain under CC0 1.0 Universal.
+The full legal code is in LICENSE.
 
 Why CC0: a format is only useful if people can implement it without
 asking. Under CC0 anyone may implement this format, in any language,
@@ -20,10 +21,12 @@ is governed by its MIT License, not by this repository's CC0.
 Two things CC0 does not do, as its own section 4(a) says: it does not
 affect trademark or patent rights. And a dedication to the public
 domain is not a statement that an implementation conforms; conformance
-is defined by the suite in the velaris-lang repository (SPEC.md
-section 10).
+is defined by the corpus in tests/, at the levels of CONFORMANCE.md
+(SPEC.md section 10).
 
 Three sections of SPEC.md (section 2) are copied from velaris-lang's
-SPEC.md, which is part of velaris-lang and is MIT-licensed. The author
-of both works dedicates this copy of that text to the public domain
-under CC0 along with the rest of this repository.
+SPEC.md, the cases in tests/ are transcribed from tables in
+velaris-lang's test suites, and schemas/capability-predicate.v1.schema.json
+is also published by velaris-lang; velaris-lang is MIT-licensed. The
+author of both works dedicates these copies to the public domain under
+CC0 along with the rest of this repository.

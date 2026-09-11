@@ -1,0 +1,24 @@
+{
+  "id": "L2-net-additive",
+  "level": 2,
+  "kind": "run",
+  "description": "additive net: two host grants both apply",
+  "spec": [
+    "4.3"
+  ],
+  "from": "check_sandbox.py HONEST net-additive",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, net {\n    check fetch_status(\"http://127.0.0.1:{PORT_A}/\") {\n        ok a {\n            check fetch_status(\"http://localhost:{PORT_B}/\") {\n                ok b { print(\"net additive ok\") }\n                fail w { print(\"second failed: \" + w) }\n            }\n        }\n        fail w { print(\"first failed: \" + w) }\n    }\n}\n",
+    "allow": "io,net:127.0.0.1:{PORT_A},net:localhost:{PORT_B}",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": [
+      "net additive ok"
+    ]
+  }
+}

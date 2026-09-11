@@ -1,0 +1,24 @@
+{
+  "id": "L2-redirect-to-granted-host-is-followed",
+  "level": 2,
+  "kind": "run",
+  "description": "a redirect to a granted host is followed",
+  "spec": [
+    "5.2"
+  ],
+  "from": "check_sandbox.py HONEST redirect-to-granted-host-is-followed",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, net {\n    check fetch(\"http://127.0.0.1:{PORT_A}/go\") {\n        ok b {\n            print(\"landed: \" + b)\n        }\n        fail w {\n            print(\"caught: \" + w)\n        }\n    }\n}\n",
+    "allow": "io,net:127.0.0.1:{PORT_A},net:localhost:{PORT_B}",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": [
+      "landed: hello"
+    ]
+  }
+}

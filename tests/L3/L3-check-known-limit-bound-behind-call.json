@@ -1,0 +1,40 @@
+{
+  "id": "L3-check-known-limit-bound-behind-call",
+  "level": 3,
+  "kind": "check",
+  "description": "a loop bound moved behind a function call loses its bound and is reported as unbounded",
+  "spec": [
+    "9.4"
+  ],
+  "from": "check_ratchet.py CHECKS known-limit-bound-behind-call",
+  "requires": [],
+  "known_limit": "A change that does not widen, reported as one. The loop still turns three times, but the bound comes from fixed rules that read a limit only from literals and variables the text fixes, not from what a function returns.",
+  "input": {
+    "tree": {
+      "scan.vel": "fn main() uses io, fs {\n    for i in 0 to 3 {\n        print(to_text(file_exists(\"data/x\")))\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "scan.vel": "fn limit() -> Int {\n    return 3\n}\n\nfn main() uses io, fs {\n    for i in 0 to limit() {\n        print(to_text(file_exists(\"data/x\")))\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "count",
+        "effect": "fs",
+        "program": "scan.vel",
+        "current": null,
+        "rules": [
+          "W2",
+          "W4"
+        ]
+      }
+    ]
+  }
+}

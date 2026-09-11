@@ -1,0 +1,29 @@
+{
+  "id": "L1-budget-ffi-module-named-random",
+  "level": 1,
+  "kind": "budget",
+  "description": "ffi:math,random names the Python module random",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ffi-module-named-random",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi:math,random"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "ffi"
+      ],
+      "ffi": [
+        "math",
+        "random"
+      ],
+      "counts": {}
+    }
+  }
+}

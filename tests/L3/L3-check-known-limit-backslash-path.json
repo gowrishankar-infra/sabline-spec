@@ -1,0 +1,57 @@
+{
+  "id": "L3-check-known-limit-backslash-path",
+  "level": 3,
+  "kind": "check",
+  "description": "a path written with a backslash is covered only by the same text, so data\\in.csv is outside a recorded prefix data even where \\ separates directories",
+  "spec": [
+    "9.5",
+    "Q7"
+  ],
+  "from": "check_ratchet.py CHECKS known-limit-backslash-path",
+  "requires": [],
+  "known_limit": "A change that does not widen, reported as one, on Windows. A path holding a backslash is compared whole, because on Windows data/..\\..\\x leaves data; the price is that data\\in.csv, which is inside data there, is reported too (velaris-spec open question Q7).",
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": {
+        "surface": {
+          "grants": [
+            "fs:read:data",
+            "io"
+          ]
+        },
+        "programs": {
+          "read.vel": {
+            "grants": [
+              "fs:read:data",
+              "io"
+            ]
+          }
+        }
+      }
+    },
+    "change": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data\\\\in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "fs:read:data\\in.csv",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "read.vel"
+        ]
+      }
+    ]
+  }
+}

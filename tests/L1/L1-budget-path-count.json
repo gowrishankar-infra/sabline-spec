@@ -1,0 +1,33 @@
+{
+  "id": "L1-budget-path-count",
+  "level": 1,
+  "kind": "budget",
+  "description": "a write grant with a count",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS path-count",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:write:./out@5"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "write",
+          "path": "./out"
+        }
+      ],
+      "counts": {
+        "fs": 5
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "L3-check-url-star-is-any-host",
+  "level": 3,
+  "kind": "check",
+  "description": "a host changed from api.example.com to *.example.com in a URL: a star in a URL is taken as any host",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py CHECKS url-star-is-any-host",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://*.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "net",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "poll.vel"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "L1-budget-ffi-dotted-module",
+  "level": 1,
+  "kind": "budget",
+  "description": "ffi:os.path grants os, all of it",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ffi-dotted-module",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi:os.path"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "ffi"
+      ],
+      "ffi": [
+        "os"
+      ],
+      "counts": {}
+    }
+  }
+}

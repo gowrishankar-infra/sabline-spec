@@ -1,0 +1,69 @@
+{
+  "id": "L3-derive-fixed-text",
+  "level": 3,
+  "kind": "derive",
+  "description": "a literal bound once by let, and + of two fixed texts, are fixed text",
+  "spec": [
+    "9.3"
+  ],
+  "from": "check_ratchet.py DERIVE fixed-text",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    let base = \"https://api.example.com\"\n    let url = base + \"/ping\"\n    return try fetch_status(url)\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n",
+      "read.vel": "fn main() uses io, fs {\n    let where = \"data/in.csv\"\n    check read_file(where) {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "fs:read:data/in.csv",
+        "io",
+        "net:api.example.com"
+      ],
+      "counts": {
+        "fs": 1,
+        "net": 3
+      }
+    },
+    "programs": [
+      {
+        "file": "poll.vel",
+        "grants": [
+          "io",
+          "net:api.example.com"
+        ],
+        "counts": {
+          "net": 3
+        },
+        "functions": {
+          "main": [
+            "io",
+            "net"
+          ],
+          "ping": [
+            "net"
+          ]
+        }
+      },
+      {
+        "file": "read.vel",
+        "grants": [
+          "fs:read:data/in.csv",
+          "io"
+        ],
+        "counts": {
+          "fs": 1
+        },
+        "functions": {
+          "main": [
+            "fs",
+            "io"
+          ]
+        }
+      }
+    ]
+  }
+}

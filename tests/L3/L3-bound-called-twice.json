@@ -1,0 +1,20 @@
+{
+  "id": "L3-bound-called-twice",
+  "level": 3,
+  "kind": "bound",
+  "description": "a function called twice counts twice",
+  "spec": [
+    "9.4"
+  ],
+  "from": "check_ratchet.py BOUNDS called-twice",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "source": "fn one() -> Bool uses fs {\n    return file_exists(\"x\")\n}\n\nfn main() uses fs {\n    let a = one()\n    let b = one()\n}\n",
+    "function": "main"
+  },
+  "expect": {
+    "fs": 2,
+    "net": 0
+  }
+}

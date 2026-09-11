@@ -1,0 +1,47 @@
+{
+  "id": "L3-derive-counter-bound",
+  "level": 3,
+  "kind": "derive",
+  "description": "a counter started by let and moved one step toward a fixed limit bounds its loop",
+  "spec": [
+    "9.4"
+  ],
+  "from": "check_ratchet.py DERIVE counter-bound",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "count.vel": "fn main() uses io, fs {\n    let i = 0\n    while i < 4 {\n        print(to_text(file_exists(\"data/in.csv\")))\n        i = i + 1\n    }\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "fs:read:data/in.csv",
+        "io"
+      ],
+      "counts": {
+        "fs": 4
+      }
+    },
+    "programs": [
+      {
+        "file": "count.vel",
+        "grants": [
+          "fs:read:data/in.csv",
+          "io"
+        ],
+        "counts": {
+          "fs": 4
+        },
+        "functions": {
+          "main": [
+            "fs",
+            "io"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "L3-check-stdlib-module-brings-net",
+  "level": 3,
+  "kind": "check",
+  "description": "the standard library's http.vel brings net, unscoped because its URL is a parameter",
+  "spec": [
+    "9.3",
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS stdlib-module-brings-net",
+  "requires": [
+    "stdlib"
+  ],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "app.vel": "import \"lib/text.vel\"\n\nfn main() uses io {\n    print(greeting(\"world\"))\n}\n",
+      "lib/text.vel": "fn greeting(who: Text) -> Text {\n    return \"hello, \" + who\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "app.vel": "import \"lib/text.vel\"\nimport \"http.vel\" as http\n\nfn main() uses io, net {\n    check http.get(\"https://api.example.com\") {\n        ok body {\n            print(body)\n        }\n        fail why {\n            print(greeting(why))\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "net",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "app.vel"
+        ]
+      },
+      {
+        "kind": "function",
+        "program": "app.vel",
+        "function": "main",
+        "gained": [
+          "net"
+        ],
+        "rules": [
+          "W5"
+        ]
+      }
+    ]
+  }
+}

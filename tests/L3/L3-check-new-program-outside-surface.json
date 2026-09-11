@@ -1,0 +1,40 @@
+{
+  "id": "L3-check-new-program-outside-surface",
+  "level": 3,
+  "kind": "check",
+  "description": "a program the baseline does not record is held to the surface alone, and fails W1 when it reaches a new host",
+  "spec": [
+    "9.6 W1"
+  ],
+  "from": "check_ratchet.py CHECKS new-program-outside-surface",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "other.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://cdn.example.org/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "net:cdn.example.org",
+        "rules": [
+          "W1"
+        ],
+        "programs": [
+          "other.vel"
+        ]
+      }
+    ]
+  }
+}

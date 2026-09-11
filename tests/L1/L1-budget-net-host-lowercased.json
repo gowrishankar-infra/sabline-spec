@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-net-host-lowercased",
+  "level": 1,
+  "kind": "budget",
+  "description": "a host is lower-cased and its trailing dots removed",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS net-host-lowercased",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "net:API.Example.COM."
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "net"
+      ],
+      "net": [
+        {
+          "host": "api.example.com",
+          "port": null
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

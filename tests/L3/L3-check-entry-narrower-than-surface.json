@@ -1,0 +1,41 @@
+{
+  "id": "L3-check-entry-narrower-than-surface",
+  "level": 3,
+  "kind": "check",
+  "description": "a recorded program reaching a host another program already had fails: the surface is unchanged, its own entry is not (W3)",
+  "spec": [
+    "9.6 W3"
+  ],
+  "from": "check_ratchet.py CHECKS entry-narrower-than-surface",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "a.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n",
+      "b.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://cdn.example.org/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "b.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "net:api.example.com",
+        "rules": [
+          "W3"
+        ],
+        "programs": [
+          "b.vel"
+        ]
+      }
+    ]
+  }
+}

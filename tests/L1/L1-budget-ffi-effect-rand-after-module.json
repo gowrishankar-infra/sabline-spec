@@ -1,0 +1,29 @@
+{
+  "id": "L1-budget-ffi-effect-rand-after-module",
+  "level": 1,
+  "kind": "budget",
+  "description": "ffi:math,rand grants the effect rand",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ffi-effect-rand-after-module",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi:math,rand"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "ffi",
+        "rand"
+      ],
+      "ffi": [
+        "math"
+      ],
+      "counts": {}
+    }
+  }
+}

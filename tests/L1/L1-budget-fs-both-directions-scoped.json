@@ -1,0 +1,35 @@
+{
+  "id": "L1-budget-fs-both-directions-scoped",
+  "level": 1,
+  "kind": "budget",
+  "description": "fs:read,fs:write grants both directions as two grants, not plain fs",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS fs-both-directions-scoped",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read,fs:write"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": null
+        },
+        {
+          "direction": "write",
+          "path": null
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

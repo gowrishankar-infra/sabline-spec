@@ -1,0 +1,56 @@
+{
+  "id": "L3-check-declared-prefix-not-outside",
+  "level": 3,
+  "kind": "check",
+  "description": "...and nothing outside it",
+  "spec": [
+    "9.5"
+  ],
+  "from": "check_ratchet.py CHECKS declared-prefix-not-outside",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/sub/x.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": {
+        "surface": {
+          "grants": [
+            "fs:read:data",
+            "io"
+          ]
+        },
+        "programs": {
+          "read.vel": {
+            "grants": [
+              "fs:read:data",
+              "io"
+            ]
+          }
+        }
+      }
+    },
+    "change": {
+      "read.vel": "fn main() uses io, fs {\n    check read_file(\"config.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "fs:read:config.csv",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "read.vel"
+        ]
+      }
+    ]
+  }
+}

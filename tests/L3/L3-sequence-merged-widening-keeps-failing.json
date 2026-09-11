@@ -1,0 +1,251 @@
+{
+  "id": "L3-sequence-merged-widening-keeps-failing",
+  "level": 3,
+  "kind": "sequence",
+  "description": "a count widened and merged anyway fails at every later step until the baseline is edited; seven small steps from 10 are reported against the declared 10; deleting the baseline makes the check fail, not pass",
+  "spec": [
+    "9.1",
+    "9.6"
+  ],
+  "from": "check_ratchet.py SEQUENCES merged-widening-keeps-failing",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 10 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "steps": [
+      {
+        "description": "twenty requests a run",
+        "change": {
+          "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 20 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "an unrelated change after the widening was merged",
+        "change": {
+          "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    print(\"polling\")\n    for i in 0 to 20 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "40 requests a run",
+        "change": {
+          "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 40 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "80 requests a run",
+        "change": {
+          "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 80 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "160 requests a run",
+        "change": {
+          "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 160 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "320 requests a run",
+        "change": {
+          "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 320 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "640 requests a run",
+        "change": {
+          "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 640 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "1000 requests a run",
+        "change": {
+          "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 1000 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+        },
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "the baseline edited to accept 1000 requests a run",
+        "change": {},
+        "edit": {
+          "surface": {
+            "counts": {
+              "net": 1000
+            }
+          },
+          "programs": {
+            "poll.vel": {
+              "counts": {
+                "net": 1000
+              }
+            }
+          }
+        },
+        "rewrite": false,
+        "delete_baseline": false
+      },
+      {
+        "description": "velaris.capabilities deleted",
+        "change": {},
+        "edit": null,
+        "rewrite": false,
+        "delete_baseline": true
+      }
+    ]
+  },
+  "expect": {
+    "steps": [
+      {
+        "verdict": "widened",
+        "widenings": [
+          {
+            "kind": "count",
+            "effect": "net",
+            "program": "poll.vel",
+            "current": 20,
+            "rules": [
+              "W2",
+              "W4"
+            ]
+          }
+        ]
+      },
+      {
+        "verdict": "widened",
+        "widenings": [
+          {
+            "kind": "count",
+            "effect": "net",
+            "program": "poll.vel",
+            "current": 20,
+            "rules": [
+              "W2",
+              "W4"
+            ]
+          }
+        ]
+      },
+      {
+        "verdict": "widened",
+        "widenings": [
+          {
+            "kind": "count",
+            "effect": "net",
+            "program": "poll.vel",
+            "current": 40,
+            "rules": [
+              "W2",
+              "W4"
+            ]
+          }
+        ]
+      },
+      {
+        "verdict": "widened",
+        "widenings": [
+          {
+            "kind": "count",
+            "effect": "net",
+            "program": "poll.vel",
+            "current": 80,
+            "rules": [
+              "W2",
+              "W4"
+            ]
+          }
+        ]
+      },
+      {
+        "verdict": "widened",
+        "widenings": [
+          {
+            "kind": "count",
+            "effect": "net",
+            "program": "poll.vel",
+            "current": 160,
+            "rules": [
+              "W2",
+              "W4"
+            ]
+          }
+        ]
+      },
+      {
+        "verdict": "widened",
+        "widenings": [
+          {
+            "kind": "count",
+            "effect": "net",
+            "program": "poll.vel",
+            "current": 320,
+            "rules": [
+              "W2",
+              "W4"
+            ]
+          }
+        ]
+      },
+      {
+        "verdict": "widened",
+        "widenings": [
+          {
+            "kind": "count",
+            "effect": "net",
+            "program": "poll.vel",
+            "current": 640,
+            "rules": [
+              "W2",
+              "W4"
+            ]
+          }
+        ]
+      },
+      {
+        "verdict": "widened",
+        "widenings": [
+          {
+            "kind": "count",
+            "effect": "net",
+            "program": "poll.vel",
+            "current": 1000,
+            "rules": [
+              "W2",
+              "W4"
+            ]
+          }
+        ]
+      },
+      {
+        "verdict": "pass",
+        "widenings": []
+      },
+      {
+        "verdict": "cannot-compare"
+      }
+    ]
+  }
+}

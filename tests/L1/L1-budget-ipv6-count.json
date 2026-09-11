@@ -1,0 +1,33 @@
+{
+  "id": "L1-budget-ipv6-count",
+  "level": 1,
+  "kind": "budget",
+  "description": "an IPv6 grant with a count",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ipv6-count",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "net:[::1]@3"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "net"
+      ],
+      "net": [
+        {
+          "host": "::1",
+          "port": null
+        }
+      ],
+      "counts": {
+        "net": 3
+      }
+    }
+  }
+}

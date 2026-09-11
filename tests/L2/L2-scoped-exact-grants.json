@@ -1,0 +1,26 @@
+{
+  "id": "L2-scoped-exact-grants",
+  "level": 2,
+  "kind": "run",
+  "description": "an honest program using exactly its grants",
+  "spec": [
+    "5.1",
+    "5.2",
+    "5.4"
+  ],
+  "from": "check_sandbox.py HONEST scoped-exact-grants",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, env, fs, net {\n    check read_file(\"{DATA}/a.txt\") {\n        ok t {\n            write_file(\"{OUT}/copy.txt\", t)\n            check fetch_status(\"http://127.0.0.1:{PORT_A}/\") {\n                ok c {\n                    print(format(\"all grants used, status {}, path set: {}\",\n                                 c, length(env(\"PATH\", \"\")) > 0))\n                }\n                fail w {\n                    print(\"fetch failed: \" + w)\n                }\n            }\n        }\n        fail w {\n            print(\"read failed: \" + w)\n        }\n    }\n}\n",
+    "allow": "io,env,fs:read:{DATA},fs:write:{OUT}@5,net:127.0.0.1:{PORT_A}@5",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": [
+      "all grants used, status 200"
+    ]
+  }
+}

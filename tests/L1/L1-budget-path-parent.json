@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-path-parent",
+  "level": 1,
+  "kind": "budget",
+  "description": "a path above the working directory",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS path-parent",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:../up"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "../up"
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

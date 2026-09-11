@@ -1,0 +1,31 @@
+{
+  "id": "L3-check-function-renamed",
+  "level": 3,
+  "kind": "check",
+  "description": "a function renamed, its effects unchanged",
+  "spec": [
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS function-renamed",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "app.vel": "import \"lib/text.vel\"\nimport \"lib/store.vel\"\n\nfn helper(n: Int) -> Int {\n    return n + 1\n}\n\nfn main() uses io, fs {\n    let total = helper(1)\n    let g = greeting(\"x\")\n    save(g)\n    for i in 0 to 4 {\n        print(to_text(file_exists(\"data/in.csv\")))\n    }\n    print(to_text(total))\n}\n",
+      "lib/text.vel": "fn greeting(who: Text) -> Text {\n    return \"hello, \" + who\n}\n",
+      "lib/store.vel": "fn save(line: Text) uses fs {\n    write_file(\"out/log.txt\", line)\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "app.vel": "import \"lib/text.vel\"\nimport \"lib/store.vel\"\n\nfn plus_one(n: Int) -> Int {\n    return n + 1\n}\n\nfn main() uses io, fs {\n    let total = plus_one(1)\n    let g = greeting(\"x\")\n    save(g)\n    for i in 0 to 4 {\n        print(to_text(file_exists(\"data/in.csv\")))\n    }\n    print(to_text(total))\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-ipv6-zone",
+  "level": 1,
+  "kind": "budget",
+  "description": "an IPv6 zone identifier's % written %25",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ipv6-zone",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "net:[fe80::1%25eth0]"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "net"
+      ],
+      "net": [
+        {
+          "host": "fe80::1%eth0",
+          "port": null
+        }
+      ],
+      "counts": {}
+    }
+  }
+}

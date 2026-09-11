@@ -1,0 +1,18 @@
+{
+  "id": "L1-budget-malformed-a04877f113",
+  "level": 1,
+  "kind": "budget",
+  "description": "refused whole: \"ffi:math@\"",
+  "spec": [
+    "4.2"
+  ],
+  "from": "check_library.py malformed_budgets()",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi:math@"
+  },
+  "expect": {
+    "valid": false
+  }
+}

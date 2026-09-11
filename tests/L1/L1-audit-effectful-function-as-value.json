@@ -1,0 +1,25 @@
+{
+  "id": "L1-audit-effectful-function-as-value",
+  "level": 1,
+  "kind": "audit",
+  "description": "a function that declares an effect cannot be passed as a value (T4, E530)",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS effectful-function-as-value",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn shout(t: Text) -> Text uses io {\n    print(t)\n    return t\n}\n\nfn main() uses io {\n    let f = shout\n    print(\"x\")\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": false,
+    "problems_include": [
+      "E530"
+    ]
+  }
+}

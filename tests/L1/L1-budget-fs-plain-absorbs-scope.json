@@ -1,0 +1,28 @@
+{
+  "id": "L1-budget-fs-plain-absorbs-scope",
+  "level": 1,
+  "kind": "budget",
+  "description": "fs,fs:read:./a@5 is any path, at most 5 operations",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS fs-plain-absorbs-scope",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs,fs:read:./a@5"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": "any",
+      "counts": {
+        "fs": 5
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "L3-check-new-effect",
+  "level": 3,
+  "kind": "check",
+  "description": "an effect the surface has no grant of is a new effect",
+  "spec": [
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS new-effect",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "app.vel": "fn main() uses io {\n    print(\"hi\")\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "app.vel": "fn main() uses io, clock {\n    print(to_text(now()))\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "grant",
+        "grant": "clock",
+        "rules": [
+          "W1",
+          "W3"
+        ],
+        "programs": [
+          "app.vel"
+        ]
+      },
+      {
+        "kind": "function",
+        "program": "app.vel",
+        "function": "main",
+        "gained": [
+          "clock"
+        ],
+        "rules": [
+          "W5"
+        ]
+      }
+    ]
+  }
+}

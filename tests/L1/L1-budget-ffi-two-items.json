@@ -1,0 +1,29 @@
+{
+  "id": "L1-budget-ffi-two-items",
+  "level": 1,
+  "kind": "budget",
+  "description": "two ffi:M items grant both modules",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ffi-two-items",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi:math,ffi:json"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "ffi"
+      ],
+      "ffi": [
+        "json",
+        "math"
+      ],
+      "counts": {}
+    }
+  }
+}

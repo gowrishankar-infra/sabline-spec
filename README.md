@@ -8,12 +8,15 @@ JSON documents that report and record all of it.
 
 **Reference implementation: velaris-lang
 (https://github.com/gowrishankar-infra/velaris-lang). Conformance is
-defined by the suite in that repository.**
+defined by the corpus in [tests/](tests), at the three levels of
+[CONFORMANCE.md](CONFORMANCE.md).**
 
-Version 0.3, 2026-09-11. First extracted from velaris-lang 3.1.1;
+Version 0.4, 2026-09-11. First extracted from velaris-lang 3.1.1;
 version 0.2 tracked velaris-lang 3.3.0, which fixed the five defects
-the extraction found; version 0.3 tracks velaris-lang 4.0.0, which
-reads and writes the baseline of section 9.
+the extraction found; version 0.3 tracked velaris-lang 4.0.0, which
+reads and writes the baseline of section 9; version 0.4 tracks
+velaris-lang 4.1.0, and adds the conformance corpus and an in-toto
+predicate type.
 
 ## What it covers
 
@@ -41,6 +44,15 @@ reads and writes the baseline of section 9.
   it (`velaris capabilities init`) and checks against it (`velaris
   capabilities check`). The provisional `/0` form of 0.1 and 0.2 is
   superseded; its schema is kept for the record.
+- **An in-toto predicate type** for `velaris.audit/1`,
+  `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`, so
+  a signed statement can say which source files an audit describes
+  (section 8.5, [schemas/capability-predicate.v1.schema.json](schemas/capability-predicate.v1.schema.json)).
+- **Conformance** at three levels - L1 Declaration, L2 Enforcement, L3
+  Ratchet - defined by a corpus of 444 JSON cases that an
+  implementation in any language runs its own way, with a runner
+  contract ([CONFORMANCE.md](CONFORMANCE.md), [tests/](tests)). No level
+  needs a theorem prover.
 
 ## What it does not cover
 
@@ -53,24 +65,35 @@ SPEC.md section 7 lists what a budget does not bound.
 
 SPEC.md section 2 quotes velaris-lang SPEC.md sections 6, 7 and 7.1
 word for word, and the rest of the document elaborates them.
-`tools/check_sync.py` compares the quoted text with velaris-lang's and
-fails on any difference; CI runs it on every push and once a week.
-Where this text and the reference disagree, that is a bug in one of
-them, and until it is fixed the conformance suite decides. Where the
-reference does something this text does not settle, SPEC.md says so and
-lists it in section 11 as an open question.
+`tools/check_sync.py` compares the quoted text with velaris-lang's, and
+the predicate schema with the copy velaris-lang publishes, and fails on
+any difference. The corpus in `tests/` is written by velaris-lang's
+`build_conformance.py` from the tables of three of its suites, which
+assert the same expectations against velaris-lang; a drift test
+regenerates it and fails when it differs from what is committed here.
+CI runs all of it on every push and once a week, and runs velaris-lang
+against the corpus. Where this text and the reference disagree, that is
+a bug in one of them, and until it is fixed the corpus decides. Where
+the reference does something this text does not settle, SPEC.md says so
+and lists it in section 11 as an open question.
 
 ## Files
 
 | File | What it is |
 |---|---|
 | [SPEC.md](SPEC.md) | the specification |
-| [schemas/](schemas) | JSON Schema (draft 2020-12) for both documents |
+| [CONFORMANCE.md](CONFORMANCE.md) | the three levels of conformance, the behaviours each requires, and how to claim one |
+| [tests/](tests) | the conformance corpus: 444 cases, the runner contract ([tests/README.md](tests/README.md)) and the case schema |
+| [schemas/](schemas) | JSON Schema (draft 2020-12) for both documents and for the predicate |
 | [examples/audits/](examples/audits) | four `velaris.audit/1` documents produced by velaris-lang 3.1.1, unedited |
 | [examples/velaris-lang.capabilities.json](examples/velaris-lang.capabilities.json) | the `velaris.capabilities/1` baseline velaris-lang 4.0.0 writes for those four programs |
+| [examples/capability-statement.json](examples/capability-statement.json) | an in-toto Statement of the predicate type, assembled from velaris-lang 4.1.0's audit of one example |
 | [PRIOR_ART.md](PRIOR_ART.md) | the published work this sits beside, and how it differs |
-| [tools/validate.py](tools/validate.py) | checks the schemas, and the examples against them |
-| [tools/check_sync.py](tools/check_sync.py) | checks the quoted sections against velaris-lang |
+| [REGISTRY_SUBMISSION.md](REGISTRY_SUBMISSION.md) | a pull request, prepared and not sent, listing the predicate type with in-toto |
+| [PROVENANCE.md](PROVENANCE.md) | dates and archive identifiers |
+| [CITATION.cff](CITATION.cff) | how to cite this repository |
+| [tools/validate.py](tools/validate.py) | checks the schemas, the examples and the corpus |
+| [tools/check_sync.py](tools/check_sync.py) | checks the quoted sections and the predicate schema against velaris-lang |
 | [CHANGELOG.md](CHANGELOG.md) | versions |
 
 ```
@@ -79,7 +102,16 @@ python tools/validate.py
 python tools/validate.py --audits DIR          # also any audits you produced
 python tools/validate.py --capabilities FILE   # also a baseline you committed
 python tools/check_sync.py ../velaris-lang/SPEC.md
+python ../velaris-lang/build_conformance.py --check tests   # the drift test
+python ../velaris-lang/velaris.py conformance --corpus tests
 ```
+
+## Cite this repository
+
+[CITATION.cff](CITATION.cff) holds the citation, and GitHub offers it as
+"Cite this repository" beside the file list. A preprint describing
+Velaris and this format is forthcoming; until it is published, cite the
+repository.
 
 ## License
 

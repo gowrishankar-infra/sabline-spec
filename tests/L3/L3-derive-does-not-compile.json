@@ -1,0 +1,46 @@
+{
+  "id": "L3-derive-does-not-compile",
+  "level": 3,
+  "kind": "derive",
+  "description": "a file that does not compile is recorded as such and adds nothing to the surface",
+  "spec": [
+    "9.2",
+    "9.3"
+  ],
+  "from": "check_ratchet.py DERIVE does-not-compile",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "ok.vel": "fn main() uses io {\n    print(\"hi\")\n}\n",
+      "bad.vel": "fn main() {\n    print(\"x\")\n}\n"
+    },
+    "root": "."
+  },
+  "expect": {
+    "surface": {
+      "grants": [
+        "io"
+      ],
+      "counts": {}
+    },
+    "programs": [
+      {
+        "file": "bad.vel",
+        "compiles": false
+      },
+      {
+        "file": "ok.vel",
+        "grants": [
+          "io"
+        ],
+        "counts": {},
+        "functions": {
+          "main": [
+            "io"
+          ]
+        }
+      }
+    ]
+  }
+}

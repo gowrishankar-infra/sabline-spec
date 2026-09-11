@@ -1,0 +1,30 @@
+{
+  "id": "L3-check-known-limit-granted-module-behaviour",
+  "level": 3,
+  "kind": "check",
+  "description": "a program that newly calls os.system through a module the baseline already grants passes: the baseline records modules, not what they do",
+  "spec": [
+    "9.8",
+    "7"
+  ],
+  "from": "check_ratchet.py CHECKS known-limit-granted-module-behaviour",
+  "requires": [],
+  "known_limit": "A widening that passes. What a granted module does is outside the program's text: ffi:os in a baseline is the operating system, and a new call into it is inside the surface.",
+  "input": {
+    "tree": {
+      "cwd.vel": "fn cwd() -> Text uses ffi or fail {\n    let none: List of Text = []\n    return try py(\"os\", \"getcwd\", none)\n}\n\nfn main() uses io, ffi {\n    check cwd() {\n        ok d {\n            print(d)\n        }\n        fail w {\n            print(w)\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": null
+    },
+    "change": {
+      "cwd.vel": "fn cwd() -> Text uses ffi or fail {\n    let none: List of Text = []\n    return try py(\"os\", \"getcwd\", none)\n}\n\nfn main() uses io, ffi {\n    check py_int(\"os\", \"system\", [\"echo hi\"]) {\n        ok n {\n            print(to_text(n))\n        }\n        fail w {\n            print(w)\n        }\n    }\n    check cwd() {\n        ok d {\n            print(d)\n        }\n        fail w {\n            print(w)\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "pass",
+    "widenings": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "L3-check-version-never-hides-widening",
+  "level": 3,
+  "kind": "check",
+  "description": "...but another version never hides a widening",
+  "spec": [
+    "9.6"
+  ],
+  "from": "check_ratchet.py CHECKS version-never-hides-widening",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "tree": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 3 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    },
+    "root": ".",
+    "baseline": {
+      "from_tree": true,
+      "edit": {
+        "velaris_version": "1.0.0"
+      }
+    },
+    "change": {
+      "poll.vel": "fn ping() -> Int uses net or fail {\n    return try fetch_status(\"https://api.example.com/ping\")\n}\n\nfn main() uses io, net {\n    for i in 0 to 4 {\n        check ping() {\n            ok code {\n                print(to_text(code))\n            }\n            fail why {\n                print(why)\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "expect": {
+    "verdict": "widened",
+    "widenings": [
+      {
+        "kind": "count",
+        "effect": "net",
+        "program": "poll.vel",
+        "current": 4,
+        "rules": [
+          "W2",
+          "W4"
+        ]
+      }
+    ]
+  }
+}

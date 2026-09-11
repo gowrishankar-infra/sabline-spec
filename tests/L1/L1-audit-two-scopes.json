@@ -1,0 +1,54 @@
+{
+  "id": "L1-audit-two-scopes",
+  "level": 1,
+  "kind": "audit",
+  "description": "effects and functions are the audited file's; ffi_modules and net_hosts read every file loaded, including a function in an import the program never calls",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS two-scopes",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "import \"lib.vel\"\n\nfn main() uses io, net {\n    check fetch_it() {\n        ok b {\n            print(b)\n        }\n        fail w {\n            print(w)\n        }\n    }\n}\n",
+      "lib.vel": "fn fetch_it() -> Text uses net or fail {\n    return try fetch(\"https://lib.example.org/x\")\n}\n\nfn root(n: Text) -> Text uses ffi or fail {\n    let args = [n]\n    return try py(\"math\", \"sqrt\", args)\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": true,
+    "effects": [
+      "io",
+      "net"
+    ],
+    "functions": [
+      {
+        "name": "main",
+        "effects": [
+          "io",
+          "net"
+        ],
+        "can_fail": false
+      }
+    ],
+    "ffi_modules": [
+      "math"
+    ],
+    "ffi_any": false,
+    "fs_paths": {
+      "read": [],
+      "write": [],
+      "read_any": false,
+      "write_any": false
+    },
+    "net_hosts": {
+      "hosts": [
+        "lib.example.org"
+      ],
+      "any": false
+    },
+    "safe_command": "velaris <file> --allow io,net:lib.example.org"
+  }
+}

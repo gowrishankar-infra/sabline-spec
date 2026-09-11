@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.4/tests/case.schema.json",
+  "title": "A velaris-spec conformance case",
+  "description": "One case of the conformance corpus in tests/: what it is, the input, and the outcome an implementation must produce. tests/README.md is the runner contract that says how each kind of case is run and compared; CONFORMANCE.md says which levels the cases make up. This schema checks shape only.",
+  "type": "object",
+  "required": ["id", "level", "kind", "description", "spec", "from", "requires", "known_limit", "input", "expect"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "pattern": "^L[123]-[a-z0-9]+(-[a-z0-9]+)*$"},
+    "level": {"enum": [1, 2, 3]},
+    "kind": {"enum": ["budget", "audit", "run", "derive", "check", "sequence", "write-guard", "covers", "reduce", "bound"]},
+    "description": {"type": "string", "minLength": 1},
+    "spec": {"description": "Sections of SPEC.md the case holds an implementation to.", "type": "array", "items": {"type": "string"}},
+    "from": {"description": "The table entry in velaris-lang's suites the case was written from.", "type": "string", "minLength": 1},
+    "requires": {"description": "What the runner's platform must provide for the case to run: symlink, a symbolic link can be made; stdlib, the reference's standard library files can be imported by name.", "type": "array", "uniqueItems": true, "items": {"enum": ["stdlib", "symlink"]}},
+    "known_limit": {"description": "Null, or the known limit this case records: its expected outcome is what the reference does today, not what a perfect implementation would do.", "type": ["string", "null"]},
+    "input": {"type": "object"},
+    "expect": {"type": "object"}
+  },
+  "allOf": [
+    {"if": {"properties": {"kind": {"const": "budget"}}}, "then": {"properties": {"level": {"const": 1}, "input": {"$ref": "#/$defs/budget_input"}, "expect": {"$ref": "#/$defs/budget_expect"}}}},
+    {"if": {"properties": {"kind": {"const": "audit"}}}, "then": {"properties": {"level": {"const": 1}, "input": {"$ref": "#/$defs/audit_input"}, "expect": {"$ref": "#/$defs/audit_expect"}}}},
+    {"if": {"properties": {"kind": {"const": "run"}}}, "then": {"properties": {"level": {"const": 2}, "input": {"$ref": "#/$defs/run_input"}, "expect": {"$ref": "#/$defs/run_expect"}}}},
+    {"if": {"properties": {"kind": {"const": "derive"}}}, "then": {"properties": {"level": {"const": 3}, "input": {"$ref": "#/$defs/tree_input"}, "expect": {"$ref": "#/$defs/baseline_body"}}}},
+    {"if": {"properties": {"kind": {"const": "check"}}}, "then": {"properties": {"level": {"const": 3}, "input": {"$ref": "#/$defs/check_input"}, "expect": {"$ref": "#/$defs/verdict"}}}},
+    {"if": {"properties": {"kind": {"const": "sequence"}}}, "then": {"properties": {"level": {"const": 3}, "input": {"$ref": "#/$defs/sequence_input"}, "expect": {"$ref": "#/$defs/sequence_expect"}}}},
+    {"if": {"properties": {"kind": {"const": "write-guard"}}}, "then": {"properties": {"level": {"const": 3}, "input": {"$ref": "#/$defs/write_input"}, "expect": {"$ref": "#/$defs/write_expect"}}}},
+    {"if": {"properties": {"kind": {"const": "covers"}}}, "then": {"properties": {"level": {"const": 3}, "input": {"$ref": "#/$defs/covers_input"}, "expect": {"$ref": "#/$defs/covers_expect"}}}},
+    {"if": {"properties": {"kind": {"const": "reduce"}}}, "then": {"properties": {"level": {"const": 3}, "input": {"$ref": "#/$defs/grant_list_holder"}, "expect": {"$ref": "#/$defs/grant_list_holder"}}}},
+    {"if": {"properties": {"kind": {"const": "bound"}}}, "then": {"properties": {"level": {"const": 3}, "input": {"$ref": "#/$defs/bound_input"}, "expect": {"$ref": "#/$defs/counts_pair"}}}}
+  ],
+  "$defs": {
+    "effect": {"enum": ["io", "env", "fs", "net", "clock", "rand", "ffi"]},
+    "count": {"type": ["integer", "null"], "minimum": 0},
+    "file_name": {"description": "A '/'-separated path relative to the case's root, as a tree names its files.", "type": "string", "pattern": "^[^/\\\\]+(/[^/\\\\]+)*$"},
+    "tree": {"type": "object", "propertyNames": {"$ref": "#/$defs/file_name"}, "additionalProperties": {"type": "string"}},
+    "change": {"description": "Files to write, or to delete (null).", "type": "object", "propertyNames": {"$ref": "#/$defs/file_name"}, "additionalProperties": {"type": ["string", "null"]}},
+    "grants": {
+      "description": "A parsed budget. ffi, fs and net appear exactly when that effect is granted; 'any' is unscoped. A path is the text of the grant after its percent-escapes are decoded, before SPEC.md 5.1 resolves it.",
+      "type": "object",
+      "required": ["effects", "counts"],
+      "additionalProperties": false,
+      "properties": {
+        "effects": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/effect"}},
+        "ffi": {"oneOf": [{"const": "any"}, {"type": "array", "items": {"type": "string", "minLength": 1}}]},
+        "fs": {"oneOf": [{"const": "any"}, {"type": "array", "items": {"type": "object", "required": ["direction", "path"], "additionalProperties": false, "properties": {"direction": {"enum": ["read", "write"]}, "path": {"type": ["string", "null"]}}}}]},
+        "net": {"oneOf": [{"const": "any"}, {"type": "array", "items": {"type": "object", "required": ["host", "port"], "additionalProperties": false, "properties": {"host": {"type": "string", "minLength": 1}, "port": {"type": ["integer", "null"], "minimum": 1, "maximum": 65535}}}}]},
+        "counts": {"type": "object", "additionalProperties": false, "properties": {"fs": {"type": "integer", "minimum": 0}, "net": {"type": "integer", "minimum": 0}}}
+      }
+    },
+    "budget_input": {"type": "object", "minProperties": 1, "additionalProperties": false, "properties": {"allow": {"type": "string"}, "deny": {"type": "string"}}},
+    "budget_expect": {"oneOf": [
+      {"type": "object", "required": ["valid"], "additionalProperties": false, "properties": {"valid": {"const": false}}},
+      {"type": "object", "required": ["valid", "grants"], "additionalProperties": false, "properties": {"valid": {"const": true}, "grants": {"$ref": "#/$defs/grants"}}}
+    ]},
+    "audit_input": {"type": "object", "required": ["files", "entry"], "additionalProperties": false, "properties": {"files": {"$ref": "#/$defs/tree"}, "entry": {"$ref": "#/$defs/file_name"}}},
+    "audit_expect": {"oneOf": [
+      {"type": "object", "required": ["ok", "problems_include"], "additionalProperties": false, "properties": {"ok": {"const": false}, "problems_include": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^E[0-9]{3}$"}}}},
+      {"type": "object", "required": ["ok", "effects", "functions", "ffi_modules", "ffi_any", "fs_paths", "net_hosts", "safe_command"], "additionalProperties": false, "properties": {
+        "ok": {"const": true},
+        "effects": {"type": "array", "items": {"$ref": "#/$defs/effect"}},
+        "functions": {"type": "array", "items": {"type": "object", "required": ["name", "effects", "can_fail"], "additionalProperties": false, "properties": {"name": {"type": "string"}, "effects": {"type": "array", "items": {"$ref": "#/$defs/effect"}}, "can_fail": {"type": "boolean"}}}},
+        "ffi_modules": {"type": "array", "items": {"type": "string"}},
+        "ffi_any": {"type": "boolean"},
+        "fs_paths": {"type": "object"},
+        "net_hosts": {"type": "object"},
+        "safe_command": {"type": "string", "pattern": "^velaris <file> --allow .+$"}
+      }}
+    ]},
+    "run_input": {"type": "object", "required": ["fixture", "source", "args"], "additionalProperties": false, "properties": {"fixture": {"const": "sandbox"}, "source": {"type": "string"}, "allow": {"type": "string"}, "deny": {"type": "string"}, "args": {"type": "array", "items": {"type": "string"}}}},
+    "run_expect": {"oneOf": [
+      {"type": "object", "required": ["outcome", "code", "stdout_includes", "stdout_excludes", "must_not_exist"], "additionalProperties": false, "properties": {"outcome": {"const": "refused"}, "code": {"enum": ["E310", "E311", "E313", "E314", "E315"]}, "stdout_includes": {"type": "array", "items": {"type": "string"}}, "stdout_excludes": {"type": "array", "items": {"type": "string"}}, "must_not_exist": {"type": "array", "items": {"type": "string"}}}},
+      {"type": "object", "required": ["outcome", "stdout_includes"], "additionalProperties": false, "properties": {"outcome": {"const": "completed"}, "stdout_includes": {"type": "array", "items": {"type": "string"}}}}
+    ]},
+    "tree_input": {"type": "object", "required": ["tree", "root"], "additionalProperties": false, "properties": {"tree": {"$ref": "#/$defs/tree"}, "root": {"type": "string"}}},
+    "entry": {"oneOf": [
+      {"type": "object", "required": ["file", "compiles"], "additionalProperties": false, "properties": {"file": {"type": "string"}, "compiles": {"const": false}}},
+      {"type": "object", "required": ["file", "grants", "counts", "functions"], "additionalProperties": false, "properties": {"file": {"type": "string"}, "grants": {"type": "array", "items": {"type": "string"}}, "counts": {"type": "object", "additionalProperties": false, "properties": {"fs": {"$ref": "#/$defs/count"}, "net": {"$ref": "#/$defs/count"}}}, "functions": {"type": "object", "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/effect"}}}}}
+    ]},
+    "baseline_body": {"description": "What a writer records for a tree: velaris.capabilities/1 without schema, velaris_version and date.", "type": "object", "required": ["surface", "programs"], "additionalProperties": false, "properties": {
+      "surface": {"type": "object", "required": ["grants", "counts"], "additionalProperties": false, "properties": {"grants": {"type": "array", "items": {"type": "string"}}, "counts": {"type": "object", "additionalProperties": false, "properties": {"fs": {"$ref": "#/$defs/count"}, "net": {"$ref": "#/$defs/count"}}}}},
+      "programs": {"type": "array", "items": {"$ref": "#/$defs/entry"}}
+    }},
+    "edit": {"description": "A person's edit of the baseline written from the tree: velaris_version replaced; each key under surface replaced; each key of a named program's entry replaced.", "type": ["object", "null"], "additionalProperties": false, "properties": {
+      "velaris_version": {"type": "string"},
+      "surface": {"type": "object", "additionalProperties": false, "properties": {"grants": {"type": "array", "items": {"type": "string"}}, "counts": {"type": "object"}}},
+      "programs": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "properties": {"grants": {"type": "array", "items": {"type": "string"}}, "counts": {"type": "object"}, "functions": {"type": "object"}}}}
+    }},
+    "baseline_given": {"oneOf": [
+      {"type": "object", "required": ["from_tree", "edit"], "additionalProperties": false, "properties": {"from_tree": {"const": true}, "edit": {"$ref": "#/$defs/edit"}}},
+      {"type": "object", "required": ["absent"], "additionalProperties": false, "properties": {"absent": {"const": true}}},
+      {"type": "object", "required": ["text"], "additionalProperties": false, "properties": {"text": {"type": "string"}}}
+    ]},
+    "check_input": {"type": "object", "required": ["tree", "root", "baseline", "change"], "additionalProperties": false, "properties": {"tree": {"$ref": "#/$defs/tree"}, "root": {"type": "string"}, "baseline": {"$ref": "#/$defs/baseline_given"}, "change": {"$ref": "#/$defs/change"}}},
+    "widening": {"oneOf": [
+      {"type": "object", "required": ["kind", "grant", "rules", "programs"], "additionalProperties": false, "properties": {"kind": {"const": "grant"}, "grant": {"type": "string"}, "rules": {"type": "array", "items": {"enum": ["W1", "W3"]}}, "programs": {"type": "array", "items": {"type": "string"}}}},
+      {"type": "object", "required": ["kind", "effect", "program", "current", "rules"], "additionalProperties": false, "properties": {"kind": {"const": "count"}, "effect": {"enum": ["fs", "net"]}, "program": {"type": "string"}, "current": {"$ref": "#/$defs/count"}, "rules": {"type": "array", "items": {"enum": ["W2", "W4"]}}}},
+      {"type": "object", "required": ["kind", "program", "function", "gained", "rules"], "additionalProperties": false, "properties": {"kind": {"const": "function"}, "program": {"type": "string"}, "function": {"type": "string"}, "gained": {"type": "array", "items": {"$ref": "#/$defs/effect"}}, "rules": {"const": ["W5"]}}}
+    ]},
+    "verdict": {"oneOf": [
+      {"type": "object", "required": ["verdict", "widenings"], "additionalProperties": false, "properties": {"verdict": {"const": "pass"}, "widenings": {"type": "array", "maxItems": 0}}},
+      {"type": "object", "required": ["verdict", "widenings"], "additionalProperties": false, "properties": {"verdict": {"const": "widened"}, "widenings": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/widening"}}}},
+      {"type": "object", "required": ["verdict"], "additionalProperties": false, "properties": {"verdict": {"const": "cannot-compare"}}}
+    ]},
+    "sequence_input": {"type": "object", "required": ["tree", "root", "steps"], "additionalProperties": false, "properties": {"tree": {"$ref": "#/$defs/tree"}, "root": {"type": "string"}, "steps": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["description", "change", "edit", "rewrite", "delete_baseline"], "additionalProperties": false, "properties": {"description": {"type": "string"}, "change": {"$ref": "#/$defs/change"}, "edit": {"$ref": "#/$defs/edit"}, "rewrite": {"type": "boolean"}, "delete_baseline": {"type": "boolean"}}}}}},
+    "sequence_expect": {"type": "object", "required": ["steps"], "additionalProperties": false, "properties": {"steps": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/verdict"}}}},
+    "write_input": {"type": "object", "required": ["tree", "root", "change"], "additionalProperties": false, "properties": {"tree": {"$ref": "#/$defs/tree"}, "root": {"type": "string"}, "change": {"$ref": "#/$defs/change"}}},
+    "write_expect": {"type": "object", "required": ["refuses", "unchanged"], "additionalProperties": false, "properties": {"refuses": {"const": true}, "unchanged": {"const": true}}},
+    "covers_input": {"type": "object", "required": ["grant", "other"], "additionalProperties": false, "properties": {"grant": {"type": "string"}, "other": {"type": "string"}}},
+    "covers_expect": {"type": "object", "required": ["covers"], "additionalProperties": false, "properties": {"covers": {"type": "boolean"}}},
+    "grant_list_holder": {"type": "object", "required": ["grants"], "additionalProperties": false, "properties": {"grants": {"type": "array", "items": {"type": "string"}}}},
+    "bound_input": {"type": "object", "required": ["source", "function"], "additionalProperties": false, "properties": {"source": {"type": "string"}, "function": {"type": "string"}}},
+    "counts_pair": {"type": "object", "required": ["fs", "net"], "additionalProperties": false, "properties": {"fs": {"$ref": "#/$defs/count"}, "net": {"$ref": "#/$defs/count"}}}
+  }
+}

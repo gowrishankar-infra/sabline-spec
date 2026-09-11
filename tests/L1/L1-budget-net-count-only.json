@@ -1,0 +1,28 @@
+{
+  "id": "L1-budget-net-count-only",
+  "level": 1,
+  "kind": "budget",
+  "description": "net@7 is any host, at most 7 requests",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS net-count-only",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "net@7"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "net"
+      ],
+      "net": "any",
+      "counts": {
+        "net": 7
+      }
+    }
+  }
+}

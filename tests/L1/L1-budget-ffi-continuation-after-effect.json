@@ -1,0 +1,19 @@
+{
+  "id": "L1-budget-ffi-continuation-after-effect",
+  "level": 1,
+  "kind": "budget",
+  "description": "ffi:math,io,json is refused: json comes after io, so it is not a module",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS ffi-continuation-after-effect",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "ffi:math,io,json"
+  },
+  "expect": {
+    "valid": false
+  }
+}

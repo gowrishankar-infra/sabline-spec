@@ -1,0 +1,31 @@
+{
+  "id": "L1-budget-fs-windows-drive-path",
+  "level": 1,
+  "kind": "budget",
+  "description": "a path is everything after the second colon, drive letter included",
+  "spec": [
+    "4",
+    "5"
+  ],
+  "from": "check_library.py BUDGETS fs-windows-drive-path",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "allow": "fs:read:C:\\data"
+  },
+  "expect": {
+    "valid": true,
+    "grants": {
+      "effects": [
+        "fs"
+      ],
+      "fs": [
+        {
+          "direction": "read",
+          "path": "C:\\data"
+        }
+      ],
+      "counts": {}
+    }
+  }
+}
