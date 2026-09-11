@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.4, 2026-09-11. Dedicated to the public domain under CC0 1.0;
+Version 0.5, 2026-09-11. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -8,11 +8,12 @@ Reference implementation: velaris-lang,
 first extracted from velaris-lang 3.1.1 (commit `25d2c05`); version 0.2
 tracked velaris-lang 3.3.0, which fixed the five defects the extraction
 found; version 0.3 tracked velaris-lang 4.0.0, which reads and writes
-the baseline of section 9; version 0.4 tracks velaris-lang 4.1.0, and
-adds a conformance corpus any implementation can run, in
+the baseline of section 9; version 0.4 tracked velaris-lang 4.1.0,
+and added a conformance corpus any implementation can run, in
 [tests/](tests), with the levels of conformance in
-[CONFORMANCE.md](CONFORMANCE.md). Conformance is defined by that
-corpus (section 10), not by this text.
+[CONFORMANCE.md](CONFORMANCE.md); version 0.5 tracks velaris-lang
+4.2.0, which writes the in-toto Statements of section 8.5. Conformance
+is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
 
@@ -41,13 +42,13 @@ SPEC.md, EMBEDDING.md and THREAT_MODEL.md cover those.
 
 **Conventions.** MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
 read as described in RFC 2119 and RFC 8174 when, and only when, they
-appear in capitals. "The reference" means velaris-lang 4.1.0. A
+appear in capitals. "The reference" means velaris-lang 4.2.0. A
 paragraph marked *Reference behaviour* records what the reference does
 at a point this document does not yet settle; each such point is also
 an open question in section 11. A paragraph marked *Resolved in 0.2*,
-*0.3* or *0.4* records a point that an earlier version left open, or
-stated wrongly, and that version settles, naming the velaris-lang
-release that made the reference match.
+*0.3*, *0.4* or *0.5* records a point that an earlier version left
+open, or stated wrongly, and that version settles, naming the
+velaris-lang release that made the reference match.
 
 Where this document and the reference disagree, that is a bug in one of
 them. Until it is resolved, the conformance corpus decides (section
@@ -721,7 +722,9 @@ each promise is proven. In the reference it is what
 tool `velaris_audit`, the `POST /audit` endpoint of its HTTP door, its
 npm `audit()`, its CrewAI audit tool, its GitHub Action's pull request
 comment, and - from velaris-lang 3.3.0 - its command line's
-`audit --json` are built on. Its JSON Schema is
+`audit --json` are built on; from 4.2.0 it is also the predicate of the
+in-toto Statements `velaris attest` writes (section 8.5). Its JSON
+Schema is
 [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json);
 [examples/audits/](examples/audits) holds four documents the reference
 produced.
@@ -768,10 +771,12 @@ was added.
 | `fs_paths` | object | `read` and `write`: sorted arrays of path text, exactly as written, not resolved. `read` holds the literal first argument of every `read_file` and `file_exists` call anywhere in the program as loaded; `write`, of every `write_file` call. `read_any` and `write_any`: true when some such call's argument is not a literal. | 3.0 |
 | `net_hosts` | object | `hosts`: a sorted array. For each literal URL given as the first argument of `fetch`, `post` or `fetch_status`, or the second of `request`, anywhere in the program as loaded: `https://` is put in front if it begins with neither `http://` nor `https://`; the host is lower-cased and trailing dots removed; the entry is the host, or `host:port` when the URL writes a port. From velaris-lang 3.3.0 an IPv6 host is written in brackets (`[::1]`, `[::1]:443`), so `host:port` is never ambiguous, and any of `, @ [ ] %` in a host is percent-encoded (a `net:` grant, section 5.2). `any`: true when some such argument is not a literal, or has no host. | 3.0 (IPv6 bracketed, 3.3) |
 | `ffi_any` | boolean | true when the module argument of some `py`, `py_int`, `py_float`, `py_json` or `py_new` call, anywhere in the program as loaded, is not a literal - a module named by a value built while running, which `ffi_modules` cannot list | 4.0 |
+| `counts` | object or null | `fs` and `net`: for each, the largest bound of section 9.4 on the operations of that effect one call to a function defined in the audited file can perform (`0` when none of them declares the effect), or `null` when the text fixes no bound or the bound exceeds 2^53. For a file whose `main` calls every other function, a bound on one run. The whole field is `null` when no bound was determined, as when `ok` is false. | 4.2 |
+| `prover` | boolean | true when a prover decided the `status` of the promises: one was present and the program compiled. False otherwise - no prover, or `ok` false - and then no `status` is `"proven"` and a `proven_share` of 0 says nothing about what a prover would prove. | 4.2 |
 
 Two scopes are at work, and they differ. `effects`, `functions`,
-`loops_unshown` and `contract_coverage` describe the functions defined
-in the audited file. `ffi_modules`, `ffi_any`, `fs_paths` and
+`loops_unshown`, `contract_coverage` and `counts` describe the functions
+defined in the audited file. `ffi_modules`, `ffi_any`, `fs_paths` and
 `net_hosts` read the literals of every function loaded, including
 functions in imported files that the program never calls, so they can
 list more than the program's own calls reach.
@@ -831,6 +836,12 @@ grants it was built from.
   open question Q5. It left one case, found in 0.4: the audit that
   reports that E300 still copied the name into `safe_command` until
   velaris-lang 4.1.0 (section 3.2).
+- **A count is a bound the text fixes, not a measurement.** When `ok`
+  is true, `counts` is at least the operations any one call to a
+  function defined in the file can perform (section 9.4), and may be far
+  more; `null` says the text fixes no bound, not that the program
+  performs many. Like `effects`, it does not cover a `main` the file
+  imports from another file.
 - **When `ok` is false, no field bounds anything.**
 
 ### 8.5 The audit as an in-toto predicate
@@ -860,7 +871,7 @@ A Statement of this type is an in-toto Statement v1
   "predicate": {
     "producer": {"name": "velaris-lang",
                  "uri": "https://github.com/gowrishankar-infra/velaris-lang"},
-    "specification": "velaris-spec 0.4",
+    "specification": "velaris-spec 0.5",
     "auditedAt": "2026-09-11T00:00:00Z",
     "audit": {"schema": "velaris.audit/1", "...": "..."}
   }
@@ -881,7 +892,7 @@ A Statement of this type is an in-toto Statement v1
   wrote the audit, and optionally `uri`. Its version is the audit's
   `velaris_version`.
 - **`predicate.specification`** (optional): the version of this
-  document the producer followed, as `velaris-spec 0.4`.
+  document the producer followed, as `velaris-spec 0.5`.
 - **`predicate.auditedAt`** (optional): when the audit was made, RFC
   3339 in UTC, as the producer's clock says.
 - **`predicate.conformance`** (optional): `levels`, the levels of
@@ -907,11 +918,36 @@ program is safe to run, or that any runtime will enforce the budget in
 `safe_command`; and when `audit.ok` is false it says nothing about what
 the program may do (section 8.4).
 
-velaris-lang 4.1.0 publishes the predicate type and its schema, and
-does not yet write Statements of it. One can be assembled from
-`velaris audit FILE --json` and the file's digest;
+*Resolved in 0.5 (velaris-lang 4.2.0).* Version 0.4 recorded that the
+reference published the predicate type and its schema and wrote no
+Statements of it, and its example Statement was assembled by hand from
+`velaris audit FILE --json` and the file's digest. From 4.2.0 the
+reference writes them:
+
+- `velaris attest FILE` writes one Statement. Its subjects are FILE,
+  then each file it imports, by the sha256 of the bytes the audit read;
+  a file that changes while it is being attested is refused. Its
+  `predicate.audit` is `velaris.audit(source).as_dict()` itself, not a
+  copy, so it holds what the audit holds and nothing more. It sets
+  `producer`, `specification` and `auditedAt` - from
+  `SOURCE_DATE_EPOCH` when that is set - and not `conformance`.
+- `velaris attest DIR` writes one Statement for each `.vel` file under
+  DIR that section 9.3 takes as a program, one to a line (JSON Lines,
+  the layout of an in-toto Bundle, whose lines are envelopes once
+  signed): a Statement of this type carries one audit, so a directory
+  is several.
+- Where the audit could not determine something, the Statement says so
+  in the audit's own fields, unchanged: `ok` false with its `problems`,
+  `ffi_any`, `read_any`, `write_any` or `any` true, `counts` or one of
+  its entries `null`, `prover` false.
+- It signs nothing. The reference's release workflow signs one
+  Statement, for its `examples/effects.vel`, with cosign and with
+  sigstore-python, and verifies both before publishing them.
+
 [examples/capability-statement.json](examples/capability-statement.json)
-was assembled that way.
+is the Statement `velaris attest examples/effects.vel` writes in
+velaris-lang at tag `v4.2.0`, with `SOURCE_DATE_EPOCH` set to that
+commit's time, as the release workflow runs it.
 
 ## 9. velaris.capabilities/1
 
@@ -1304,7 +1340,7 @@ reference, beyond the corpus.
 | Suite | What it holds | Sections |
 |---|---|---|
 | `check_sandbox.py` | escape attempts against a budget given on the command line, each refused with the code it must carry (from 4.1): each effect refused; an effect hidden two helpers down; a refusal caught and carried on; the module list through `py`, `py_json`, `py_new` and a submodule path; the attribute-chain bound of section 5.3 - codecs through json, os.system through os, importlib to another module, a builtins type through a value, a `__globals__`/`__class__` traversal, a foreign object through a handle - with a deep attribute inside the granted module and a two-module grant still running; additive `fs`, `net` and `ffi`; a path outside a prefix, a write under a read grant, `..`, and a symbolic link (where the system will make one); a host outside the list, including a name when an address was granted; a port; a wildcard's parent domain; redirects to a granted and to an ungranted host; counts on `fs` and `net`; `env` under `io`; and from 4.1 `@0`, a count spent by an operation that then fails, a URL with no scheme taken as HTTPS, and an existence check under a write grant. The corpus's level 2 is written from it | 4, 5, 6 |
-| `check_library.py` | the same through the reference's library, its HTTP door's ceiling (section 5.5) and its MCP server; that the library and the server report the same audit; that `safe_command` round-trips for awkward paths and hosts (section 8.3); that every malformed budget raises a readable budget error and never a traceback (section 4.2); from 4.1, 55 budgets each held to the grants sections 4 and 5 give it, or to its refusal, and 18 programs each audited to the effect surface section 8 gives it; that the command line's `audit --json` is `velaris.audit/1` and validates against the schema (section 8). The corpus's level 1 is written from its tables | 3.2, 4, 5, 6, 8 |
+| `check_library.py` | the same through the reference's library, its HTTP door's ceiling (section 5.5) and its MCP server; that the library and the server report the same audit; that `safe_command` round-trips for awkward paths and hosts (section 8.3); that every malformed budget raises a readable budget error and never a traceback (section 4.2); from 4.1, 55 budgets each held to the grants sections 4 and 5 give it, or to its refusal, and 18 programs each audited to the effect surface section 8 gives it; that the command line's `audit --json` is `velaris.audit/1` and validates against the schema (section 8); from 4.2, that a Statement `velaris attest` writes validates against in-toto's Statement v1 schema, the predicate's and the audit's, that its audit is `audit()`'s for the same program field for field, that a directory gives one Statement per file, that each digest is the sha256 of the file's bytes, and that a module named while running is carried as `ffi_any` (section 8.5). The corpus's level 1 is written from its tables | 3.2, 4, 5, 6, 8 |
 | `check_refusals.py` | wrong programs refused with the right code, among them an undeclared effect (E300) | 3.2 |
 | `check_fallible.py` | every fallible builtin refused when its failure is ignored, and its failure catchable - the redirect failure of G4 among them | 6, 8 |
 | `check_termination.py` | the termination verdict for each of 44 adversarial loops, which `velaris.audit/1` reports as `loops_unshown` | 8 |
@@ -1321,8 +1357,10 @@ behaviour, or where the reference's own text and behaviour disagree,
 without settling what is right. Q1, Q2, Q3, Q5 and Q6 were open in
 version 0.1 and are **resolved in 0.2** (velaris-lang 3.3.0); Q4 is
 **resolved in 0.3** (velaris-lang 4.0.0); Q8, Q9 and Q11 are
-**resolved in 0.4** (velaris-lang 4.1.0). They are kept here, marked
-resolved, so the record of what changed stays with the question.
+**resolved in 0.4** (velaris-lang 4.1.0), and the part of Q11 that 0.4
+left to the reference is done in 0.5 (velaris-lang 4.2.0). They are
+kept here, marked resolved, so the record of what changed stays with
+the question.
 
 - **Q1. Unknown names in declarations. Resolved in 0.2.** Version 0.1
   asked whether a checker should reject a `uses` name that is not one of
@@ -1389,12 +1427,13 @@ resolved, so the record of what changed stays with the question.
   8.5 defines an in-toto predicate type,
   `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`,
   that carries an audit with the digests of the files audited, so a
-  signed Statement can say which source it describes. The reference
-  publishes the type; it does not yet write Statements of it.
+  signed Statement can say which source it describes. From
+  velaris-lang 4.2.0 the reference writes Statements of it too
+  (`velaris attest`, section 8.5), and signs none.
 
 ## Appendix A. The reference binding
 
-Informative: which builtins of velaris-lang 4.1.0 perform which
+Informative: which builtins of velaris-lang 4.2.0 perform which
 operations. They are unchanged since 3.3.0.
 
 | Builtins | Effect | Operation | Checked beyond the effect |
@@ -1434,6 +1473,18 @@ E310 (T5).
 
 ## Appendix C. Changes
 
+- **0.5**, 2026-09-11: tracks velaris-lang 4.2.0, which writes the
+  Statements of section 8.5 (`velaris attest`). `velaris.audit/1` gains
+  two optional fields within version 1 (section 8.2): `counts`, the
+  bound of section 9.4 on `fs` and `net` operations, `null` where none
+  is determined; and `prover`, whether a prover decided the promises'
+  status. Section 8.4 says what a count is not. Section 8.5 records the
+  producer, and `examples/capability-statement.json` is now what it
+  writes rather than a Statement assembled by hand. The predicate type,
+  its URI and its schema are unchanged. The corpus is unchanged: 444
+  cases. Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and
+  7.1 word for word - those sections did not change in 4.2 - so
+  `tools/check_sync.py` still passes.
 - **0.4**, 2026-09-11: tracks velaris-lang 4.1.0. Conformance is a
   corpus any implementation can run: `tests/`, 444 JSON cases written
   from three of the reference's suites and held to them by a drift test,

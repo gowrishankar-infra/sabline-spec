@@ -101,9 +101,11 @@ Software Artifacts, <https://slsa.dev>, and its provenance predicate.
   predicate type that carries an audit with the digests of the files
   audited; in-toto supplies the Statement, the envelope and the
   signing, and this format only the predicate. SLSA has no counterpart
-  here: nothing in this format says how an artifact was built. The
-  reference implementation publishes the predicate type and does not
-  yet write Statements of it.
+  here: nothing in this format says how an artifact was built. From
+  velaris-lang 4.2.0 the reference implementation writes Statements of
+  the type (`velaris attest`) and leaves signing to Sigstore's tools,
+  cosign and sigstore-python; until 0.5 this file said it wrote none,
+  which was true of 4.1.0.
 
 ## SARIF
 

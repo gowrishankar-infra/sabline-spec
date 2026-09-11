@@ -257,7 +257,7 @@ shape:
 ```json
 {
   "schema": "velaris.conformance/1",
-  "implementation": {"name": "velaris-lang", "version": "4.1.0"},
+  "implementation": {"name": "velaris-lang", "version": "4.2.0"},
   "corpus": "where the corpus was read from",
   "levels_run": [1, 2, 3],
   "levels": {"1": {"name": "Declaration", "cases": 298, "passed": 298,

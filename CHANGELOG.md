@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.5 - 2026-09-11
+
+Tracks velaris-lang 4.2.0, which writes Statements of the predicate
+type 0.4 defined.
+
+- **Section 8.5** records the producer. `velaris attest FILE` writes one
+  in-toto Statement v1: its subjects are the file and each file it
+  imports, by the sha256 of the bytes the audit read, and its
+  `predicate.audit` is the reference's `audit()` output itself, so it
+  holds nothing the audit does not. `velaris attest DIR` writes one
+  Statement per program, as JSON Lines. It signs nothing; the
+  reference's release workflow signs one Statement with cosign and with
+  sigstore-python and verifies both.
+- **`velaris.audit/1`** gains two optional fields within version 1
+  (section 8.2 and the schema): `counts`, the bound of section 9.4 on
+  the `fs` and `net` operations of the functions the audited file
+  defines - `null` for an effect whose bound the text does not fix, and
+  `null` as a whole when no bound was determined, as when `ok` is false;
+  and `prover`, whether a prover decided the promises' status. Section
+  8.4 says what a count is not.
+- **examples/capability-statement.json** is the Statement `velaris
+  attest examples/effects.vel` writes at velaris-lang v4.2.0, with
+  `SOURCE_DATE_EPOCH` at that commit's time, as the release workflow
+  writes it. 0.4's was assembled by hand.
+- **REGISTRY_SUBMISSION.md** names the producer and the command that
+  fetches the signed Statement, and its example is the real one. It is
+  still not submitted.
+- The predicate type, its URI and its schema are unchanged, as are the
+  corpus (444 cases) and section 2, so `tools/check_sync.py` still
+  passes. The three schemas' `$id` values point at the `v0.5` tag.
+- The author's name is written in full, family name first:
+  Palakurthi Gowri shankar (family name Palakurthi, given name Gowri
+  shankar), in CITATION.cff, NOTICE, README.md, PROVENANCE.md and
+  REGISTRY_SUBMISSION.md.
+
 ## 0.4 - 2026-09-11
 
 Tracks velaris-lang 4.1.0. Conformance becomes something an

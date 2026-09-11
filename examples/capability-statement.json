@@ -14,19 +14,11 @@
       "name": "velaris-lang",
       "uri": "https://github.com/gowrishankar-infra/velaris-lang"
     },
-    "specification": "velaris-spec 0.4",
-    "auditedAt": "2026-09-11T10:07:06Z",
-    "conformance": {
-      "levels": [
-        "L1",
-        "L2",
-        "L3"
-      ],
-      "corpus": "velaris-spec 0.4 tests/, 444 cases"
-    },
+    "specification": "velaris-spec 0.5",
+    "auditedAt": "2026-09-11T14:20:49Z",
     "audit": {
       "schema": "velaris.audit/1",
-      "velaris_version": "4.1.0",
+      "velaris_version": "4.2.0",
       "ok": true,
       "problems": [],
       "effects": [
@@ -104,7 +96,12 @@
         "hosts": [],
         "any": false
       },
-      "ffi_any": false
+      "ffi_any": false,
+      "counts": {
+        "fs": 2,
+        "net": 0
+      },
+      "prover": true
     }
   }
 }

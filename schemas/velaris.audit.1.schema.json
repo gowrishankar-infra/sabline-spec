@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.4/schemas/velaris.audit.1.schema.json",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.5/schemas/velaris.audit.1.schema.json",
   "title": "velaris.audit/1",
   "description": "What a Velaris program declares, names and promises, before it runs: velaris-spec SPEC.md section 8. Within version 1 fields may be added and consumers must ignore fields they do not know, so no object here forbids other properties; fields added after version 1 was first released (2.52) are optional. This schema checks shape. It does not check the rules of SPEC.md section 8 that JSON Schema cannot state - for example that effects is sorted, or that it is the union of the functions' effects.",
   "type": "object",
@@ -142,6 +142,37 @@
     },
     "ffi_any": {
       "description": "Added in 4.0. True when the module argument of some py, py_int, py_float, py_json or py_new call, anywhere in the program as loaded, is not a literal: a module named by a value built while running, which ffi_modules cannot list (SPEC.md 8.2, 8.4; Q4 resolved in spec 0.3).",
+      "type": "boolean"
+    },
+    "counts": {
+      "description": "Added in 4.2. For fs and net, the largest bound of velaris-spec SPEC.md section 9.4 on the operations of that effect one call to a function defined in the audited file can perform (0 when none of them declares the effect), or null when the text fixes no bound or it exceeds 2^53. The whole field is null when no bound was determined, as when ok is false (SPEC.md 8.2, 8.4).",
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "fs",
+        "net"
+      ],
+      "properties": {
+        "fs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "net": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "prover": {
+      "description": "Added in 4.2. True when a prover decided the status of the promises: one was present and the program compiled. When false, no status is proven, and a proven_share of 0 says nothing about what a prover would prove (SPEC.md 8.2).",
       "type": "boolean"
     }
   },

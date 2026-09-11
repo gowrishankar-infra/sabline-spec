@@ -35,14 +35,45 @@ does not.
   changing it is a new type. If a different URI is wanted, change it
   before sending, in velaris-spec SPEC.md 8.5, the predicate schema's
   `$id` and `title`, velaris-lang's `build_docs.py`, and this file.
-- **No tool writes Statements of this type yet.** velaris-lang 4.1.0
-  publishes the type and its schema; the example below was assembled by
-  hand from `velaris audit --json` and a file digest. Reviewers of the
-  vetted list are likely to ask who produces it. A producer in
-  velaris-lang (an `--in-toto` form of `velaris audit`) would answer
-  that, and is not part of 4.1.0.
+- **The producer.** velaris-lang 4.2.0 writes Statements of this type:
+  `velaris attest FILE` writes one, and `velaris attest DIR` one for
+  each `.vel` file under DIR, one to a line (JSON Lines). Each
+  Statement's `predicate.audit` is `velaris.audit()`'s own output, and
+  its subjects are the audited file and its imports by sha256. It signs
+  nothing: velaris-lang's EMBEDDING.md gives the commands for cosign
+  (`cosign attest-blob --statement`) and for sigstore-python, and its
+  release workflow signs one Statement, for `examples/effects.vel`,
+  with both and verifies both. The example below is that Statement, as
+  is velaris-spec's
+  [examples/capability-statement.json](examples/capability-statement.json).
 - **Whether to open an issue first.** The guidelines do not require
   one.
+
+## For a reviewer: the artifact, in one command
+
+The Statement for velaris-lang's `examples/effects.vel`, and its two
+Sigstore bundles, from the v4.2.0 release (GitHub's `gh`):
+
+    gh release download v4.2.0 --repo gowrishankar-infra/velaris-lang --pattern 'velaris-attestation-*'
+
+or the unsigned Statement alone, with nothing but curl:
+
+    curl -LO https://github.com/gowrishankar-infra/velaris-lang/releases/download/v4.2.0/velaris-attestation-4.2.0.intoto.json
+
+To write it on your own machine instead, with git and Python 3.10 or
+later (`velaris.py` needs nothing else):
+
+    git clone -q --depth 1 --branch v4.2.0 https://github.com/gowrishankar-infra/velaris-lang && cd velaris-lang && SOURCE_DATE_EPOCH=$(git log -1 --format=%ct) python velaris.py attest examples/effects.vel --output effects.intoto.json
+
+With the optional prover installed (`pip install z3-solver`), as the
+release workflow has it, the file is byte for byte the release's
+`velaris-attestation-4.2.0.intoto.json`; without it the audit's
+`prover` is `false`, and nothing else differs.
+
+To check the cosign bundle against the example's bytes and the
+release workflow's identity, in that clone:
+
+    cosign verify-blob-attestation --bundle velaris-attestation-4.2.0.cosign.sigstore.json --type https://gowrishankar-infra.github.io/velaris-lang/capability/v1 --certificate-identity https://github.com/gowrishankar-infra/velaris-lang/.github/workflows/release.yml@refs/tags/v4.2.0 --certificate-oidc-issuer https://token.actions.githubusercontent.com examples/effects.vel
 
 ## The pull request
 
@@ -81,6 +112,10 @@ does not.
 > (`ok`)? Which producer wrote it, and which version of the format did it
 > follow?
 >
+> **Producer.** velaris-lang 4.2.0 writes Statements of this type
+> (`velaris attest`), unsigned; its releases carry one for an example
+> program, signed with cosign and with sigstore-python.
+>
 > **What it does not claim.** That the audit is right, that the program
 > is safe, or that any runtime will enforce the budget. The format is
 > specified, under CC0, at <https://github.com/gowrishankar-infra/velaris-spec>
@@ -115,7 +150,7 @@ Version: 1.0.0
 
 Predicate Name: Velaris Capability
 
-Authors: Gowri Shankar (@gowrishankar-infra)
+Authors: Palakurthi Gowri shankar (@gowrishankar-infra)
 
 ## Purpose
 
@@ -165,7 +200,8 @@ implementation is velaris-lang
 ## Model
 
 The producer is the tool that audits the source - in the reference
-implementation, `velaris audit` - run by whoever audits it: a CI job, a
+implementation, `velaris attest`, which puts `velaris audit`'s document
+in a Statement - run by whoever audits it and signed by them: a CI job, a
 review bot, an agent platform before it runs a program. The consumer
 is whatever decides whether to run the program, or records that it was
 reviewed. The predicate describes source text, before any build and
@@ -186,7 +222,7 @@ before any run.
   "predicateType": "https://gowrishankar-infra.github.io/velaris-lang/capability/v1",
   "predicate": {
     "producer": {"name": "<implementation>", "uri": "<optional>"},
-    "specification": "velaris-spec 0.4",          // optional
+    "specification": "velaris-spec 0.5",          // optional
     "auditedAt": "<RFC 3339, Z>",                  // optional
     "conformance": {"levels": ["L1"], "corpus": "<optional>"},  // optional
     "audit": { /* a velaris.audit/1 document */ }
@@ -223,11 +259,16 @@ The implementation that wrote the audit: `name` (string, required) and
 A `velaris.audit/1` document for the first subject, as velaris-spec
 section 8 defines it: among other fields `ok`, `effects` (a subset of
 `io`, `env`, `fs`, `net`, `clock`, `rand`, `ffi`), `functions`,
-`ffi_modules`, `ffi_any`, `fs_paths`, `net_hosts` and `safe_command`.
+`ffi_modules`, `ffi_any`, `fs_paths`, `net_hosts`, `safe_command` and,
+from velaris-spec 0.5, `counts` (a bound on file and network
+operations, `null` where none is determined) and `prover`. Where the
+audit could not determine something it says so in these fields -
+`ok` false, `ffi_any`, `fs_paths.read_any`, `net_hosts.any`, a `null`
+count - and the predicate carries them unchanged.
 
 `specification` _string, optional_
 
-The velaris-spec version the producer followed, as `velaris-spec 0.4`.
+The velaris-spec version the producer followed, as `velaris-spec 0.5`.
 
 `auditedAt` _string ([Timestamp]), optional_
 
@@ -246,9 +287,10 @@ producer lists them, the files it imports, each with a `sha256` digest.
 
 ## Example
 
-An audit made by velaris-lang 4.1.0 of `examples/effects.vel` in that
-repository, assembled into a Statement by hand, since velaris-lang does
-not yet write Statements of this type:
+The Statement velaris-lang 4.2.0 writes for `examples/effects.vel` in
+that repository (`velaris attest examples/effects.vel`), before it is
+signed. It has no `conformance` field: `velaris attest` does not run
+the conformance corpus, so it claims no level.
 
 ```json
 {
@@ -267,19 +309,11 @@ not yet write Statements of this type:
       "name": "velaris-lang",
       "uri": "https://github.com/gowrishankar-infra/velaris-lang"
     },
-    "specification": "velaris-spec 0.4",
-    "auditedAt": "2026-09-11T10:07:06Z",
-    "conformance": {
-      "levels": [
-        "L1",
-        "L2",
-        "L3"
-      ],
-      "corpus": "velaris-spec 0.4 tests/, 444 cases"
-    },
+    "specification": "velaris-spec 0.5",
+    "auditedAt": "2026-09-11T14:20:49Z",
     "audit": {
       "schema": "velaris.audit/1",
-      "velaris_version": "4.1.0",
+      "velaris_version": "4.2.0",
       "ok": true,
       "problems": [],
       "effects": [
@@ -357,7 +391,12 @@ not yet write Statements of this type:
         "hosts": [],
         "any": false
       },
-      "ffi_any": false
+      "ffi_any": false,
+      "counts": {
+        "fs": 2,
+        "net": 0
+      },
+      "prover": true
     }
   }
 }
