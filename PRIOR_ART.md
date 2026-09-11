@@ -94,7 +94,7 @@ Software Artifacts, <https://slsa.dev>, and its provenance predicate.
   in-toto attestation binds a typed predicate to subjects identified by
   digest, and SLSA defines levels of build integrity and a provenance
   predicate that records how an artifact was built.
-- **How this differs:** `velaris.audit/1` and `velaris.capabilities/0`
+- **How this differs:** `velaris.audit/1` and `velaris.capabilities/1`
   are unsigned, name no artifact digest, and describe what a source
   text declares rather than how or by whom an artifact was built;
   nothing here makes them attestations, and carrying an audit as an

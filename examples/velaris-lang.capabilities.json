@@ -1,6 +1,22 @@
 {
-  "schema": "velaris.capabilities/0",
-  "generated_by": "derived by hand under SPEC.md section 9.3 from the velaris 3.1.1 audits in examples/audits/",
+  "schema": "velaris.capabilities/1",
+  "velaris_version": "4.0.0",
+  "date": "2026-09-11",
+  "surface": {
+    "grants": [
+      "clock",
+      "env",
+      "ffi:datetime",
+      "ffi:math",
+      "ffi:sqlite3",
+      "fs:read",
+      "fs:write:report.txt",
+      "io",
+      "net:raw.githubusercontent.com",
+      "rand"
+    ],
+    "counts": {"fs": 2, "net": 1}
+  },
   "programs": [
     {
       "file": "examples/effects.vel",
@@ -10,13 +26,25 @@
         "fs:write:report.txt",
         "io",
         "rand"
-      ]
+      ],
+      "counts": {"fs": 2},
+      "functions": {
+        "dice": ["rand"],
+        "main": ["clock", "fs", "io", "rand"],
+        "save_report": ["fs"],
+        "timestamp": ["clock"]
+      }
     },
     {
       "file": "examples/pipeline.vel",
       "grants": [
         "io"
-      ]
+      ],
+      "counts": {},
+      "functions": {
+        "main": ["io"],
+        "total_of": []
+      }
     },
     {
       "file": "examples/stress.vel",
@@ -28,7 +56,26 @@
         "ffi:sqlite3",
         "io",
         "net:raw.githubusercontent.com"
-      ]
+      ],
+      "counts": {"net": 1},
+      "functions": {
+        "add_item": [],
+        "average": [],
+        "bump": [],
+        "count_letters": [],
+        "discount": [],
+        "halve": [],
+        "is_even": [],
+        "main": ["clock", "env", "ffi", "io", "net"],
+        "negated": [],
+        "quarter": [],
+        "rows_of": [],
+        "scan_list": [],
+        "shift": [],
+        "shout": [],
+        "sum_to": [],
+        "tag_it": []
+      }
     },
     {
       "file": "examples/wordcount.vel",
@@ -36,7 +83,16 @@
         "fs:read",
         "io"
       ],
-      "note": "reads the file named on its command line, so the audit cannot name the path"
+      "counts": {"fs": 1},
+      "functions": {
+        "bar": [],
+        "clean": [],
+        "count_words": [],
+        "main": ["fs", "io"],
+        "report": [],
+        "to_tallies": [],
+        "total_words": []
+      }
     }
   ]
 }

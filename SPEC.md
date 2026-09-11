@@ -1,14 +1,16 @@
 # The Velaris capability format
 
-Version 0.2, 2026-09-11. Dedicated to the public domain under CC0 1.0;
+Version 0.3, 2026-09-11. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
 <https://github.com/gowrishankar-infra/velaris-lang>. This text was
 first extracted from velaris-lang 3.1.1 (commit `25d2c05`); version 0.2
-tracks velaris-lang 3.3.0, which fixed the five defects the extraction
-found, and describes what that version does. Conformance is defined by
-the suite in that repository (section 10), not by this text.
+tracked velaris-lang 3.3.0, which fixed the five defects the extraction
+found; version 0.3 tracks velaris-lang 4.0.0, which reads and writes
+the baseline of section 9, so that section is no longer provisional.
+Conformance is defined by the suite in that repository (section 10),
+not by this text.
 
 ## 0. About this document
 
@@ -23,8 +25,9 @@ This document specifies:
   and what a grant does not bound (section 7);
 - `velaris.audit/1`, the JSON report of what a program declares and
   names (section 8);
-- `velaris.capabilities/0`, a provisional JSON baseline a repository
-  can hold its programs to (section 9).
+- `velaris.capabilities/1`, the JSON baseline in which a repository
+  declares the capability surface its programs may have, and the
+  comparison that fails a change which widens it (section 9).
 
 It does not specify the rest of the Velaris language - types,
 contracts, proofs, failure - or the time and memory limits a runtime
@@ -34,12 +37,13 @@ SPEC.md, EMBEDDING.md and THREAT_MODEL.md cover those.
 
 **Conventions.** MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
 read as described in RFC 2119 and RFC 8174 when, and only when, they
-appear in capitals. "The reference" means velaris-lang 3.3.0. A
+appear in capitals. "The reference" means velaris-lang 4.0.0. A
 paragraph marked *Reference behaviour* records what the reference does
 at a point this document does not yet settle; each such point is also
-an open question in section 11. A paragraph marked *Resolved in 0.2*
-records a point that version 0.1 left open and this version settles,
-naming the velaris-lang release that made the reference match.
+an open question in section 11. A paragraph marked *Resolved in 0.2* or
+*Resolved in 0.3* records a point that an earlier version left open and
+that version settles, naming the velaris-lang release that made the
+reference match.
 
 Where this document and the reference disagree, that is a bug in one of
 them. Until it is resolved, the conformance suite decides.
@@ -362,6 +366,14 @@ reference's MCP tool `velaris_run` and its HTTP `POST /run` default to
 `io` alone. A tool built on this format SHOULD require an explicit
 budget, or default to one that grants no more than `io`.
 
+The reference's two doors also have a ceiling, the most a request may
+ask for, compared under section 5.5. For the MCP server it is `io`
+unless its operator names a wider one (from velaris-lang 3.4); for the
+HTTP door it is `io` from velaris-lang 4.0, where before a door started
+without one granted all seven effects. A tool that takes budgets from
+callers SHOULD have a ceiling, and SHOULD make it no wider than `io`
+unless its operator says otherwise.
+
 ### 4.7 Canonical text
 
 Informative. The reference writes a parsed budget back as text - to
@@ -575,9 +587,9 @@ rate, or what they carry.
 
 ### 5.5 One budget inside another
 
-The reference uses this relation for its HTTP door's ceiling
-(`--max-allow`): a request may ask for any budget the ceiling covers.
-Section 9 uses it, grant by grant, for baselines. A budget C covers a
+The reference uses this relation for the ceilings of its HTTP door and
+its MCP server (`--max-allow`): a request may ask for any budget the
+ceiling covers. Section 9 uses it, grant by grant, for baselines. A budget C covers a
 budget A when all of the following hold:
 
 1. C grants every effect A grants.
@@ -671,8 +683,9 @@ format can say more exactly what it does not cover.
   a `write` grant alone, so a write-only grant lets a program learn
   whether paths under it exist.
 - **Time, memory and processor use.** The reference offers a time limit
-  and a memory cap as settings of a run. They are not part of this
-  format, and they have platform limits of their own (see the
+  and a memory cap as settings of a run, and from velaris-lang 4.0 its
+  doors hold both to ceilings the operator sets. They are not part of
+  this format, and they have platform limits of their own (see the
   reference's THREAT_MODEL.md).
 - **Side channels**: timing, load, cache effects.
 - **Reads while compiling.** In the reference, `import "path.vel"`
@@ -739,13 +752,14 @@ was added.
 | `contract_coverage` | array of strings | functions in the audited file that take or return a `List`, a `Map` or a record and have no `requires` or `ensures` | 2.62 |
 | `fs_paths` | object | `read` and `write`: sorted arrays of path text, exactly as written, not resolved. `read` holds the literal first argument of every `read_file` and `file_exists` call anywhere in the program as loaded; `write`, of every `write_file` call. `read_any` and `write_any`: true when some such call's argument is not a literal. | 3.0 |
 | `net_hosts` | object | `hosts`: a sorted array. For each literal URL given as the first argument of `fetch`, `post` or `fetch_status`, or the second of `request`, anywhere in the program as loaded: `https://` is put in front if it begins with neither `http://` nor `https://`; the host is lower-cased and trailing dots removed; the entry is the host, or `host:port` when the URL writes a port. From velaris-lang 3.3.0 an IPv6 host is written in brackets (`[::1]`, `[::1]:443`), so `host:port` is never ambiguous, and any of `, @ [ ] %` in a host is percent-encoded (a `net:` grant, section 5.2). `any`: true when some such argument is not a literal, or has no host. | 3.0 (IPv6 bracketed, 3.3) |
+| `ffi_any` | boolean | true when the module argument of some `py`, `py_int`, `py_float`, `py_json` or `py_new` call, anywhere in the program as loaded, is not a literal - a module named by a value built while running, which `ffi_modules` cannot list | 4.0 |
 
 Two scopes are at work, and they differ. `effects`, `functions`,
 `loops_unshown` and `contract_coverage` describe the functions defined
-in the audited file. `ffi_modules`, `fs_paths` and `net_hosts` read the
-literals of every function loaded, including functions in imported
-files that the program never calls, so they can list more than the
-program's own calls reach.
+in the audited file. `ffi_modules`, `ffi_any`, `fs_paths` and
+`net_hosts` read the literals of every function loaded, including
+functions in imported files that the program never calls, so they can
+list more than the program's own calls reach.
 
 ### 8.3 How safe_command is derived
 
@@ -771,14 +785,20 @@ reproduces the grants it was built from.
 
 ### 8.4 What an audit does not tell you
 
-- **It reads literals only.** A path or URL built at runtime is
-  reported through `read_any`, `write_any` and `any`. For modules there
-  is no such flag in version 1: a module named by a computed value is
-  absent from `ffi_modules`, and nothing says one exists. A program
-  whose `ffi_modules` is `["math"]` may also call a module whose name
-  it builds while running. Under the `safe_command`'s `ffi:math` that
-  call is refused (E311), so the gap errs toward refusal at runtime,
-  but a reader of the audit is not told of it. Open question Q4.
+- **It reads literals only.** A path, URL or module named by a value
+  built at runtime is reported through `read_any`, `write_any`, `any`
+  and - from velaris-lang 4.0 - `ffi_any`, not listed. A program whose
+  `ffi_modules` is `["math"]` and whose `ffi_any` is true also calls a
+  module whose name it builds while running; under the `safe_command`'s
+  `ffi:math` that call is refused (E311), so `safe_command` still errs
+  toward refusal, and section 9 takes such a program to need unscoped
+  `ffi`.
+- *Resolved in 0.3 (velaris-lang 4.0.0).* Version 0.2 recorded that
+  nothing in `velaris.audit/1` said a module was named by a computed
+  value, so a reader of the audit was not told such a call existed.
+  `ffi_any` is added within version 1, as an optional field, closing
+  open question Q4. A document from a producer before 4.0 lacks it, and
+  says nothing either way.
 - **`safe_command` is the narrowest budget the audit can write, not a
   budget known to be enough, and not one known to be safe.** It grants
   every declared effect, `ffi` included, and a relative path in it
@@ -795,102 +815,207 @@ reproduces the grants it was built from.
   reaches the audit. This closes open question Q5.
 - **When `ok` is false, no field bounds anything.**
 
-## 9. velaris.capabilities/0 (provisional)
+## 9. velaris.capabilities/1
 
-**This section is provisional.** The reference implementation does not
-read or write this document yet. It is defined now so that tools can be
-written against a fixed text, and so that the reference has a text to
-implement. Until the reference ships it, this section may change
-without the schema name changing; the `/0` says so. The form the
-reference ships will be `velaris.capabilities/1`.
+*Resolved in 0.3 (velaris-lang 4.0.0).* Versions 0.1 and 0.2 defined a
+provisional `velaris.capabilities/0` that no implementation read or
+wrote. From 4.0.0 the reference writes and reads the document this
+section defines, `velaris.capabilities/1`, and the section is no longer
+provisional. `/1` keeps `/0`'s grant grammar, covering rule and
+per-program entries, and adds what `/0` could not express: the
+repository's whole surface, a bound on operations, the effects of each
+function, and the version and date of the producer. The `/0` schema is
+kept in `schemas/` for the record; no reference version wrote a `/0`
+document, and the reference refuses to compare against one.
 
 ### 9.1 What it is for
 
-A baseline is a file committed to a repository. For each program it
-records the grants the program's audit says it needs. A check in CI
-compares each program's current audit with its entry, and fails when
-the program has come to need something the entry does not cover: a new
-effect, a new module, a path, a host. A tool may narrow an entry when a
-program comes to need less - the ratchet moves one way on its own - but
-an entry is widened only by someone editing the file, where the change
-shows in review.
+A repository commits a baseline declaring the capability surface its
+programs may have. A check in CI derives the surface the working tree
+needs and fails when it is wider. Its purpose is change made a little
+at a time: capability assembled across many commits, each of which
+looks harmless to a reviewer reading its diff - a helper that builds a
+URL, a function that reads a file, then a call three levels down that
+sends one to the other. Capability is binary and cumulative, so the
+sum of those steps reaches exactly as far as one step that did it all
+at once; but only a comparison with a declared baseline sees the sum.
+A comparison of each commit with the one before it sees each step
+alone, and once a widening has been merged, sees nothing at all.
 
-A baseline records what a program's text names, not what a run may do.
+So the rule of this section: **a check compares the tree with the
+baseline, and with nothing else.** A widening, once introduced, fails
+every later check until the baseline itself is edited - which is a
+change to a file, made by a person, visible in review.
+
+A baseline records what programs' text needs, not what a run may do.
 It is not a budget, though its grants are written in the budget
-grammar, and an entry's grants joined with commas make a budget an
-operator may choose to run under.
+grammar, and a program's grants joined with commas, with its counts
+appended, make a budget an operator may choose to run under.
 
 ### 9.2 The document
 
-A JSON object with these fields, and no others:
+A JSON object:
 
-| Field | Required | Meaning |
-|---|---|---|
-| `schema` | yes | `"velaris.capabilities/0"` |
-| `generated_by` | no | informative: what wrote the document |
-| `programs` | yes | an array of entries, sorted by `file`, no two with the same `file` |
+| Field | Meaning |
+|---|---|
+| `schema` | `"velaris.capabilities/1"` |
+| `velaris_version` | the version of the producer that wrote it. Informative: a checker of another version SHOULD warn, and MUST NOT fail for that reason alone |
+| `date` | the day it was written, `YYYY-MM-DD`, UTC. Informative |
+| `surface` | the repository's surface: `grants`, an array of grants, and `counts`, an object (below) |
+| `programs` | an array of program entries, sorted by `file`, no two with the same `file` |
 
-Each entry has these fields, and no others:
+A program entry is one of two shapes:
 
-| Field | Required | Meaning |
-|---|---|---|
-| `file` | yes | the program's entry file, relative to the directory holding the baseline; `/`-separated; not beginning with `/`; no empty, `.` or `..` component; no `\` |
-| `grants` | yes | an array of grants, possibly empty |
-| `note` | no | text for people; tools MUST NOT read meaning into it |
+| Shape | Fields |
+|---|---|
+| a program that compiled | `file`; `grants`, an array; `counts`, an object; `functions`, an object mapping the name of each function the file defines (inline function values are not listed) to the sorted array of effects it declares |
+| a program that did not | `file`, and `compiles`: `false` |
 
-Grants in a baseline use the grammar of section 4 with these
-restrictions, so that an entry means the same thing on every machine:
+`file` is the program's path relative to the directory holding the
+baseline: `/`-separated, not beginning with `/`, with no empty, `.` or
+`..` component, and no `\`.
 
-1. **No counts.** A count is an operator's decision about a run, not a
-   property of a program's text.
+`counts` has at most two keys, `fs` and `net`. A key's value is a whole
+number N - at most N operations of that effect in one run, derived as
+section 9.4 says - or `null`, meaning the text sets no bound. An effect
+with grants in the same list and no key in `counts` has no bound, as a
+budget with no count has none (section 5.4).
+
+Grants use the grammar of section 4, with these restrictions so that a
+grant means the same on every machine:
+
+1. **No counts** in a grant; counts are in `counts`.
 2. **One module per grant**: `ffi:math` and `ffi:json`, never the
    continuation form.
-3. **Paths as the program writes them**, compared as text (section 9.4)
+3. **Paths as the program writes them**, compared as text (section 9.5)
    and never resolved against a file system. No `,` or `@` in a path.
-4. **Hosts lower case**; IPv6 addresses in brackets.
+4. **Hosts lower case**, IPv6 addresses in brackets.
 5. **Reduced**: sorted by code point, no repeats, and no grant that
-   another grant in the same entry covers (section 9.4). So an entry
-   never holds `ffi` together with `ffi:M`: `ffi` covers `ffi:M`
-   (section 9.4), and as a budget `ffi` grants every module anyway
-   (section 4.3), so the `ffi:M` would add nothing.
+   another grant in the same list covers (section 9.5). Of two grants
+   that cover each other - two spellings of one path - the first in
+   code-point order is kept.
 
-The schema,
-[schemas/velaris.capabilities.0.schema.json](schemas/velaris.capabilities.0.schema.json),
-checks the shape of all of this; it cannot check sorting, reduction or
-the port range, and `tools/validate.py` checks the sorting.
+Within version 1, fields may be added. A consumer MUST ignore a field
+it does not know. The schema,
+[schemas/velaris.capabilities.1.schema.json](schemas/velaris.capabilities.1.schema.json),
+checks the shape; it cannot check sorting, reduction or the port
+range, which `tools/validate.py` checks for the first two.
 
-### 9.3 From an audit to grants
+### 9.3 From a program's text to what it needs
 
-A program's current grants are derived from a `velaris.audit/1`
-document D of it:
+Each `.vel` file under the directory holding the baseline is a program,
+except files inside a `.git` directory and, where that directory is in
+a git work tree, files git ignores. For each:
 
-1. If D's `ok` is false, the program has no current grants and the
-   comparison fails: a program that does not compile cannot be
-   compared.
-2. If a name in D's `effects` is not one of the seven effects, the
-   derivation fails.
-3. For each name e in D's `effects`:
+1. **Load and check it.** Read the file and everything it imports, and
+   run the checks that need no prover: the rules of section 3.2, the
+   shape of `main`, and the language's type rules. If loading or a
+   check fails, the program *does not compile*: its entry is
+   `{"file": ..., "compiles": false}` and it needs nothing, since it
+   cannot run. The prover does not take part, so the result is the
+   same with and without one.
+2. **Its functions** are those the file defines, not counting inline
+   function values - plus `main`, when the file imports its `main`
+   from another file instead of defining one, because running the file
+   runs that `main`.
+3. **Its effects** are the union of its functions' declarations.
+4. **Fixed text.** An argument is *fixed* when it is a text literal; or
+   a variable of the calling function that is bound exactly once, by a
+   `let` whose value is fixed text, and is never assigned, bound by a
+   `check`, or a parameter; or `+` of two fixed texts. Any other
+   argument is *built while running*.
+5. **What its calls name**, read over every function loaded - its own
+   and every imported file's, as `velaris.audit/1` reads them (section
+   8.2): the paths given to `read_file` and `file_exists` (read) and to
+   `write_file` (write); the `net_hosts` entry (section 8.2) of the URL
+   given to `fetch`, `post` or `fetch_status`, or as the second argument
+   of `request`; the module given to `py`, `py_int`, `py_float`,
+   `py_json` or `py_new`, up to its first `.`. For each of the three, a
+   flag says some such argument was built while running.
+6. **Its grants.** For each effect e in step 3, in order:
    - `io`, `env`, `clock`, `rand`: e.
-   - `ffi`: one `ffi:M` for each M in `ffi_modules`; `ffi` if it is
-     empty.
-   - `fs`: for each direction d, `read` and then `write`: `fs:d` when
-     `fs_paths.d_any` is true, or when any path listed for d contains
-     `,` or `@`; otherwise one `fs:d:P` for each path P listed for d.
+   - `ffi`: one `ffi:M` for each module named, or `ffi` alone when a
+     module argument was built while running, when none was named, or
+     when a module named is empty or holds `,`, `@`, `:` or whitespace.
+   - `fs`: for each direction d, `read` then `write`: `fs:d` alone when
+     a path argument for d was built while running, or a path for d is
+     empty, holds `,`, `@`, a tab, a line break, or leading or trailing
+     whitespace; otherwise one `fs:d:P` for each path P named for d.
      If this produced nothing, `fs`.
-   - `net`: `net` when `net_hosts.any` is true, when `hosts` is empty,
-     or when any entry of `hosts` contains more than one `:` or any of
-     `,`, `@`, `/`, `*`. Otherwise one `net:E` for each entry E.
-4. Reduce (section 9.2, rule 5).
+   - `net`: `net` alone when a URL argument was built while running,
+     when no host was named, or when an entry holds `*` or `/`, or more
+     than one `:` outside brackets; otherwise one `net:E` for each
+     entry E.
 
-These are the rules of section 8.3 with the reference's `safe_command`
-defects closed in the conservative direction. An entry with more than
-one `:` is an IPv6 address with or without a port, and
-`velaris.audit/1` cannot say which; where the audit's text is
-ambiguous, the derivation takes the unscoped grant, which a scoped
-baseline entry does not cover, so the ambiguity surfaces as a failure
-someone has to look at.
+   Then reduce (section 9.2, rule 5). Wherever the text cannot fix a
+   scope, the grant is unscoped - wider - so a scoped baseline does not
+   cover it and someone has to look.
+7. **Its counts**: for `fs` and for `net`, when step 3 includes it, the
+   largest bound (section 9.4) of any of its functions (step 2). For a
+   file with a `main` that calls every other function, this is the
+   bound on one run.
+8. **Its `functions`**: each function the file defines, with its own
+   declaration, sorted.
 
-### 9.4 When one grant covers another
+The **surface** of a tree is the union of the grants of its programs
+that compile, reduced, and for `fs` and `net` the largest count any of
+them has, `null` exceeding every number.
+
+The reference's `velaris.audit/1` reads literals only (section 8.4);
+step 4 reads fixed text, so moving a literal into a variable bound once
+does not change what a program needs.
+
+### 9.4 A bound on operations
+
+An *operation* is a call to `read_file`, `write_file` or `file_exists`
+(an `fs` operation) or to `fetch`, `post`, `fetch_status` or `request`
+(a `net` operation) - exactly the calls a runtime counts against a
+budget's count (section 5.4). For a function f and each of the two
+effects, B(f) is the most operations of that effect one call to f can
+perform, a whole number or infinity:
+
+- **An expression** is the sum over the calls inside it: a call adds 1
+  when it is an operation of that effect, plus B of the callee when it
+  calls a function of the program. An inline function value adds
+  nothing: it is pure (section 3.2, T4).
+- **Statements in sequence** add. `let`, assignment, `return`, `fail`
+  and an expression statement count their expression. `if` counts its
+  condition and the larger of its two branches; `check` counts its
+  subject and the larger of its two arms. Both `and` and `or` count
+  both sides.
+- **A loop** `while C { S }` that turns at most T times counts C T+1
+  times and S T times, where zero times infinity is zero. T is the
+  smallest of the bounds its condition gives, and infinity when it
+  gives none. A conjunct `v < E`, `v <= E`, `v > E` or `v >= E` of C (v
+  on either side) gives a bound when: v is assigned in S; every path
+  through S that reaches its end moves v by exactly one step toward E
+  and assigns it nowhere else (the termination rule of velaris-lang
+  SPEC.md section 9.5); and v's value s on entry to the loop, and E's
+  value l, are known (below). The bound is then l − s for `<`,
+  l − s + 1 for `<=`, s − l for `>` and s − l + 1 for `>=`, or 0 when
+  that is negative. When every path through S leaves the loop by
+  `return` or `fail`, the bound is 1. A `for` loop is the `while` loop
+  it stands for (velaris-lang SPEC.md section 9.5).
+- **Known values.** Walking a function's statements in order, a `let`
+  or assignment whose value is built from whole-number literals, known
+  variables, negation, `+`, `-` and `*`, or is `length` of a list
+  literal, or of a variable known to hold a list literal of n items,
+  makes the variable known; a `let` or assignment of a list literal
+  makes it known to hold that many items; any other `let` or
+  assignment forgets the variable. After an `if`, a `check` or a loop,
+  every variable bound inside it is forgotten. A loop's body starts
+  from the values known on entry, less the variables the body binds,
+  and E's value is taken only from those.
+- **Recursion.** A call to a function whose bound is still being
+  computed contributes infinity for each counted effect that function
+  declares.
+
+A bound greater than 2^53 is written as `null`. The rules give a bound
+at least as large as the operations any run can perform, for a
+program that compiles; they do not try to be tight, and a loop whose
+turns the text does not fix has none.
+
+### 9.5 When one grant covers another
 
 A grant b covers a grant c when one of these holds:
 
@@ -898,73 +1023,157 @@ A grant b covers a grant c when one of these holds:
 - b is `ffi` and c is `ffi:M`;
 - b is `fs` and c is any `fs` grant;
 - b is `fs:d` and c is `fs:d:P`;
-- b is `fs:d:Q` and c is `fs:d:P`, and N(P) = N(Q), or N(P) begins
-  with N(Q) followed by `/`, or N(Q) is `.` and N(P) is relative and is
-  neither `..` nor begins with `../`;
+- b is `fs:d:Q` and c is `fs:d:P`, and N(P) = N(Q), or - when neither
+  holds a `\` - N(P) begins with N(Q) followed by `/`, or N(Q) is `.`
+  and N(P) is relative and is neither `..` nor begins with `../`, or
+  N(Q) is `/` and N(P) begins with `/`;
 - b is `net` and c is any `net` grant;
 - b is `net:H` or `net:H:p`, c is `net:h` or `net:h:q`, the port p is
   absent from b or equal to q (so a grant with a port does not cover
   one without), and either H and h are both wildcards and equal, or h
-  is not a wildcard and H matches it (section 5.2).
+  is not a wildcard and H matches it (section 5.2);
+- b and c are the same one of `io`, `env`, `clock`, `rand`.
 
 N(P) is P with every run of `/` made one `/`; every `.` component
 removed; every `..` removed together with the component before it,
 when there is one and it is not `..`; a `..` directly after a leading
 `/` removed; a trailing `/` removed; and an empty result made `.`. So
 N(`./data/`) is `data`, N(`a/../b`) is `b`, and N(`../x`) is `../x`.
-`\` is not a separator (open question Q7), and comparison is
-case-sensitive.
+Comparison is case-sensitive. A path holding a `\` is covered only by
+the same text or an unscoped grant, because on Windows `\` separates
+components - `data/..\..\x` lies outside `data` - and on other systems
+it does not (open question Q7).
 
 This is the relation of section 5.5, applied grant by grant, with paths
 compared as text instead of resolved.
 
-### 9.5 The ratchet
+### 9.6 The ratchet
 
-For each program a tool checks - which files it checks is the tool's
-choice, usually every `.vel` file in the repository:
+A check derives every program of the tree (section 9.3) and compares
+the result with the baseline B - **with B and nothing else**: not with
+a previous commit, not with an earlier derivation. For each program P
+that compiles, let E be B's entry for P's file, when there is one that
+does not say `"compiles": false`. The tree widens B, and the check
+fails, when any of these holds:
 
-- **R1.** If the baseline has no entry for the program, the check fails
-  and reports the program's current grants.
-- **R2.** If the current grants cannot be derived (section 9.3, steps 1
-  and 2), the check fails.
-- **R3.** Otherwise the check passes when every current grant is
-  covered by some grant of the entry, and fails when one is not, naming
-  each grant that is not covered.
-- **R4.** When the check passes, a tool MAY replace the entry with the
-  program's current grants - that is the ratchet tightening. A tool
-  MUST NOT write an entry the existing entry does not cover unless a
-  person asks for it in so many words (for example with a flag named
-  for accepting a widening), so that every widening arrives as a change
-  to the baseline in review.
-- **R5.** An entry for a file that no longer exists is not a failure,
-  and a tool MAY remove it.
+| | Widens when |
+|---|---|
+| W1 | a grant of P is not covered (section 9.5) by any grant of B's surface |
+| W2 | P has a count for `fs` or `net`, B's surface has a grant of that effect, and P's count exceeds the surface's (`null` exceeds every number; a surface with no count for it has no bound) |
+| W3 | there is an E, and a grant of P is not covered by any grant of E |
+| W4 | there is an E with a grant of that effect, and P's count for `fs` or `net` exceeds E's |
+| W5 | there is an E, P defines a function E's `functions` names, and P's declaration of it has an effect E's list for it does not |
 
-### 9.6 Example
+Read by the kind of scope, a change widens B when it brings:
+
+| Scope | A widening | Not a widening |
+|---|---|---|
+| an effect | a grant of an effect B's surface has no grant of | - |
+| an `fs` path | `fs:d:P` with P outside every recorded path for d (`./data` widened to `./`); `fs:d` where B holds only paths for d; `fs` where B holds only `fs:read`/`fs:write` grants; any direction B does not hold | a path under a recorded one (`./data/x.csv` under `./data`); another spelling of the same path |
+| a `net` host | a host no grant matches; `net:*.D` where B holds only single hosts under D; a grant without a port where B holds the host only with one; `net` where B holds only hosts | a host a recorded wildcard matches by one label; a host with a port where B holds it without one |
+| an `ffi` module | a module B does not name; `ffi` where B holds only `ffi:M` grants | a module B names |
+| a count | a larger number; `null` against a number | a smaller number or the same |
+| a function | an effect added to a function B records, even when its program's grants and counts stay the same (W5) | a function B does not record; one that declares fewer effects |
+
+These are **not** failures, and a check MUST NOT fail for them:
+
+- **Narrowing**: a grant of B nothing needs, a lower count, a function
+  that declares less. A check SHOULD report narrowing, so the baseline
+  can be tightened.
+- **A program B does not record.** It is held to W1 and W2 only: a new
+  program that stays inside the surface the repository declared does
+  not widen it.
+- **A program B records that is not there**, or that does not compile
+  now: one cannot run, and the other adds nothing until it compiles.
+  A check SHOULD report both.
+- **A different producer version** in B: a check SHOULD warn that its
+  own derivation or standard library may differ from the producer's.
+
+A check MUST report each widening: the grant, count or function, the
+program, and which of W1 to W5 it fails - whether B's surface or the
+program's own entry does not cover it. It SHOULD name the call that
+makes a grant needed - file, line and function - and the chain of
+calls from the program's `main` that reaches it, and the edit to B
+that would accept the widening. The reference's `--json` report names
+the rules in each finding's `rules`.
+
+A check MUST NOT pass when it cannot compare: when there is no B, B is
+not `velaris.capabilities/1`, or a grant in B is not one section 9.2
+allows. The reference exits 2 in these cases, 1 for a widening, and 0
+otherwise.
+
+A tool MUST NOT write a baseline that does not cover the existing one,
+unless a person asks for it in so many words - the reference's
+`velaris capabilities init` refuses to replace a baseline without
+`--force` - so that every widening arrives as a change to the file, in
+review.
+
+*Informative.* The reference's `velaris review --against REF` derives
+the same for the files at a git ref, read with `git show` rather than
+checked out, and reports how the working tree differs from it,
+together with the proven share and the functions that became fallible.
+It compares with a previous state, so it is a report for a reviewer,
+not the ratchet: once a widening has been merged, a review against the
+commit after it no longer sees it, and a check against B still does.
+
+### 9.7 Example
 
 [examples/velaris-lang.capabilities.json](examples/velaris-lang.capabilities.json)
-is what a baseline at the root of velaris-lang would hold for four of
-its example programs, derived under section 9.3 from the four audits in
-[examples/audits/](examples/audits):
+is what velaris-lang 4.0.0 writes for a tree holding four of its
+example programs. Each program's entry is the one velaris-lang's own
+baseline holds for it; the surface is the union of these four alone:
 
 ```json
 {
-  "schema": "velaris.capabilities/0",
+  "schema": "velaris.capabilities/1",
+  "velaris_version": "4.0.0",
+  "date": "2026-09-11",
+  "surface": {
+    "grants": ["clock", "env", "ffi:datetime", "ffi:math", "ffi:sqlite3",
+               "fs:read", "fs:write:report.txt", "io",
+               "net:raw.githubusercontent.com", "rand"],
+    "counts": {"fs": 2, "net": 1}
+  },
   "programs": [
     {"file": "examples/effects.vel",
-     "grants": ["clock", "fs:read:report.txt", "fs:write:report.txt", "io", "rand"]},
-    {"file": "examples/pipeline.vel", "grants": ["io"]},
-    {"file": "examples/stress.vel",
-     "grants": ["clock", "env", "ffi:datetime", "ffi:math", "ffi:sqlite3", "io",
-                "net:raw.githubusercontent.com"]},
-    {"file": "examples/wordcount.vel", "grants": ["fs:read", "io"]}
+     "grants": ["clock", "fs:read:report.txt", "fs:write:report.txt",
+                "io", "rand"],
+     "counts": {"fs": 2},
+     "functions": {"dice": ["rand"],
+                   "main": ["clock", "fs", "io", "rand"],
+                   "save_report": ["fs"], "timestamp": ["clock"]}},
+    {"file": "examples/pipeline.vel", "grants": ["io"], "counts": {},
+     "functions": {"main": ["io"], "total_of": []}},
+    ...
   ]
 }
 ```
 
-If `examples/pipeline.vel` came to read a file whose name it is
-given on its command line, its audit would add `fs` with `read_any`,
-its current grants would become `["fs:read", "io"]`, and the check
-would fail on `fs:read` until someone widened the entry.
+`fs:read:report.txt` is in `effects.vel`'s entry and not in the
+surface, because `wordcount.vel` reads a path it is given, so the
+surface holds `fs:read`, which covers it. If `pipeline.vel` came to
+read a file named on its command line, it would need `fs:read`: the
+surface covers that (W1 holds), but its own entry grants only `io`,
+so W3 fails, and so does W5 for `main`. If `effects.vel` came to write
+its report twice, its `fs` count would be 3: W2 and W4 fail.
+
+### 9.8 What a baseline does not tell you
+
+- **What a granted module does.** `ffi:os` in a baseline is the
+  operating system, and a program that newly calls `os.system` through
+  it is inside the surface (section 7).
+- **Where a path leads.** Paths are compared as text; a symbolic link
+  under a recorded directory is that directory's content. A budget
+  built from the baseline resolves every path when it runs (section
+  5.1), which is where that is caught.
+- **A function's history.** A function is known by its file and name.
+  One renamed as it gains an effect is a new function, held to W1 to
+  W4 and not to what its old name declared.
+- **Anything about a program that does not compile.**
+- **Anything, if the check is not required.** A baseline is a control
+  only where a failing check blocks a change, and an edit to the
+  baseline is the acceptance of a widening: who may make that edit is
+  the repository's decision.
 
 ## 10. Conformance
 
@@ -972,16 +1181,17 @@ Conformance is defined by the suite in the reference implementation's
 repository, not by this text. From velaris-lang 3.2.0, its
 ARCHITECTURE.md names that suite: `check_termination.py`,
 `check_sandbox.py`, `check_refusals.py`, `check_fallible.py` and
-`check_library.py`. An implementation claiming velaris.capabilities
-compliance must pass the subset of those five that does not require
-the prover - that is, each suite as it runs when the Z3 prover is not
-installed. Each suite detects the prover and, without it, skips the
-checks that need it or asserts the runtime fallback instead.
+`check_library.py`, and from velaris-lang 4.0.0 `check_ratchet.py`. An
+implementation claiming velaris.capabilities compliance must pass the
+subset of those six that does not require the prover - that is, each
+suite as it runs when the Z3 prover is not installed. Each suite
+detects the prover and, without it, skips the checks that need it or
+asserts the runtime fallback instead; `check_ratchet.py` needs none.
 
-The claim covers sections 3 to 8: the effects and the transitive rule,
-the grant grammar, scoped grants and counts, enforcement, and
-`velaris.audit/1`. It does not cover `velaris.capabilities/0`, which no
-suite exercises, because the reference does not read it yet.
+The claim covers sections 3 to 9: the effects and the transitive rule,
+the grant grammar, scoped grants and counts, enforcement,
+`velaris.audit/1`, and from 0.3 `velaris.capabilities/1` and its
+comparison.
 
 | Suite | What it holds | Sections |
 |---|---|---|
@@ -990,6 +1200,7 @@ suite exercises, because the reference does not read it yet.
 | `check_refusals.py` | wrong programs refused with the right code, among them an undeclared effect (E300) | 3.2 |
 | `check_fallible.py` | every fallible builtin refused when its failure is ignored, and its failure catchable - the redirect failure of G4 among them | 6, 8 |
 | `check_termination.py` | the termination verdict for each of 44 adversarial loops, which `velaris.audit/1` reports as `loops_unshown` | 8 |
+| `check_ratchet.py` | the comparison of section 9.6, through the reference's command line, in scratch trees and real git histories: a six-commit history whose sixth commit reaches a new host three calls down, failing at that commit only, with the file, function, line and call chain named; a widening merged once and still failing against the baseline at every later commit, where a comparison with the previous commit reports nothing; widenings through an import, the standard library, a path prefix, a count, a wildcard host, a URL, path or module built while running, a new module, a new direction, and a program whose `main` is imported from outside the tree; an effect added to a function while its program's grants stay the same (W5); and changes that must pass - narrowing, reordering and reformatting, a file with no effects, a new program inside the surface, a literal moved into a variable, a function renamed or moved; the covering relation (9.5) and the operation bound (9.4) case by case; a baseline from another version (a warning), and baselines that cannot be read (exit 2) | 9 |
 
 What the suite cannot yet do as a conformance suite:
 
@@ -1011,9 +1222,9 @@ What the suite cannot yet do as a conformance suite:
 Each question is a point where this document records the reference's
 behaviour, or where the reference's own text and behaviour disagree,
 without settling what is right. Q1, Q2, Q3, Q5 and Q6 were open in
-version 0.1 and are **resolved in 0.2** (velaris-lang 3.3.0); they are
-kept here, marked resolved, so the record of what changed stays with the
-question.
+version 0.1 and are **resolved in 0.2** (velaris-lang 3.3.0); Q4 is
+**resolved in 0.3** (velaris-lang 4.0.0). They are kept here, marked
+resolved, so the record of what changed stays with the question.
 
 - **Q1. Unknown names in declarations. Resolved in 0.2.** Version 0.1
   asked whether a checker should reject a `uses` name that is not one of
@@ -1029,10 +1240,11 @@ question.
   recorded that `velaris audit FILE --json` printed a shape that is not
   `velaris.audit/1`. From velaris-lang 3.3.0 it prints
   `audit().as_dict()`, the same document as every other door (section 8).
-- **Q4. No flag for a computed module name.** `velaris.audit/1` has
-  `read_any`, `write_any` and `any`, and nothing for `ffi` (section
-  8.4). A field such as `ffi_any` would be an addition within version 1.
-  (Still open.)
+- **Q4. No flag for a computed module name. Resolved in 0.3.** Version
+  0.2 recorded that `velaris.audit/1` had `read_any`, `write_any` and
+  `any`, and nothing for `ffi`. From velaris-lang 4.0.0 it has `ffi_any`,
+  added within version 1 (section 8.2), and section 9 takes a program
+  whose `ffi_any` is true to need unscoped `ffi`.
 - **Q5. `safe_command` for IPv6 hosts and awkward paths. Resolved in
   0.2.** Version 0.1 recorded the unbracketed IPv6 form and the paths
   that did not round-trip. From velaris-lang 3.3.0 IPv6 hosts are
@@ -1045,11 +1257,15 @@ question.
   recorded a count with non-ASCII digits, `ffi:M@N`, and `ffi:` with no
   module. From velaris-lang 3.3.0 each is a budget error (sections 4.2,
   5.3), and no malformed budget produces a traceback.
-- **Q7. Windows paths in baselines.** Section 9.4 compares paths as
+- **Q7. Windows paths in baselines.** Section 9.5 compares paths as
   text with `/` as the only separator, and case-sensitively. A program
   written for Windows may name `data\in.csv`; two spellings of one path
   then compare as different, and the check fails rather than passes -
-  the safe direction, but noisy.
+  the safe direction, but noisy. From 0.3 a path holding a `\` is
+  covered only by the same text or an unscoped grant, because on
+  Windows `data/..\..\x` lies outside `data`: the version 0.2 rule
+  would have let a recorded prefix cover it. Whether a baseline should
+  instead normalise `\` on every platform is still open.
 - **Q8. A conformance harness for other languages.** The suite drives
   the reference's command line and Python library (section 10). What
   would an implementation in another language run?
@@ -1072,8 +1288,8 @@ question.
 
 ## Appendix A. The reference binding
 
-Informative: which builtins of velaris-lang 3.3.0 perform which
-operations.
+Informative: which builtins of velaris-lang 4.0.0 perform which
+operations. They are unchanged since 3.3.0.
 
 | Builtins | Effect | Operation | Checked beyond the effect |
 |---|---|---|---|
@@ -1112,6 +1328,23 @@ E310 (T5).
 
 ## Appendix C. Changes
 
+- **0.3**, 2026-09-11: tracks velaris-lang 4.0.0, which reads and writes
+  baselines. Section 9 is no longer provisional: `velaris.capabilities/0`
+  is replaced by `velaris.capabilities/1`, which records the
+  repository's surface as well as each program's grants, a bound on
+  `fs` and `net` operations (9.4), each function's effects, and the
+  producer's version and date; the derivation (9.3) reads fixed text,
+  not only literals, and takes an imported `main` into account; the
+  covering rule (9.5) compares a path holding `\` whole; and the
+  comparison (9.6) is stated as five rules, W1 to W5, with a table of
+  what widens for each kind of scope, and the rule that a check
+  compares with the baseline and nothing else. Resolves Q4:
+  `velaris.audit/1` gains `ffi_any` (section 8.2). Section 4.6 records
+  that the reference's HTTP door has had an `io` ceiling by default
+  since 4.0; section 10 adds `check_ratchet.py` to the conformance
+  suite. Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and
+  7.1 word for word - those sections did not change in 4.0 - so
+  `tools/check_sync.py` still passes.
 - **0.2**, 2026-09-11: tracks velaris-lang 3.3.0, which fixed the five
   defects the 0.1 extraction found. Resolves Q1 (an unknown name in a
   `uses` clause is rejected, section 3.2), Q2 (`ffi` grants are additive;

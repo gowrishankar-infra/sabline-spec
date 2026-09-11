@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.3/schemas/velaris.capabilities.1.schema.json",
+  "title": "velaris.capabilities/1",
+  "description": "The capability surface a repository declares its programs may have (velaris-spec SPEC.md section 9): the union of every program's grants and a bound on its fs and net operations, and for each program its own grants, counts and functions' effects. A check derives the same from the working tree and fails when the tree needs more - compared with this document, never with a previous commit. Written and read by velaris-lang from 4.0.0. Within version 1 fields may be added and a consumer must ignore those it does not know, so objects here do not forbid other properties. This schema checks shape. SPEC.md section 9 states what it cannot: that programs are sorted by file, that grants are sorted and reduced (no grant covered by another in the same list), that a port is between 1 and 65535, and how paths are normalised before comparison.",
+  "type": "object",
+  "required": [
+    "schema",
+    "velaris_version",
+    "date",
+    "surface",
+    "programs"
+  ],
+  "properties": {
+    "schema": {
+      "const": "velaris.capabilities/1"
+    },
+    "velaris_version": {
+      "description": "Informative: the version of the producer that wrote the document. A checker of another version warns and does not fail for that alone.",
+      "type": "string",
+      "minLength": 1
+    },
+    "date": {
+      "description": "Informative: the day the document was written, UTC.",
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "surface": {
+      "description": "The union of the grants of every program that compiles, reduced, and for fs and net the largest count any of them has.",
+      "type": "object",
+      "required": [
+        "grants",
+        "counts"
+      ],
+      "properties": {
+        "grants": {
+          "$ref": "#/$defs/grants"
+        },
+        "counts": {
+          "$ref": "#/$defs/counts"
+        }
+      }
+    },
+    "programs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "file": {
+      "description": "The program's path relative to the directory holding the baseline, '/'-separated, with no empty, '.' or '..' component and no backslash.",
+      "type": "string",
+      "pattern": "^(?!/)(?!.*//)(?!.*/$)(?!(?:.*/)?\\.{1,2}(?:/|$))[^\\\\]+$"
+    },
+    "entry": {
+      "oneOf": [
+        {
+          "description": "A program that compiled.",
+          "type": "object",
+          "required": [
+            "file",
+            "grants",
+            "counts",
+            "functions"
+          ],
+          "properties": {
+            "file": {
+              "$ref": "#/$defs/file"
+            },
+            "grants": {
+              "$ref": "#/$defs/grants"
+            },
+            "counts": {
+              "$ref": "#/$defs/counts"
+            },
+            "functions": {
+              "description": "Each function the file defines (not inline function values), mapped to the effects it declares, sorted.",
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "io",
+                    "env",
+                    "fs",
+                    "net",
+                    "clock",
+                    "rand",
+                    "ffi"
+                  ]
+                }
+              }
+            },
+            "compiles": {
+              "const": true
+            }
+          }
+        },
+        {
+          "description": "A program that did not compile: it cannot run, and needs nothing until it does.",
+          "type": "object",
+          "required": [
+            "file",
+            "compiles"
+          ],
+          "properties": {
+            "file": {
+              "$ref": "#/$defs/file"
+            },
+            "compiles": {
+              "const": false
+            }
+          },
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "grants"
+                ]
+              },
+              {
+                "required": [
+                  "functions"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "counts": {
+      "description": "At most one key per counted effect: a whole number N is at most N operations of that effect in one run (SPEC.md 9.4); null is no bound. A counted effect with grants and no key here has no bound.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "net": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "grants": {
+      "description": "Grants in the budget grammar of SPEC.md section 4, restricted as section 9.2 says: no counts, one module per ffi: grant, paths as the program writes them, reduced.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/grant"
+      }
+    },
+    "grant": {
+      "anyOf": [
+        {
+          "description": "An effect, unscoped.",
+          "enum": [
+            "io",
+            "env",
+            "clock",
+            "rand",
+            "ffi",
+            "fs",
+            "net"
+          ]
+        },
+        {
+          "description": "One Python module: text up to the first '.', no ',', '@', ':' or whitespace.",
+          "type": "string",
+          "pattern": "^ffi:[^,@.:\\s]+$"
+        },
+        {
+          "description": "One fs direction, any path.",
+          "enum": [
+            "fs:read",
+            "fs:write"
+          ]
+        },
+        {
+          "description": "One fs direction under a path, written as the program writes it; no ',' or '@'.",
+          "type": "string",
+          "pattern": "^fs:(read|write):[^,@]+$"
+        },
+        {
+          "description": "A host name, lower case, optionally with a port; ',' '@' '[' ']' '%' in a name are percent-encoded (SPEC.md 5.2).",
+          "type": "string",
+          "pattern": "^net:[^,@/*\\s:\\[\\]A-Z]+(:[0-9]{1,5})?$"
+        },
+        {
+          "description": "A wildcard: '*.' and at least two labels, optionally with a port.",
+          "type": "string",
+          "pattern": "^net:\\*\\.[^,@/*\\s:\\[\\]A-Z.]+(\\.[^,@/*\\s:\\[\\]A-Z.]+)+(:[0-9]{1,5})?$"
+        },
+        {
+          "description": "An IPv6 address in brackets, optionally with a port.",
+          "type": "string",
+          "pattern": "^net:\\[[0-9a-f:.%]+\\](:[0-9]{1,5})?$"
+        }
+      ]
+    }
+  }
+}

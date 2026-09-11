@@ -10,9 +10,10 @@ JSON documents that report and record all of it.
 (https://github.com/gowrishankar-infra/velaris-lang). Conformance is
 defined by the suite in that repository.**
 
-Version 0.2, 2026-09-11. First extracted from velaris-lang 3.1.1;
-version 0.2 tracks velaris-lang 3.3.0, which fixed the five defects the
-extraction found.
+Version 0.3, 2026-09-11. First extracted from velaris-lang 3.1.1;
+version 0.2 tracked velaris-lang 3.3.0, which fixed the five defects
+the extraction found; version 0.3 tracks velaris-lang 4.0.0, which
+reads and writes the baseline of section 9.
 
 ## What it covers
 
@@ -28,12 +29,18 @@ extraction found.
 - **`velaris.audit/1`**: the JSON report of what a program declares and
   names before it runs (section 8,
   [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json)).
-- **`velaris.capabilities/0`**: a baseline a repository can hold its
-  programs to, so that a change that makes a program need more fails
-  review (section 9,
-  [schemas/velaris.capabilities.0.schema.json](schemas/velaris.capabilities.0.schema.json)).
-  **Provisional**: the reference implementation does not read or write
-  it yet, and it may change until it does.
+- **`velaris.capabilities/1`**: the baseline in which a repository
+  declares the capability surface its programs may have - their
+  grants, a bound on their file and network operations, each
+  function's effects - and the comparison that fails a change which
+  needs more, made against that baseline and never against the
+  previous commit, so capability added a little at a time is caught
+  as surely as all at once (section 9,
+  [schemas/velaris.capabilities.1.schema.json](schemas/velaris.capabilities.1.schema.json)).
+  From 0.3 it is not provisional: the reference implementation writes
+  it (`velaris capabilities init`) and checks against it (`velaris
+  capabilities check`). The provisional `/0` form of 0.1 and 0.2 is
+  superseded; its schema is kept for the record.
 
 ## What it does not cover
 
@@ -60,7 +67,7 @@ lists it in section 11 as an open question.
 | [SPEC.md](SPEC.md) | the specification |
 | [schemas/](schemas) | JSON Schema (draft 2020-12) for both documents |
 | [examples/audits/](examples/audits) | four `velaris.audit/1` documents produced by velaris-lang 3.1.1, unedited |
-| [examples/velaris-lang.capabilities.json](examples/velaris-lang.capabilities.json) | a baseline derived from those four audits |
+| [examples/velaris-lang.capabilities.json](examples/velaris-lang.capabilities.json) | the `velaris.capabilities/1` baseline velaris-lang 4.0.0 writes for those four programs |
 | [PRIOR_ART.md](PRIOR_ART.md) | the published work this sits beside, and how it differs |
 | [tools/validate.py](tools/validate.py) | checks the schemas, and the examples against them |
 | [tools/check_sync.py](tools/check_sync.py) | checks the quoted sections against velaris-lang |
@@ -70,6 +77,7 @@ lists it in section 11 as an open question.
 pip install jsonschema
 python tools/validate.py
 python tools/validate.py --audits DIR          # also any audits you produced
+python tools/validate.py --capabilities FILE   # also a baseline you committed
 python tools/check_sync.py ../velaris-lang/SPEC.md
 ```
 

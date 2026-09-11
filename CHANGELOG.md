@@ -1,5 +1,49 @@
 # Changelog
 
+## 0.3 - 2026-09-11
+
+Tracks velaris-lang 4.0.0, which reads and writes the baseline of
+section 9. That section stops being provisional.
+
+- **`velaris.capabilities/1`** (SPEC.md 9) replaces the provisional
+  `/0`, which no implementation wrote. It records the repository's
+  surface - the union of its programs' grants - and for each program
+  its grants, a bound on its `fs` and `net` operations in a run, and
+  the effects each of its functions declares, or that it does not
+  compile; with the producer's version and the date. Schema:
+  `schemas/velaris.capabilities.1.schema.json`. The `/0` schema is kept,
+  marked superseded.
+- **The derivation** (9.3) is stated from the program text: the checks
+  that need no prover, then the effects of the file's functions (and of
+  an imported `main`), then the paths, hosts and modules its calls name.
+  An argument counts as named when it is fixed text - a literal, a
+  variable bound once to one, or `+` of two - so moving a literal into
+  a variable does not read as a value built while running.
+- **The operation bound** (9.4): how many `fs` and `net` operations one
+  run can perform, from loops whose counter and limit the text fixes,
+  branches, calls and recursion, with no bound where the text sets none.
+- **The covering rule** (9.5) compares a path holding a `\` whole: on
+  Windows `data/..\..\x` lies outside `data`, and the 0.2 rule let a
+  recorded prefix cover it. Q7 notes the change.
+- **The comparison** (9.6) is five rules, W1 to W5 - the surface's
+  grants and counts, a recorded program's grants and counts, and a
+  recorded function's effects - with a table of what widens for each
+  kind of scope, what is not a failure, and the rule that a check
+  compares with the baseline and with nothing else: not with a previous
+  commit. A check that cannot compare must not pass.
+- **Q4 resolved** (8.2, 8.4): `velaris.audit/1` gains `ffi_any`, an
+  optional field, true when a module is named by a value built while
+  running. The audit schema has it.
+- **4.6** records that the reference's HTTP door has had an `io` ceiling
+  by default since velaris-lang 4.0; **10** adds `check_ratchet.py` to
+  the conformance suite and extends the claim to section 9.
+- `tools/validate.py` checks examples as `velaris.capabilities/1`,
+  including reduction under 9.5, and takes `--capabilities FILE`; CI
+  holds velaris-lang's own committed baseline to it.
+- Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and 7.1 word
+  for word - those sections did not change in 4.0 - so
+  `tools/check_sync.py` still passes.
+
 ## 0.2 - 2026-09-11
 
 Tracks velaris-lang 3.3.0, which fixed the five defects the 0.1

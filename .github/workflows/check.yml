@@ -1,9 +1,9 @@
 name: check
 
-# Validate the schemas and examples, and fail if the sections SPEC.md
-# quotes from velaris-lang have drifted from velaris-lang's SPEC.md.
-# Weekly as well as on push, because the drift would start in the
-# other repository.
+# Validate the schemas and examples, and the baseline velaris-lang
+# commits for itself, and fail if the sections SPEC.md quotes from
+# velaris-lang have drifted from velaris-lang's SPEC.md. Weekly as well
+# as on push, because the drift would start in the other repository.
 
 on:
   push:
@@ -28,5 +28,5 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install jsonschema==4.26.0
-      - run: python tools/validate.py
+      - run: python tools/validate.py --capabilities velaris-lang/velaris.capabilities
       - run: python tools/check_sync.py velaris-lang/SPEC.md
