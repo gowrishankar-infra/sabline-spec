@@ -11,14 +11,14 @@ JSON documents that report and record all of it.
 defined by the corpus in [tests/](tests), at the three levels of
 [CONFORMANCE.md](CONFORMANCE.md).**
 
-Version 0.5.1, 2026-09-11. First extracted from velaris-lang 3.1.1;
+Version 0.5.2, 2026-09-11. First extracted from velaris-lang 3.1.1;
 version 0.2 tracked velaris-lang 3.3.0, which fixed the five defects
 the extraction found; version 0.3 tracked velaris-lang 4.0.0, which
 reads and writes the baseline of section 9; version 0.4 tracked
 velaris-lang 4.1.0, and added the conformance corpus and an in-toto
 predicate type; version 0.5 tracked velaris-lang 4.2.0, which writes
-Statements of that type (`velaris attest`); version 0.5.1 tracks
-velaris-lang 4.2.1 and changes no rule.
+Statements of that type (`velaris attest`); versions 0.5.1 and 0.5.2
+track velaris-lang 4.2.1 and change no rule.
 
 ## What it covers
 
@@ -94,7 +94,9 @@ and lists it in section 11 as an open question.
 | [examples/velaris-lang.capabilities.json](examples/velaris-lang.capabilities.json) | the `velaris.capabilities/1` baseline velaris-lang 4.0.0 writes for those four programs |
 | [examples/capability-statement.json](examples/capability-statement.json) | an in-toto Statement of the predicate type: what `velaris attest examples/effects.vel` writes at velaris-lang v4.2.0 |
 | [PRIOR_ART.md](PRIOR_ART.md) | the published work this sits beside, and how it differs |
-| [REGISTRY_SUBMISSION.md](REGISTRY_SUBMISSION.md) | a pull request, prepared and not sent, listing the predicate type with in-toto |
+| [REGISTRY_SUBMISSION.md](REGISTRY_SUBMISSION.md) | the pull request listing the predicate type with in-toto: its branch is pushed, and the steps left before it is opened |
+| [MCP_PROPOSAL.md](MCP_PROPOSAL.md) | a draft, not sent: a capability declaration for Model Context Protocol tools |
+| [NIST_SUBMISSION.md](NIST_SUBMISSION.md) | a draft, not sent: input to NIST's AI Agent Standards Initiative |
 | [PROVENANCE.md](PROVENANCE.md) | dates and archive identifiers |
 | [CITATION.cff](CITATION.cff) | how to cite this repository |
 | [tools/validate.py](tools/validate.py) | checks the schemas, the examples and the corpus |

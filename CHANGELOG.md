@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.5.2 - 2026-09-11
+
+Tracks velaris-lang 4.2.1. No rule, field, schema or conformance case
+changes; the corpus is still 444 cases.
+
+- **MCP_PROPOSAL.md**, a draft, not sent: an optional capability
+  declaration for Model Context Protocol tools, written against the MCP
+  specification revision 2026-07-28. It carries grants in this
+  format's grammar in a namespaced `_meta` key, uses section 9.5's
+  covering rule for a client to notice a declaration that has widened
+  since it was approved, gives two tools of velaris-lang's MCP server
+  as examples, says what would enforce a declaration and what it does
+  not solve, and names the MCP proposals it overlaps (SEP-3140,
+  SEP-1076).
+- **NIST_SUBMISSION.md**, a draft, not sent: input to NIST's AI Agent
+  Standards Initiative. Every call for input the Initiative has made
+  closed by 2026-04-02, and it records that; it is written as a general
+  submission for the next one.
+- **REGISTRY_SUBMISSION.md**: the in-toto pull request's branch is
+  pushed (gowrishankar-infra/attestation, `velaris-capability-predicate`)
+  and not opened. in-toto's AI policy asks that the pull request's
+  description be written by the submitter and that only the submitter
+  sign off for the DCO, so those steps are left to the maintainer, with
+  what the description has to state. The reviewer's verification now
+  downloads the example file's bytes instead of checking it out, because
+  a checkout that converts line endings changes its digest; run on
+  2026-09-11 with cosign v3.0.6, it verifies for v4.2.0 and v4.2.1.
+
 ## 0.5.1 - 2026-09-11
 
 Tracks velaris-lang 4.2.1. A text change only: no rule, field, schema

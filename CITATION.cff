@@ -17,7 +17,7 @@ authors:
     given-names: Gowri Shankar
 repository-code: "https://github.com/gowrishankar-infra/velaris-spec"
 license: CC0-1.0
-version: "0.5.1"
+version: "0.5.2"
 date-released: "2026-09-11"
 keywords:
   - specification

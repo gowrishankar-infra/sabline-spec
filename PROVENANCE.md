@@ -17,7 +17,8 @@ those services.
 | v0.3, `velaris.capabilities/1` | tag `v0.3` on commit `e2622eb3ba87edd233cdc6fdbfe9113d16bd70d8` | tagged 2026-09-11T13:41:55+05:30 |
 | v0.4, the conformance corpus and the predicate type | tag `v0.4` on commit `2bf8bbe189a81582772b5c6549cef6fda18524e2` | tagged 2026-09-11T16:09:41+05:30 |
 | v0.5, the producer of the predicate recorded; `counts` and `prover` in `velaris.audit/1` | tag `v0.5` on commit `f6ac9896b9204ea3b658b3d685c5b21ee257069f` | tagged 2026-09-11T19:51:32+05:30 |
-| v0.5.1, the author's name with a capital S | tag `v0.5.1` | 2026-09-11 |
+| v0.5.1, the author's name with a capital S | tag `v0.5.1` on commit `907f7fc76412dbd76c851f3e7f194d5517a2f24e` | tagged 2026-09-11T20:42:58+05:30 |
+| v0.5.2, the MCP and NIST drafts, and the in-toto pull request's state | tag `v0.5.2` | 2026-09-11 |
 
 ## velaris-lang, the reference implementation
 
