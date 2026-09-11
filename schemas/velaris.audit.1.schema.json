@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.1/schemas/velaris.audit.1.schema.json",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.2/schemas/velaris.audit.1.schema.json",
   "title": "velaris.audit/1",
   "description": "What a Velaris program declares, names and promises, before it runs: velaris-spec SPEC.md section 8. Within version 1 fields may be added and consumers must ignore fields they do not know, so no object here forbids other properties; fields added after version 1 was first released (2.52) are optional. This schema checks shape. It does not check the rules of SPEC.md section 8 that JSON Schema cannot state - for example that effects is sorted, or that it is the union of the functions' effects.",
   "type": "object",
@@ -120,7 +120,7 @@
       }
     },
     "net_hosts": {
-      "description": "Added in 3.0. Hosts named in literal URLs given to fetch, post, fetch_status and request, anywhere in the program as loaded: the host lower-cased with trailing dots removed, or host:port when the URL writes a port. IPv6 hosts are written without brackets, which makes host:port ambiguous for them (SPEC.md 8.4). any says that some URL was not a literal or had no host.",
+      "description": "Added in 3.0. Hosts named in literal URLs given to fetch, post, fetch_status and request, anywhere in the program as loaded: the host lower-cased with trailing dots removed, or host:port when the URL writes a port. From velaris-lang 3.3.0 an IPv6 host is written in brackets ([::1], [::1]:443), so host:port is unambiguous, and , @ [ ] % in a host are percent-encoded (SPEC.md 5.2, 8.2; Q5 resolved in spec 0.2). any says that some URL was not a literal or had no host.",
       "type": "object",
       "required": [
         "hosts",
@@ -143,7 +143,7 @@
   },
   "$defs": {
     "effect_name": {
-      "description": "One of io, env, fs, net, clock, rand, ffi. The reference implementation accepts any identifier in a uses clause and reports it here (SPEC.md 3.2, open question Q1), so the schema accepts any identifier rather than reject documents the reference really produces.",
+      "description": "One of io, env, fs, net, clock, rand, ffi. From velaris-lang 3.3.0 the reference rejects any other identifier in a uses clause (SPEC.md 3.2, Q1 resolved in spec 0.2), so a 3.3+ producer's effects are always a subset of the seven; the schema still accepts any identifier so that documents from earlier producers (2.52 onward), which could carry an unknown name, remain valid.",
       "type": "string",
       "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
     },

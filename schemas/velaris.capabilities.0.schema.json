@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.1/schemas/velaris.capabilities.0.schema.json",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.2/schemas/velaris.capabilities.0.schema.json",
   "title": "velaris.capabilities/0 (provisional)",
   "description": "A ratchet baseline: for each program in a repository, the grants its velaris.audit/1 document says it needs (velaris-spec SPEC.md section 9). PROVISIONAL: the reference implementation, velaris-lang, does not read or write this document yet, and until it does this format may change without the schema name changing. The shipped form will be velaris.capabilities/1. This schema checks shape. SPEC.md section 9 states the rules it cannot: that programs are sorted by file, that grants are sorted and reduced (no grant covered by another in the same entry), that a port is between 1 and 65535, and how paths are normalised before comparison.",
   "type": "object",

@@ -10,7 +10,9 @@ JSON documents that report and record all of it.
 (https://github.com/gowrishankar-infra/velaris-lang). Conformance is
 defined by the suite in that repository.**
 
-Version 0.1, 2026-09-11. Extracted from velaris-lang 3.1.1.
+Version 0.2, 2026-09-11. First extracted from velaris-lang 3.1.1;
+version 0.2 tracks velaris-lang 3.3.0, which fixed the five defects the
+extraction found.
 
 ## What it covers
 

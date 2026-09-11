@@ -1,13 +1,14 @@
 # The Velaris capability format
 
-Version 0.1, 2026-09-11. Dedicated to the public domain under CC0 1.0;
+Version 0.2, 2026-09-11. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
 <https://github.com/gowrishankar-infra/velaris-lang>. This text was
-extracted from velaris-lang 3.1.1 (commit `25d2c05`) and describes what
-that version does. Conformance is defined by the suite in that
-repository (section 10), not by this text.
+first extracted from velaris-lang 3.1.1 (commit `25d2c05`); version 0.2
+tracks velaris-lang 3.3.0, which fixed the five defects the extraction
+found, and describes what that version does. Conformance is defined by
+the suite in that repository (section 10), not by this text.
 
 ## 0. About this document
 
@@ -33,10 +34,12 @@ SPEC.md, EMBEDDING.md and THREAT_MODEL.md cover those.
 
 **Conventions.** MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
 read as described in RFC 2119 and RFC 8174 when, and only when, they
-appear in capitals. "The reference" means velaris-lang 3.1.1. A
+appear in capitals. "The reference" means velaris-lang 3.3.0. A
 paragraph marked *Reference behaviour* records what the reference does
 at a point this document does not yet settle; each such point is also
-an open question in section 11.
+an open question in section 11. A paragraph marked *Resolved in 0.2*
+records a point that version 0.1 left open and this version settles,
+naming the velaris-lang release that made the reference match.
 
 Where this document and the reference disagree, that is a bug in one of
 them. Until it is resolved, the conformance suite decides.
@@ -222,12 +225,17 @@ The reference reports T1 and T2 as E300, T4 as E530, and T5 as E310 -
 the same code as a runtime refusal (Appendix B), used here at compile
 time.
 
-*Reference behaviour.* The reference accepts any identifier in a `uses`
-clause: `uses io, teleport` compiles, and `velaris.audit/1` then lists
-`teleport` among the effects. No operation needs an unknown name and no
-budget can grant one, so it enables nothing; but it reaches the audit
-(section 8) and makes the audit's `safe_command` a budget that does not
-parse. Open question Q1.
+A `uses` clause names effects, and the seven are the only ones. A
+conforming checker MUST reject a `uses` clause naming anything else,
+before running the program, naming the seven.
+
+*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
+reference accepted any identifier in a `uses` clause: `uses io, teleport`
+compiled, `velaris.audit/1` listed `teleport` among the effects, and the
+audit's `safe_command` became a budget that does not parse. From 3.3.0
+the reference rejects an unknown name with E300, naming the seven, so
+`velaris.audit/1`'s `effects` is always a subset of them. This closes
+open question Q1.
 
 ## 4. The grant grammar
 
@@ -265,15 +273,18 @@ parse, and MUST NOT drop an item it did not understand.
       items grants nothing. (The quoted forms exist because a budget
       handed to a child process in an argument list keeps the quotes a
       shell would have removed.)
-   2. If it begins with `ffi:`, grant `ffi` restricted to named modules,
-      and add the module named by the rest of the item (section 5.3).
-      Then, while the next item is not empty, contains neither `:` nor
-      `@`, and is not one of the seven effect names, add it as another
-      module and move past it. So `ffi:math,json` names two modules;
-      `ffi:math,io` names one module and grants `io`; `ffi:math,io,json`
-      is an error, because `json` comes after `io`; `ffi:math,random`
-      names the Python module `random`, while `ffi:math,rand` grants the
-      effect `rand`.
+   2. If it begins with `ffi:`, grant `ffi` and add the module named by
+      the rest of the item to the named modules (section 5.3); the rest
+      MUST be a module name, so `ffi:` with no module and `ffi:M@N` are
+      errors (section 5.3). Then, while the next item is not empty,
+      contains neither `:` nor `@`, and is not one of the seven effect
+      names, add it as another module and move past it. So `ffi:math,json`
+      names two modules; `ffi:math,io` names one module and grants `io`;
+      `ffi:math,io,json` is an error, because `json` comes after `io`;
+      `ffi:math,random` names the Python module `random`, while
+      `ffi:math,rand` grants the effect `rand`. The named modules narrow
+      `ffi` only while no plain `ffi` has been written; a plain `ffi`
+      makes it every module (section 4.3).
    3. If it is `fs`, or begins with `fs:` or `fs@`, it is an `fs` grant
       (section 5.1).
    4. If it is `net`, or begins with `net:` or `net@`, it is a `net`
@@ -287,10 +298,14 @@ parse, and MUST NOT drop an item it did not understand.
    is the count; sections 5.1 and 5.2 read the item without it. If what
    follows the last `@` is anything else: error.
 
-*Reference behaviour.* The reference tests the count with Python's
-`str.isdigit`, which also accepts other Unicode digits: `fs@٣` is a
-count of 3, and `fs@²` stops the parser with an uncaught error instead
-of a budget error. Open question Q6.
+*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
+reference tested the count with Python's `str.isdigit`, which also
+accepts other Unicode digits, so `fs@٣` was a count of 3 and `fs@²`
+stopped the parser with an uncaught error instead of a budget error.
+From 3.3.0 a count is the ASCII digits 0 to 9 only; every other form
+after `@` is a budget error, and no malformed budget produces a
+traceback. This closes part of open question Q6 (the other two parts,
+`ffi:M@N` and `ffi:` with no module, are in section 5.3).
 
 ### 4.3 Combining grants
 
@@ -301,13 +316,22 @@ smallest (section 5.4), including a count written on an item whose
 scope an unscoped item absorbed: `fs,fs:read:./a@5` is any path, at
 most 5 operations.
 
-`ffi` is the exception, and the reference text's "Grants are additive"
-does not describe it. Once any `ffi:M` item appears, `ffi` is
-restricted to the named modules, and a plain `ffi` anywhere in the same
-budget does not widen it: `ffi,ffi:math` and `ffi:math,ffi` both grant
-`math` alone. An implementation MUST follow this restrictive reading,
-because the reference does and because it is the reading that refuses.
-Open question Q2 asks which of the two the reference text should say.
+`ffi` is additive too, the same way. A plain `ffi` grants every module;
+an `ffi:M` item narrows `ffi` to the named modules only while no plain
+`ffi` has been written. A plain `ffi` anywhere in the budget makes `ffi`
+unscoped whatever else is written, in either order: `ffi,ffi:math` and
+`ffi:math,ffi` both grant every module, because the wider grant wins,
+exactly as it does for `fs` and `net`. Two `ffi:M` items grant both
+modules.
+
+*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded the reverse:
+the reference restricted `ffi` to the named modules once any `ffi:M`
+appeared, so `ffi,ffi:math` granted `math` alone, against the reference
+text's "Grants are additive". Open question Q2 asked which of the two the
+text should say. It is settled the additive way: from 3.3.0 the reference
+makes the wider grant win, so the reference text and the parser now
+agree, and `ffi` is additive like every other effect. This closes
+open question Q2.
 
 ### 4.4 Denials
 
@@ -359,10 +383,21 @@ MUST be `read` or `write`; anything else after `fs:` is an error. P is
 everything after the second colon, so on Windows `fs:read:C:\data` has
 P = `C:\data`. If there is a second colon, P MUST NOT be empty.
 
-A path cannot contain a comma, because step 1 splits on it. A path
-whose last `@` is followed only by digits is read as a count:
-`fs:read:./x@2` is `./x` with a count of 2. A path containing `@` can
-be written only by putting a count after it: `fs:read:./a@b@4`.
+A path whose last `@` is followed only by ASCII digits is read as a
+count: `fs:read:./x@2` is `./x` with a count of 2.
+
+**Escaping (0.2).** A path may hold any character, including a comma, an
+`@`, a bracket or a percent sign, by writing these five percent-encoded:
+`,` as `%2C`, `@` as `%40`, `[` as `%5B`, `]` as `%5D`, and `%` as
+`%25`. The encoded forms carry none of the characters the grammar uses
+as structure, so `%2C` survives the comma split of step 1 and `%40`
+survives the count's `@`. When the budget is parsed, exactly these five
+sequences are decoded, in one left-to-right pass, before the path is
+resolved; every other `%` is literal, so a literal `%2C` in a path is
+written `%252C`. `fs:read:./a%2Cb.txt` is the path `./a,b.txt`, and
+`fs:read:./mail%40host` is `./mail@host`. This is the rule the
+reference's `safe_command` (section 8.3) uses to write a path back, so a
+path with a comma or an `@` round-trips.
 
 **Resolution.** P is resolved when the budget is parsed. Every path an
 operation names is resolved when the operation is attempted. Both use
@@ -400,18 +435,34 @@ A `net` item, with its count removed, is `net` or `net:S`. S is read as
 a host and an optional port:
 
 1. If S begins with `[`, the host is the text up to the next `]` (error
-   if there is none), and after the `]` there MUST be nothing, or `:`
-   followed by digits (the port).
+   if there is none, or if the brackets hold nothing), and after the `]`
+   there MUST be nothing, or `:` followed by ASCII digits (the port).
+   This is the form for an IPv6 address: `net:[::1]`, `net:[::1]:443`.
 2. Otherwise, if S contains `:` and everything after the last `:` is
-   digits, the host is the text before it and the digits are the port.
-   Otherwise the whole of S is the host. In this form a host that is
-   empty, or contains `/` or `@`, is an error.
+   ASCII digits, the host is the text before it and the digits are the
+   port. Otherwise the whole of S is the host. In this form a host that
+   is empty, or contains `/`, `@` or a residual `:`, is an error.
 3. A port MUST be from 1 to 65535.
 4. The host is lower-cased, and trailing dots are removed.
 
-An IPv6 address MUST therefore be written in brackets. *Reference
-behaviour:* `net:::1` is read by step 2 as the host `:` at port 1, and
-`net:h:x` as the host `h:x`. Open question Q5.
+An IPv6 address MUST therefore be written in brackets, so that
+`host:port` is never ambiguous. A residual `:` in an unbracketed host
+(step 2) is an error, not a host name.
+
+**Escaping (0.2).** A host may hold a `,`, `@`, `[`, `]` or `%` by
+writing it percent-encoded, exactly as a path does (section 5.1): `,` as
+`%2C`, `@` as `%40`, `[` as `%5B`, `]` as `%5D`, `%` as `%25`. The
+structural read above is done on the encoded text - so `@` and `/` are
+still errors as raw characters - and the host is decoded afterward. An
+IPv6 zone identifier's `%` is therefore written `%25`: `net:[fe80::1%25eth0]`.
+
+*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
+reference read `net:::1` as the host `:` at port 1 and `net:h:x` as the
+host `h:x`. From 3.3.0 an unbracketed IPv6 address is a budget error
+naming the bracket form to use, and a host with a residual `:` is an
+error, so `net:::1` no longer parses as a different host. This closes
+open question Q5 for the grammar; section 8.4 closes it for
+`safe_command`.
 
 **Wildcards.** A host beginning with `*.` is a wildcard over the rest,
 T. T MUST NOT be empty, MUST NOT contain `*`, MUST contain at least one
@@ -457,32 +508,47 @@ to the continuation items of step 2.2.
 
 When a program calls into the host language naming a module X - the
 first argument of `py`, `py_int`, `py_float`, `py_json` and `py_new` in
-the reference - the call is permitted when `ffi` is unscoped, or when
-the text of X up to its first `.` is one of the granted modules. The
-check happens before the module is imported.
+the reference - the call names X and then a dotted path of attributes
+reached from it (the function argument). An `ffi:M` grant bounds the
+**whole path a call reaches**, not only the module X it names:
 
-That is all the check covers:
+- The module X is checked first: the call is permitted when `ffi` is
+  unscoped, or when the text of X up to its first `.` is one of the
+  granted modules. The check happens before the module is imported.
+- The attribute chain is then resolved step by step, and at each step
+  the object reached is placed: a module by its own name, any other code
+  object (a class, a function, a bound method) by the module its code
+  lives in. If that top-level package is outside the grants, the call is
+  refused with E311 naming the module actually reached. If it cannot be
+  determined, the call is refused rather than allowed.
+- Inert data - a number, text, bytes, a list, a map - is not code from
+  any module and is not checked, so a legitimate deep attribute inside a
+  granted module (`json.decoder.JSONDecoder`) still works.
+- The same check applies to a method or attribute reached through a held
+  object (`py_do`, `py_field`), and to a non-serialisable result kept as
+  a handle: a handle to a granted module's object is not a door into an
+  ungranted one.
 
-- It is a check on the module name the call gives. The function
-  argument of those calls may be a dotted path of attributes reached
-  from the imported module, and it is not checked. Anything reachable
-  by attribute access from a granted module - including other modules
-  that module has itself imported - is reachable.
-- Calls on a host object already held (`py_do`, `py_field`, `py_close`)
-  are checked for the `ffi` effect only. Any method or attribute of the
-  object is reachable.
-- What the called code does - opening files, sockets, processes,
-  reading the environment - is not an operation of this format, and is
-  checked against no grant (section 7).
+So `ffi:M` bounds the modules a call may reach along the path it names.
+It still does not bound what a *granted* module can do: `ffi:builtins`
+grants Python's `open`; `ffi:subprocess` grants a shell; `ffi:os` is the
+whole operating system. A granted module's own C-level re-exports count
+as the module their code lives in, not as the module that re-exports
+them: `os.system` is code in the `nt`/`posix` module, so it is reached
+under `ffi:os,nt` (or `ffi:os,posix`), not under `ffi:os` alone.
 
-So `ffi:M` states which module names a program may give. It does not
-bound what those modules, or objects reached through them, can do.
-`ffi:builtins` grants Python's `open`; `ffi:subprocess` grants a shell.
+`ffi` takes no count, and `ffi:` needs a module name.
 
-`ffi` takes no count. *Reference behaviour:* `ffi:math@5` is accepted
-as a grant of a module literally named `math@5`, which no import
-matches, and `ffi:` alone grants a module whose name is empty. Open
-question Q6.
+*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
+check covered only the module name X: the attribute chain was not
+checked, so anything reachable by attribute access from a granted module
+- including other modules it imported - was reachable, and
+`py("json", "codecs.encode", ...)` ran `codecs` code under `ffi:json`.
+From 3.3.0 the whole reached path is checked as above. This closes the
+dotted-path part of open question Q9. Version 0.1 also recorded that
+`ffi:math@5` was accepted as a module literally named `math@5` and
+`ffi:` alone granted a module whose name is empty; from 3.3.0 both are
+budget errors, closing the rest of open question Q6.
 
 ### 5.4 Counts
 
@@ -581,11 +647,15 @@ format can say more exactly what it does not cover.
   process the program runs in. It guards against a program doing what
   it was not asked to. It belongs inside an operating-system sandbox, a
   network policy or a separate account when the stakes warrant one.
-- **Anything a granted `ffi` module can do, or anything reachable from
-  it** (section 5.3). Files, network access, processes and environment
-  reached through the host language are not `fs`, `net` or `env`
-  operations and are not checked against those grants. A grant of
-  `ffi:os` is the whole operating system as the current user.
+- **Anything a granted `ffi` module can do** (section 5.3). Files,
+  network access, processes and environment reached through a granted
+  module are not `fs`, `net` or `env` operations and are not checked
+  against those grants. A grant of `ffi:os` is the whole operating
+  system as the current user. From velaris-lang 3.3.0 an `ffi:M` grant
+  is bounded to the module a call actually reaches along its attribute
+  chain, so a granted module is not a door into the other modules it
+  imported; but within a granted module, that module's full behaviour is
+  granted.
 - **What a granted path contains.** A hard link inside a granted
   directory is that directory's content. A file system changed by
   another process between the check and the open is outside the model.
@@ -621,20 +691,25 @@ runs: what it declares, what it names, what it promises, and whether
 each promise is proven. In the reference it is what
 `velaris.audit(source).as_dict()` returns, and what the reference's MCP
 tool `velaris_audit`, the `POST /audit` endpoint of its HTTP door, its
-npm `audit()`, its CrewAI audit tool and its GitHub Action's pull
-request comment are built on. Its JSON Schema is
+npm `audit()`, its CrewAI audit tool, its GitHub Action's pull request
+comment, and - from velaris-lang 3.3.0 - its command line's
+`audit --json` are built on. Its JSON Schema is
 [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json);
 [examples/audits/](examples/audits) holds four documents the reference
 produced.
 
-**The reference command line is an exception.** In velaris-lang 3.1.1,
-`velaris audit FILE --json` prints an older, unversioned summary with
-different fields - `file`, `compiles`, `errors`, `effects`, `functions`
-as a count, `proven`, `checked_at_runtime`, `reaching_outside`,
-`can_fail`, `loops_unshown` as an object, `contract_coverage`, and a
-`safe_command` built from the coarse effects alone. It is not
-`velaris.audit/1`, and the schema rejects it: it has no `schema` field.
-Open question Q3.
+*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
+command line was the exception: in velaris-lang 3.1.1 `velaris audit
+FILE --json` printed an older, unversioned summary with different fields
+- `file`, `compiles`, `errors`, `effects`, `functions` as a count,
+`proven`, `checked_at_runtime`, `reaching_outside`, `can_fail`,
+`loops_unshown` as an object, `contract_coverage`, and a `safe_command`
+built from the coarse effects alone - which the schema rejected because
+it has no `schema` field. From 3.3.0 the command line prints
+`velaris.audit(source).as_dict()`, the same document as every other
+door, and its `safe_command` is derived as section 8.3 says (so
+`examples/json_ffi.vel` gives `ffi:math,io`, not `ffi,io`). This closes
+open question Q3.
 
 ### 8.1 Compatibility
 
@@ -663,7 +738,7 @@ was added.
 | `loops_unshown` | integer | loops in the audited file whose termination the reference's rule (velaris-lang SPEC.md section 9.5) does not show, including loops inside inline function values | 2.62 |
 | `contract_coverage` | array of strings | functions in the audited file that take or return a `List`, a `Map` or a record and have no `requires` or `ensures` | 2.62 |
 | `fs_paths` | object | `read` and `write`: sorted arrays of path text, exactly as written, not resolved. `read` holds the literal first argument of every `read_file` and `file_exists` call anywhere in the program as loaded; `write`, of every `write_file` call. `read_any` and `write_any`: true when some such call's argument is not a literal. | 3.0 |
-| `net_hosts` | object | `hosts`: a sorted array. For each literal URL given as the first argument of `fetch`, `post` or `fetch_status`, or the second of `request`, anywhere in the program as loaded: `https://` is put in front if it begins with neither `http://` nor `https://`; the host is lower-cased and trailing dots removed; the entry is the host, or `host:port` when the URL writes a port. IPv6 hosts are written without brackets. `any`: true when some such argument is not a literal, or has no host. | 3.0 |
+| `net_hosts` | object | `hosts`: a sorted array. For each literal URL given as the first argument of `fetch`, `post` or `fetch_status`, or the second of `request`, anywhere in the program as loaded: `https://` is put in front if it begins with neither `http://` nor `https://`; the host is lower-cased and trailing dots removed; the entry is the host, or `host:port` when the URL writes a port. From velaris-lang 3.3.0 an IPv6 host is written in brackets (`[::1]`, `[::1]:443`), so `host:port` is never ambiguous, and any of `, @ [ ] %` in a host is percent-encoded (a `net:` grant, section 5.2). `any`: true when some such argument is not a literal, or has no host. | 3.0 (IPv6 bracketed, 3.3) |
 
 Two scopes are at work, and they differ. `effects`, `functions`,
 `loops_unshown` and `contract_coverage` describe the functions defined
@@ -680,13 +755,19 @@ For each name in `effects`, in order:
   `ffi_modules` is not empty (the continuation form of section 4.2);
   otherwise `ffi`.
 - `fs`: for `read` and then `write`: `fs:read` when `read_any` is true,
-  otherwise one `fs:read:P` for each path P in `read`; and the same for
-  `write`. If this produced nothing, `fs`.
+  otherwise one `fs:read:P` for each path P in `read`, with `, @ [ ] %`
+  in P percent-encoded (section 5.1); and the same for `write`. If this
+  produced nothing, `fs`.
 - `net`: `net` when `any` is true or `hosts` is empty; otherwise one
-  `net:E` for each entry E of `hosts`.
-- any other name: the name itself.
+  `net:E` for each entry E of `hosts`, an IPv6 host bracketed and any
+  `, @ [ ] %` in a host percent-encoded (section 5.2). Each `net_hosts`
+  entry is already in this form.
+- any other name: the name itself (always one of the seven, since a
+  `uses` clause naming anything else no longer compiles, section 3.2).
 
-The results are joined with commas.
+The results are joined with commas. Because the paths and hosts are
+escaped, `safe_command` always parses, and `parse_budget` of it
+reproduces the grants it was built from.
 
 ### 8.4 What an audit does not tell you
 
@@ -702,12 +783,16 @@ The results are joined with commas.
   budget known to be enough, and not one known to be safe.** It grants
   every declared effect, `ffi` included, and a relative path in it
   resolves against the working directory of whoever runs the command.
-- *Reference behaviour.* In velaris-lang 3.1.1 `safe_command` is wrong
-  in three cases: an IPv6 literal host is written without brackets
-  (`net:::1`), which parses as a different host (section 5.2); a path
-  literal containing `,` or `@` produces text that does not parse, or
-  parses as something else (section 5.1); and an unknown name in a
-  declaration (section 3.2) is copied into it. Open question Q5.
+- *Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that in
+  velaris-lang 3.1.1 `safe_command` was wrong in three cases: an IPv6
+  literal host written without brackets (`net:::1`) parsed as a
+  different host; a path literal containing `,` or `@` produced text
+  that did not parse, or parsed as something else; and an unknown name
+  in a declaration was copied into it. From 3.3.0 IPv6 hosts are
+  bracketed and `, @ [ ] %` are percent-encoded in paths and hosts
+  (sections 5.1, 5.2), so `safe_command` round-trips; and an unknown
+  name in a `uses` clause no longer compiles (section 3.2), so none
+  reaches the audit. This closes open question Q5.
 - **When `ok` is false, no field bounds anything.**
 
 ## 9. velaris.capabilities/0 (provisional)
@@ -765,8 +850,9 @@ restrictions, so that an entry means the same thing on every machine:
 4. **Hosts lower case**; IPv6 addresses in brackets.
 5. **Reduced**: sorted by code point, no repeats, and no grant that
    another grant in the same entry covers (section 9.4). So an entry
-   never holds `ffi` together with `ffi:M`, which as a budget would take
-   the restrictive reading of section 4.3.
+   never holds `ffi` together with `ffi:M`: `ffi` covers `ffi:M`
+   (section 9.4), and as a budget `ffi` grants every module anyway
+   (section 4.3), so the `ffi:M` would add nothing.
 
 The schema,
 [schemas/velaris.capabilities.0.schema.json](schemas/velaris.capabilities.0.schema.json),
@@ -899,8 +985,8 @@ suite exercises, because the reference does not read it yet.
 
 | Suite | What it holds | Sections |
 |---|---|---|
-| `check_sandbox.py` | escape attempts against a budget given on the command line: each effect refused; an effect hidden two helpers down; a refusal caught and carried on; the module list through `py`, `py_json`, `py_new` and a submodule path; a path outside a prefix, a write under a read grant, `..`, and a symbolic link (POSIX only); a host outside the list, including a name when an address was granted; a port; a wildcard's parent domain; redirects to a granted and to an ungranted host; counts on `fs` and `net`; `env` under `io` | 4, 5, 6 |
-| `check_library.py` | the same through the reference's library, its HTTP door's ceiling (section 5.5) and its MCP server; that the library and the server report the same audit | 4, 5, 6, 8 |
+| `check_sandbox.py` | escape attempts against a budget given on the command line: each effect refused; an effect hidden two helpers down; a refusal caught and carried on; the module list through `py`, `py_json`, `py_new` and a submodule path; the attribute-chain bound of section 5.3 - codecs through json, os.system through os, importlib to another module, a builtins type through a value, a `__globals__`/`__class__` traversal, a foreign object through a handle - with a deep attribute inside the granted module and a two-module grant still running; additive `fs`, `net` and `ffi`; a path outside a prefix, a write under a read grant, `..`, and a symbolic link (POSIX only); a host outside the list, including a name when an address was granted; a port; a wildcard's parent domain; redirects to a granted and to an ungranted host; counts on `fs` and `net`; `env` under `io` | 4, 5, 6 |
+| `check_library.py` | the same through the reference's library, its HTTP door's ceiling (section 5.5) and its MCP server; that the library and the server report the same audit; that `safe_command` round-trips for awkward paths and hosts (section 8.3); that every malformed budget raises a readable budget error and never a traceback (section 4.2); that the command line's `audit --json` is `velaris.audit/1` and validates against the schema (section 8) | 4, 5, 6, 8 |
 | `check_refusals.py` | wrong programs refused with the right code, among them an undeclared effect (E300) | 3.2 |
 | `check_fallible.py` | every fallible builtin refused when its failure is ignored, and its failure catchable - the redirect failure of G4 among them | 6, 8 |
 | `check_termination.py` | the termination verdict for each of 44 adversarial loops, which `velaris.audit/1` reports as `loops_unshown` | 8 |
@@ -913,41 +999,52 @@ What the suite cannot yet do as a conformance suite:
   that offers the same command line and library calls. No
   language-neutral harness exists in this version (open question Q8).
 - **It does not test every rule stated here.** A reading of
-  `check_sandbox.py` and `check_library.py` at 3.1.1 finds no case for
-  the points listed in open question Q9. Passing the suite is evidence
-  about the cases it holds, and no more.
+  `check_sandbox.py` and `check_library.py` at 3.1.1 found no case for
+  the points listed in open question Q9. From velaris-lang 3.3.0 several
+  of them have cases - the attribute chain through a granted module,
+  `ffi` together with `ffi:M`, IPv6 grants bracketed and not - added
+  with the fixes; the rest remain untested. Passing the suite is
+  evidence about the cases it holds, and no more.
 
 ## 11. Open questions
 
 Each question is a point where this document records the reference's
 behaviour, or where the reference's own text and behaviour disagree,
-without settling what is right.
+without settling what is right. Q1, Q2, Q3, Q5 and Q6 were open in
+version 0.1 and are **resolved in 0.2** (velaris-lang 3.3.0); they are
+kept here, marked resolved, so the record of what changed stays with the
+question.
 
-- **Q1. Unknown names in declarations.** The reference accepts any
-  identifier in `uses` (section 3.2). Should a checker reject a name
-  that is not one of the seven effects? Rejecting it would make
-  `velaris.audit/1`'s `effects` always a subset of the seven, and let
-  its schema say so.
-- **Q2. "Grants are additive" and `ffi`.** The reference text says
-  grants are additive; the reference's parser restricts `ffi` to the
-  named modules when both `ffi` and `ffi:M` appear (section 4.3). One
-  of the two is wrong, and this document follows the parser.
-- **Q3. The command line's audit.** `velaris audit FILE --json` in the
-  reference prints a shape that is not `velaris.audit/1` (section 8).
-  Bringing the command line in line is a change to the reference
-  implementation, not to this format.
+- **Q1. Unknown names in declarations. Resolved in 0.2.** Version 0.1
+  asked whether a checker should reject a `uses` name that is not one of
+  the seven. From velaris-lang 3.3.0 it does, with E300 naming the
+  seven, so `velaris.audit/1`'s `effects` is always a subset of them
+  (section 3.2).
+- **Q2. "Grants are additive" and `ffi`. Resolved in 0.2.** Version 0.1
+  followed the parser, which restricted `ffi` to the named modules when
+  both `ffi` and `ffi:M` appeared, against the reference text's "Grants
+  are additive". From velaris-lang 3.3.0 `ffi` is additive like `fs` and
+  `net` - the wider grant wins - so text and parser agree (section 4.3).
+- **Q3. The command line's audit. Resolved in 0.2.** Version 0.1
+  recorded that `velaris audit FILE --json` printed a shape that is not
+  `velaris.audit/1`. From velaris-lang 3.3.0 it prints
+  `audit().as_dict()`, the same document as every other door (section 8).
 - **Q4. No flag for a computed module name.** `velaris.audit/1` has
   `read_any`, `write_any` and `any`, and nothing for `ffi` (section
   8.4). A field such as `ffi_any` would be an addition within version 1.
-- **Q5. `safe_command` for IPv6 hosts and awkward paths**, and the
-  unbracketed IPv6 form in the grammar (sections 5.2 and 8.4). Should
-  `net_hosts` write IPv6 hosts in brackets? That would change what an
-  existing field contains, which section 8.1 does not allow within
-  version 1.
-- **Q6. Stray forms the parser accepts.** A count written with
-  non-ASCII digits (section 4.2), `ffi:M@N`, and `ffi:` with no module
-  (section 5.3). Each should probably be an error; none is, in the
-  reference.
+  (Still open.)
+- **Q5. `safe_command` for IPv6 hosts and awkward paths. Resolved in
+  0.2.** Version 0.1 recorded the unbracketed IPv6 form and the paths
+  that did not round-trip. From velaris-lang 3.3.0 IPv6 hosts are
+  bracketed in the grammar, in `net_hosts` and in `safe_command`, and
+  `, @ [ ] %` are percent-encoded in paths and hosts (sections 5.1, 5.2,
+  8.3), so `safe_command` round-trips. Changing `net_hosts` to bracket
+  IPv6 is a change to what that field contains; it is made here in a new
+  format version, not within version 1 silently.
+- **Q6. Stray forms the parser accepts. Resolved in 0.2.** Version 0.1
+  recorded a count with non-ASCII digits, `ffi:M@N`, and `ffi:` with no
+  module. From velaris-lang 3.3.0 each is a budget error (sections 4.2,
+  5.3), and no malformed budget produces a traceback.
 - **Q7. Windows paths in baselines.** Section 9.4 compares paths as
   text with `/` as the only separator, and case-sensitively. A program
   written for Windows may name `data\in.csv`; two spellings of one path
@@ -956,13 +1053,14 @@ without settling what is right.
 - **Q8. A conformance harness for other languages.** The suite drives
   the reference's command line and Python library (section 10). What
   would an implementation in another language run?
-- **Q9. Rules stated here and not yet tested by the suite.** A function
+- **Q9. Rules stated here and not yet tested by the suite.** Partly
+  addressed in 0.2. From velaris-lang 3.3.0 the suite covers a function
   argument that is a dotted path through a granted module's attributes
-  (section 5.3); `ffi` together with `ffi:M` (section 4.3); a URL
-  without a scheme taken as HTTPS (section 5.2); IPv6 grants, bracketed
-  and not (section 5.2); an existence check under a write-only grant
-  (section 5.1); `@0`, and a count spent by an operation that then
-  fails (section 5.4).
+  (section 5.3), `ffi` together with `ffi:M` (section 4.3), and IPv6
+  grants bracketed and not (section 5.2). Still untested: a URL without
+  a scheme taken as HTTPS (section 5.2); an existence check under a
+  write-only grant (section 5.1); `@0`, and a count spent by an
+  operation that then fails (section 5.4).
 - **Q10. The reference text's table.** Its row `...@N` reads as if a
   count could follow any grant; the reference accepts counts only on
   `fs` and `net` (section 4.2).
@@ -974,7 +1072,7 @@ without settling what is right.
 
 ## Appendix A. The reference binding
 
-Informative: which builtins of velaris-lang 3.1.1 perform which
+Informative: which builtins of velaris-lang 3.3.0 perform which
 operations.
 
 | Builtins | Effect | Operation | Checked beyond the effect |
@@ -988,8 +1086,9 @@ operations.
 | `request` | `net` | request; URL is the second argument | host and port, count, redirects |
 | `now` | `clock` | read the time | nothing |
 | `random` | `rand` | draw a number | nothing |
-| `py`, `py_int`, `py_float`, `py_json`, `py_new` | `ffi` | call into Python; module is the first argument | module name (5.3) |
-| `py_do`, `py_field`, `py_close` | `ffi` | use a host object already held | nothing |
+| `py`, `py_int`, `py_float`, `py_json`, `py_new` | `ffi` | call into Python; module is the first argument | the module named and every module reached along the attribute chain the call names (5.3) |
+| `py_do`, `py_field` | `ffi` | use a host object already held | the module owning the method or field reached, and a foreign object returned (5.3) |
+| `py_close` | `ffi` | release a held object | nothing |
 
 The reference's standard library modules (`http.vel`, `db.vel`,
 `time.vel`, `dates.vel`, `env_tools.vel`, `log.vel` and others) are
@@ -1013,5 +1112,18 @@ E310 (T5).
 
 ## Appendix C. Changes
 
+- **0.2**, 2026-09-11: tracks velaris-lang 3.3.0, which fixed the five
+  defects the 0.1 extraction found. Resolves Q1 (an unknown name in a
+  `uses` clause is rejected, section 3.2), Q2 (`ffi` grants are additive;
+  the wider grant wins, section 4.3), Q3 (the command line's
+  `audit --json` emits `velaris.audit/1`, section 8), Q5 (`safe_command`
+  and `net_hosts` bracket IPv6, and the escaping rule holds `,`, `@` and
+  the rest in paths and hosts, sections 5.1, 5.2, 8.3, 8.4), and Q6
+  (a non-ASCII count digit, `ffi:M@N` and `ffi:` with no module are
+  budget errors, sections 4.2, 5.3). Adds the percent-encoding escaping
+  rule to sections 5.1 and 5.2. Notes in Q9 the rules the suite now
+  covers. Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and
+  7.1 word for word - those sections did not change - so
+  `tools/check_sync.py` still passes.
 - **0.1**, 2026-09-11: first version, extracted from velaris-lang
   3.1.1.
