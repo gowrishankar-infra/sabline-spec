@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.1/schemas/velaris.capabilities.0.schema.json",
+  "title": "velaris.capabilities/0 (provisional)",
+  "description": "A ratchet baseline: for each program in a repository, the grants its velaris.audit/1 document says it needs (velaris-spec SPEC.md section 9). PROVISIONAL: the reference implementation, velaris-lang, does not read or write this document yet, and until it does this format may change without the schema name changing. The shipped form will be velaris.capabilities/1. This schema checks shape. SPEC.md section 9 states the rules it cannot: that programs are sorted by file, that grants are sorted and reduced (no grant covered by another in the same entry), that a port is between 1 and 65535, and how paths are normalised before comparison.",
+  "type": "object",
+  "required": [
+    "schema",
+    "programs"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "velaris.capabilities/0"
+    },
+    "generated_by": {
+      "description": "Informative: what wrote this document.",
+      "type": "string"
+    },
+    "programs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": [
+        "file",
+        "grants"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "description": "The program's entry file, relative to the directory that holds the baseline, '/'-separated, with no empty, '.' or '..' component.",
+          "type": "string",
+          "pattern": "^(?!/)(?!.*//)(?!.*/$)(?!(?:.*/)?\\.{1,2}(?:/|$))[^\\\\]+$"
+        },
+        "grants": {
+          "description": "The grants the program's audit says it needs, in the budget grammar of SPEC.md section 4 with the restrictions of section 9.2: no counts, one module per ffi: grant, paths as the program writes them.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/grant"
+          }
+        },
+        "note": {
+          "description": "For people. Tools must not read meaning into it.",
+          "type": "string"
+        }
+      }
+    },
+    "grant": {
+      "anyOf": [
+        {
+          "description": "An effect, unscoped.",
+          "enum": [
+            "io",
+            "env",
+            "clock",
+            "rand",
+            "ffi",
+            "fs",
+            "net"
+          ]
+        },
+        {
+          "description": "One Python module: text up to the first '.', no ',', '@', ':' or whitespace.",
+          "type": "string",
+          "pattern": "^ffi:[^,@.:\\s]+$"
+        },
+        {
+          "description": "One fs direction, any path.",
+          "enum": [
+            "fs:read",
+            "fs:write"
+          ]
+        },
+        {
+          "description": "One fs direction under a path, written as the program writes it; no ',' or '@'.",
+          "type": "string",
+          "pattern": "^fs:(read|write):[^,@]+$"
+        },
+        {
+          "description": "A host name, lower case, optionally with a port.",
+          "type": "string",
+          "pattern": "^net:[^,@/*\\s:\\[\\]A-Z]+(:[0-9]{1,5})?$"
+        },
+        {
+          "description": "A wildcard: '*.' and at least two labels, optionally with a port.",
+          "type": "string",
+          "pattern": "^net:\\*\\.[^,@/*\\s:\\[\\]A-Z.]+(\\.[^,@/*\\s:\\[\\]A-Z.]+)+(:[0-9]{1,5})?$"
+        },
+        {
+          "description": "An IPv6 address in brackets, optionally with a port.",
+          "type": "string",
+          "pattern": "^net:\\[[0-9a-f:.]+\\](:[0-9]{1,5})?$"
+        }
+      ]
+    }
+  }
+}

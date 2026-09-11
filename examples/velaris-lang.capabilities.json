@@ -1,0 +1,42 @@
+{
+  "schema": "velaris.capabilities/0",
+  "generated_by": "derived by hand under SPEC.md section 9.3 from the velaris 3.1.1 audits in examples/audits/",
+  "programs": [
+    {
+      "file": "examples/effects.vel",
+      "grants": [
+        "clock",
+        "fs:read:report.txt",
+        "fs:write:report.txt",
+        "io",
+        "rand"
+      ]
+    },
+    {
+      "file": "examples/pipeline.vel",
+      "grants": [
+        "io"
+      ]
+    },
+    {
+      "file": "examples/stress.vel",
+      "grants": [
+        "clock",
+        "env",
+        "ffi:datetime",
+        "ffi:math",
+        "ffi:sqlite3",
+        "io",
+        "net:raw.githubusercontent.com"
+      ]
+    },
+    {
+      "file": "examples/wordcount.vel",
+      "grants": [
+        "fs:read",
+        "io"
+      ],
+      "note": "reads the file named on its command line, so the audit cannot name the path"
+    }
+  ]
+}

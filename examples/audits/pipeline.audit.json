@@ -1,0 +1,49 @@
+{
+  "schema": "velaris.audit/1",
+  "velaris_version": "3.1.1",
+  "ok": true,
+  "problems": [],
+  "effects": [
+    "io"
+  ],
+  "functions": [
+    {
+      "name": "total_of",
+      "effects": [],
+      "can_fail": true,
+      "requires": [],
+      "ensures": [
+        "result >= 0"
+      ],
+      "status": "checked at runtime",
+      "loops_unshown": 0
+    },
+    {
+      "name": "main",
+      "effects": [
+        "io"
+      ],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    }
+  ],
+  "proven_share": 0.0,
+  "safe_command": "velaris <file> --allow io",
+  "warnings": [],
+  "ffi_modules": [],
+  "loops_unshown": 0,
+  "contract_coverage": [],
+  "fs_paths": {
+    "read": [],
+    "write": [],
+    "read_any": false,
+    "write_any": false
+  },
+  "net_hosts": {
+    "hosts": [],
+    "any": false
+  }
+}

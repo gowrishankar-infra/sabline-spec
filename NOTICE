@@ -1,0 +1,29 @@
+velaris-spec
+https://github.com/gowrishankar-infra/velaris-spec
+
+The specification text (SPEC.md), the JSON Schemas (schemas/), and
+everything else in this repository - the examples, the two scripts in
+tools/ and the CI workflow - are dedicated to the public domain under
+CC0 1.0 Universal. The full legal code is in LICENSE.
+
+Why CC0: a format is only useful if people can implement it without
+asking. Under CC0 anyone may implement this format, in any language,
+under any license, commercially or not, and may copy the schemas into
+their own projects, with no obligation to credit, notify or ask anyone.
+
+The reference implementation is a separate work under a separate
+license. velaris-lang (https://github.com/gowrishankar-infra/velaris-lang)
+is under the MIT License. Implementing this format does not require
+using, copying or linking velaris-lang; copying velaris-lang's code
+is governed by its MIT License, not by this repository's CC0.
+
+Two things CC0 does not do, as its own section 4(a) says: it does not
+affect trademark or patent rights. And a dedication to the public
+domain is not a statement that an implementation conforms; conformance
+is defined by the suite in the velaris-lang repository (SPEC.md
+section 10).
+
+Three sections of SPEC.md (section 2) are copied from velaris-lang's
+SPEC.md, which is part of velaris-lang and is MIT-licensed. The author
+of both works dedicates this copy of that text to the public domain
+under CC0 along with the rest of this repository.

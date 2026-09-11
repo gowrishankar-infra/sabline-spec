@@ -1,0 +1,81 @@
+{
+  "schema": "velaris.audit/1",
+  "velaris_version": "3.1.1",
+  "ok": true,
+  "problems": [],
+  "effects": [
+    "clock",
+    "fs",
+    "io",
+    "rand"
+  ],
+  "functions": [
+    {
+      "name": "dice",
+      "effects": [
+        "rand"
+      ],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "timestamp",
+      "effects": [
+        "clock"
+      ],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "save_report",
+      "effects": [
+        "fs"
+      ],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "main",
+      "effects": [
+        "clock",
+        "fs",
+        "io",
+        "rand"
+      ],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    }
+  ],
+  "proven_share": null,
+  "safe_command": "velaris <file> --allow clock,fs:read:report.txt,fs:write:report.txt,io,rand",
+  "warnings": [],
+  "ffi_modules": [],
+  "loops_unshown": 0,
+  "contract_coverage": [],
+  "fs_paths": {
+    "read": [
+      "report.txt"
+    ],
+    "write": [
+      "report.txt"
+    ],
+    "read_any": false,
+    "write_any": false
+  },
+  "net_hosts": {
+    "hosts": [],
+    "any": false
+  }
+}

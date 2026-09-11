@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.1/schemas/velaris.audit.1.schema.json",
+  "title": "velaris.audit/1",
+  "description": "What a Velaris program declares, names and promises, before it runs: velaris-spec SPEC.md section 8. Within version 1 fields may be added and consumers must ignore fields they do not know, so no object here forbids other properties; fields added after version 1 was first released (2.52) are optional. This schema checks shape. It does not check the rules of SPEC.md section 8 that JSON Schema cannot state - for example that effects is sorted, or that it is the union of the functions' effects.",
+  "type": "object",
+  "required": [
+    "schema",
+    "velaris_version",
+    "ok",
+    "problems",
+    "effects",
+    "functions",
+    "proven_share",
+    "safe_command",
+    "warnings"
+  ],
+  "properties": {
+    "schema": {
+      "const": "velaris.audit/1"
+    },
+    "velaris_version": {
+      "description": "The version of the implementation that produced the document.",
+      "type": "string",
+      "minLength": 1
+    },
+    "ok": {
+      "description": "True when the program compiled: it parsed, and the checks made before running - of main, effects, types and proofs - reported no problem. When false, no other field is a bound on anything.",
+      "type": "boolean"
+    },
+    "problems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/problem"
+      }
+    },
+    "effects": {
+      "description": "The union of the declarations of every function defined in the audited file, sorted. An upper bound on the effects a run can attempt when ok is true.",
+      "$ref": "#/$defs/effect_list"
+    },
+    "functions": {
+      "description": "One entry per function defined in the audited file, in source order. Inline function values are not listed.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/function"
+      }
+    },
+    "proven_share": {
+      "description": "Percent of the functions carrying a requires or ensures whose status is proven, to one decimal; null when no function carries one.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "safe_command": {
+      "description": "'velaris <file> --allow ' followed by the grant text of SPEC.md section 8.3, or by '' when that is empty. '<file>' is literal text for the reader to replace.",
+      "type": "string",
+      "pattern": "^velaris <file> --allow .+$"
+    },
+    "warnings": {
+      "description": "Sentences for a human reader. Their wording is not part of the format; do not parse them.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ffi_modules": {
+      "description": "Added in 2.60. Top-level module names given as literal text in the module argument of py, py_int, py_float, py_json and py_new, anywhere in the program as loaded. A module named by a value computed at runtime is absent, and nothing marks that one exists (SPEC.md 8.4).",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "loops_unshown": {
+      "description": "Added in 2.62. Loops in the audited file whose termination the reference's rule does not show, including loops inside inline function values.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "contract_coverage": {
+      "description": "Added in 2.62. Functions in the audited file that take or return a List, a Map or a record and carry no requires or ensures.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "fs_paths": {
+      "description": "Added in 3.0. Literal path arguments, as written and not resolved: read from read_file and file_exists, write from write_file, anywhere in the program as loaded. read_any and write_any say that some call's path was not a literal.",
+      "type": "object",
+      "required": [
+        "read",
+        "write",
+        "read_any",
+        "write_any"
+      ],
+      "properties": {
+        "read": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "write": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "read_any": {
+          "type": "boolean"
+        },
+        "write_any": {
+          "type": "boolean"
+        }
+      }
+    },
+    "net_hosts": {
+      "description": "Added in 3.0. Hosts named in literal URLs given to fetch, post, fetch_status and request, anywhere in the program as loaded: the host lower-cased with trailing dots removed, or host:port when the URL writes a port. IPv6 hosts are written without brackets, which makes host:port ambiguous for them (SPEC.md 8.4). any says that some URL was not a literal or had no host.",
+      "type": "object",
+      "required": [
+        "hosts",
+        "any"
+      ],
+      "properties": {
+        "hosts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "any": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "effect_name": {
+      "description": "One of io, env, fs, net, clock, rand, ffi. The reference implementation accepts any identifier in a uses clause and reports it here (SPEC.md 3.2, open question Q1), so the schema accepts any identifier rather than reject documents the reference really produces.",
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+    },
+    "effect_list": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/effect_name"
+      }
+    },
+    "problem": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "line",
+        "file",
+        "fixes"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^E[0-9]{3}$"
+        },
+        "message": {
+          "type": "string"
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "file": {
+          "type": "string"
+        },
+        "fixes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "function": {
+      "type": "object",
+      "required": [
+        "name",
+        "effects",
+        "can_fail",
+        "requires",
+        "ensures",
+        "status"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effects": {
+          "description": "The function's own declaration, sorted.",
+          "$ref": "#/$defs/effect_list"
+        },
+        "can_fail": {
+          "description": "The function is declared 'or fail'.",
+          "type": "boolean"
+        },
+        "requires": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ensures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "description": "proven: every promise proven before running (only when a prover ran). checked at runtime: has promises, not all proven. no promises: no requires or ensures. error: a problem was reported on the function's line.",
+          "enum": [
+            "proven",
+            "checked at runtime",
+            "no promises",
+            "error"
+          ]
+        },
+        "loops_unshown": {
+          "description": "Added in 2.62. Loops in this function whose termination is not shown.",
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+name: check
+
+# Validate the schemas and examples, and fail if the sections SPEC.md
+# quotes from velaris-lang have drifted from velaris-lang's SPEC.md.
+# Weekly as well as on push, because the drift would start in the
+# other repository.
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5
+        with:
+          repository: gowrishankar-infra/velaris-lang
+          path: velaris-lang
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.12"
+      - run: pip install jsonschema==4.26.0
+      - run: python tools/validate.py
+      - run: python tools/check_sync.py velaris-lang/SPEC.md

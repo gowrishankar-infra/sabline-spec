@@ -1,0 +1,222 @@
+{
+  "schema": "velaris.audit/1",
+  "velaris_version": "3.1.1",
+  "ok": true,
+  "problems": [],
+  "effects": [
+    "clock",
+    "env",
+    "ffi",
+    "io",
+    "net"
+  ],
+  "functions": [
+    {
+      "name": "discount",
+      "effects": [],
+      "can_fail": false,
+      "requires": [
+        "price >= 0"
+      ],
+      "ensures": [
+        "result >= 0"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "sum_to",
+      "effects": [],
+      "can_fail": false,
+      "requires": [
+        "n >= 0"
+      ],
+      "ensures": [
+        "result >= 0"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "average",
+      "effects": [],
+      "can_fail": false,
+      "requires": [
+        "count > 0",
+        "total >= 0"
+      ],
+      "ensures": [
+        "result * count <= total"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "shift",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [
+        "result.x == p.x + dx",
+        "result.y == p.y"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "add_item",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [
+        "length(result.items) == length(b.items) + 1",
+        "result.owner == b.owner"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "bump",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [
+        "get_or(result, word, 0) == get_or(counts, word, 0) + 1",
+        "has(result, word)"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "shout",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [
+        "length(result) == length(word)"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "tag_it",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [
+        "contains(result, word)"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "rows_of",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [
+        "result == length(grid)"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "halve",
+      "effects": [],
+      "can_fail": true,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "quarter",
+      "effects": [],
+      "can_fail": true,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "count_letters",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [
+        "result >= 0"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "scan_list",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "is_even",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "negated",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "main",
+      "effects": [
+        "clock",
+        "env",
+        "ffi",
+        "io",
+        "net"
+      ],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    }
+  ],
+  "proven_share": 100.0,
+  "safe_command": "velaris <file> --allow clock,env,ffi:datetime,math,sqlite3,io,net:raw.githubusercontent.com",
+  "warnings": [
+    "these functions transform data and promise nothing: scan_list",
+    "this program calls Python modules datetime, math, sqlite3; grant exactly those with ffi:datetime,math,sqlite3 rather than plain ffi"
+  ],
+  "ffi_modules": [
+    "datetime",
+    "math",
+    "sqlite3"
+  ],
+  "loops_unshown": 0,
+  "contract_coverage": [
+    "scan_list"
+  ],
+  "fs_paths": {
+    "read": [],
+    "write": [],
+    "read_any": false,
+    "write_any": false
+  },
+  "net_hosts": {
+    "hosts": [
+      "raw.githubusercontent.com"
+    ],
+    "any": false
+  }
+}

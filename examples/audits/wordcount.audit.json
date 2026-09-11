@@ -1,0 +1,106 @@
+{
+  "schema": "velaris.audit/1",
+  "velaris_version": "3.1.1",
+  "ok": true,
+  "problems": [],
+  "effects": [
+    "fs",
+    "io"
+  ],
+  "functions": [
+    {
+      "name": "clean",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "count_words",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "to_tallies",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    },
+    {
+      "name": "total_words",
+      "effects": [],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [
+        "result >= 0"
+      ],
+      "status": "proven",
+      "loops_unshown": 0
+    },
+    {
+      "name": "bar",
+      "effects": [],
+      "can_fail": false,
+      "requires": [
+        "biggest > 0",
+        "n >= 0"
+      ],
+      "ensures": [],
+      "status": "checked at runtime",
+      "loops_unshown": 0
+    },
+    {
+      "name": "report",
+      "effects": [],
+      "can_fail": true,
+      "requires": [
+        "top > 0"
+      ],
+      "ensures": [],
+      "status": "checked at runtime",
+      "loops_unshown": 0
+    },
+    {
+      "name": "main",
+      "effects": [
+        "fs",
+        "io"
+      ],
+      "can_fail": false,
+      "requires": [],
+      "ensures": [],
+      "status": "no promises",
+      "loops_unshown": 0
+    }
+  ],
+  "proven_share": 33.3,
+  "safe_command": "velaris <file> --allow fs:read,io",
+  "warnings": [
+    "these functions transform data and promise nothing: count_words, to_tallies"
+  ],
+  "ffi_modules": [],
+  "loops_unshown": 0,
+  "contract_coverage": [
+    "count_words",
+    "to_tallies"
+  ],
+  "fs_paths": {
+    "read": [],
+    "write": [],
+    "read_any": true,
+    "write_any": false
+  },
+  "net_hosts": {
+    "hosts": [],
+    "any": false
+  }
+}
