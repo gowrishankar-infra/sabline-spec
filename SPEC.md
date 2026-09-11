@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.5, 2026-09-11. Dedicated to the public domain under CC0 1.0;
+Version 0.5.1, 2026-09-11. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -11,9 +11,10 @@ found; version 0.3 tracked velaris-lang 4.0.0, which reads and writes
 the baseline of section 9; version 0.4 tracked velaris-lang 4.1.0,
 and added a conformance corpus any implementation can run, in
 [tests/](tests), with the levels of conformance in
-[CONFORMANCE.md](CONFORMANCE.md); version 0.5 tracks velaris-lang
-4.2.0, which writes the in-toto Statements of section 8.5. Conformance
-is defined by that corpus (section 10), not by this text.
+[CONFORMANCE.md](CONFORMANCE.md); version 0.5 tracked velaris-lang
+4.2.0, which writes the in-toto Statements of section 8.5; version
+0.5.1 tracks velaris-lang 4.2.1 and changes no rule. Conformance is
+defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
 
@@ -42,7 +43,7 @@ SPEC.md, EMBEDDING.md and THREAT_MODEL.md cover those.
 
 **Conventions.** MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
 read as described in RFC 2119 and RFC 8174 when, and only when, they
-appear in capitals. "The reference" means velaris-lang 4.2.0. A
+appear in capitals. "The reference" means velaris-lang 4.2.1. A
 paragraph marked *Reference behaviour* records what the reference does
 at a point this document does not yet settle; each such point is also
 an open question in section 11. A paragraph marked *Resolved in 0.2*,
@@ -1433,7 +1434,7 @@ the question.
 
 ## Appendix A. The reference binding
 
-Informative: which builtins of velaris-lang 4.2.0 perform which
+Informative: which builtins of velaris-lang 4.2.1 perform which
 operations. They are unchanged since 3.3.0.
 
 | Builtins | Effect | Operation | Checked beyond the effect |
@@ -1473,6 +1474,12 @@ E310 (T5).
 
 ## Appendix C. Changes
 
+- **0.5.1**, 2026-09-11: tracks velaris-lang 4.2.1. No rule, field,
+  schema or case changes. The author's name is written with a capital
+  S - Palakurthi Gowri Shankar, given name Gowri Shankar - in
+  CITATION.cff, NOTICE, README.md, PROVENANCE.md and
+  REGISTRY_SUBMISSION.md. The schemas' `$id` values still point at the
+  `v0.5` tag, whose schemas are these.
 - **0.5**, 2026-09-11: tracks velaris-lang 4.2.0, which writes the
   Statements of section 8.5 (`velaris attest`). `velaris.audit/1` gains
   two optional fields within version 1 (section 8.2): `counts`, the

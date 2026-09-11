@@ -1,6 +1,6 @@
 # Conformance
 
-Version 0.5, 2026-09-11. What an implementation must do to claim that
+Version 0.5.1, 2026-09-11. What an implementation must do to claim that
 it conforms to the Velaris capability format - `velaris.capabilities`
 conformance - at each of three levels, and how it shows that it does.
 Dedicated to the public domain under CC0 1.0, like the rest of this
@@ -206,7 +206,7 @@ following.
 Run every case of the levels claimed, as [tests/README.md](tests/README.md)
 says, and report each result. A claim is made in these words:
 
-> *Implementation* *version* conforms to velaris-spec 0.5 at L1[, L2]
+> *Implementation* *version* conforms to velaris-spec 0.5.1 at L1[, L2]
 > [and L3], against the conformance corpus at velaris-spec commit
 > *sha* (*n* cases), on *platform*. Not run: *case ids, and why*.
 

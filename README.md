@@ -11,13 +11,14 @@ JSON documents that report and record all of it.
 defined by the corpus in [tests/](tests), at the three levels of
 [CONFORMANCE.md](CONFORMANCE.md).**
 
-Version 0.5, 2026-09-11. First extracted from velaris-lang 3.1.1;
+Version 0.5.1, 2026-09-11. First extracted from velaris-lang 3.1.1;
 version 0.2 tracked velaris-lang 3.3.0, which fixed the five defects
 the extraction found; version 0.3 tracked velaris-lang 4.0.0, which
 reads and writes the baseline of section 9; version 0.4 tracked
 velaris-lang 4.1.0, and added the conformance corpus and an in-toto
-predicate type; version 0.5 tracks velaris-lang 4.2.0, which writes
-Statements of that type (`velaris attest`).
+predicate type; version 0.5 tracked velaris-lang 4.2.0, which writes
+Statements of that type (`velaris attest`); version 0.5.1 tracks
+velaris-lang 4.2.1 and changes no rule.
 
 ## What it covers
 
@@ -112,7 +113,7 @@ python ../velaris-lang/velaris.py conformance --corpus tests
 
 ## Cite this repository
 
-The author is Palakurthi Gowri shankar (family name Palakurthi).
+The author is Palakurthi Gowri Shankar (family name Palakurthi).
 [CITATION.cff](CITATION.cff) holds the citation, and GitHub offers it as
 "Cite this repository" beside the file list. A preprint describing
 Velaris and this format is forthcoming; until it is published, cite the

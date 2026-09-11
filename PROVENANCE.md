@@ -1,6 +1,6 @@
 # Provenance
 
-Author: Palakurthi Gowri shankar.
+Author: Palakurthi Gowri Shankar.
 
 Dates and identifiers for this specification and its reference
 implementation. Commit and tag dates are the ones git records, from the
@@ -16,7 +16,8 @@ those services.
 | v0.2, tracking velaris-lang 3.3.0 | tag `v0.2` on commit `e45ece9ed6b4bed39a6e884a5cf1d1c343538563` | tagged 2026-09-11T10:28:38+05:30 |
 | v0.3, `velaris.capabilities/1` | tag `v0.3` on commit `e2622eb3ba87edd233cdc6fdbfe9113d16bd70d8` | tagged 2026-09-11T13:41:55+05:30 |
 | v0.4, the conformance corpus and the predicate type | tag `v0.4` on commit `2bf8bbe189a81582772b5c6549cef6fda18524e2` | tagged 2026-09-11T16:09:41+05:30 |
-| v0.5, the producer of the predicate recorded; `counts` and `prover` in `velaris.audit/1` | tag `v0.5` | 2026-09-11 |
+| v0.5, the producer of the predicate recorded; `counts` and `prover` in `velaris.audit/1` | tag `v0.5` on commit `f6ac9896b9204ea3b658b3d685c5b21ee257069f` | tagged 2026-09-11T19:51:32+05:30 |
+| v0.5.1, the author's name with a capital S | tag `v0.5.1` | 2026-09-11 |
 
 ## velaris-lang, the reference implementation
 
@@ -26,7 +27,7 @@ the reference implementation of this specification.
 | What | Identifier | Date |
 |---|---|---|
 | First commit of the effect system: `uses` clauses and the transitive effect checker. It is also that repository's first commit. | `dcb44e2310291fa546405434f4698148413f3cdd` | 2026-08-17T00:21:33+05:30 |
-| The version this one tracks | 4.2.0, tag `v4.2.0` | 2026-09-11 |
+| The version this one tracks | 4.2.1, tag `v4.2.1` | 2026-09-11 |
 
 ## Software Heritage
 

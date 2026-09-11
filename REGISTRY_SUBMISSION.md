@@ -150,7 +150,7 @@ Version: 1.0.0
 
 Predicate Name: Velaris Capability
 
-Authors: Palakurthi Gowri shankar (@gowrishankar-infra)
+Authors: Palakurthi Gowri Shankar (@gowrishankar-infra)
 
 ## Purpose
 

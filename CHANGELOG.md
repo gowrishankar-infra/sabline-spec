@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.1 - 2026-09-11
+
+Tracks velaris-lang 4.2.1. A text change only: no rule, field, schema
+or conformance case changes.
+
+- The author's name is written with a capital S: Palakurthi Gowri
+  Shankar - family name Palakurthi, given name Gowri Shankar - in
+  CITATION.cff (`given-names: Gowri Shankar`, in the author and in the
+  reference to velaris-lang), NOTICE, README.md, PROVENANCE.md and
+  REGISTRY_SUBMISSION.md. Abbreviated, it is "Palakurthi, G. S." in
+  APA and BibTeX's apalike, and "G. S. Palakurthi" in IEEE. The entry
+  for 0.5 below keeps the form 0.5 used.
+- The schemas' `$id` values still point at the `v0.5` tag, whose
+  schemas are the same files.
+
 ## 0.5 - 2026-09-11
 
 Tracks velaris-lang 4.2.0, which writes Statements of the predicate

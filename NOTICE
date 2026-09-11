@@ -1,6 +1,6 @@
 velaris-spec
 https://github.com/gowrishankar-infra/velaris-spec
-Author: Palakurthi Gowri shankar
+Author: Palakurthi Gowri Shankar
 
 The specification text (SPEC.md, CONFORMANCE.md), the JSON Schemas
 (schemas/), the conformance corpus (tests/), and everything else in
@@ -29,5 +29,5 @@ Three sections of SPEC.md (section 2) are copied from velaris-lang's
 SPEC.md, the cases in tests/ are transcribed from tables in
 velaris-lang's test suites, and schemas/capability-predicate.v1.schema.json
 is also published by velaris-lang; velaris-lang is MIT-licensed. The
-author of both works, Palakurthi Gowri shankar, dedicates these copies
+author of both works, Palakurthi Gowri Shankar, dedicates these copies
 to the public domain under CC0 along with the rest of this repository.
