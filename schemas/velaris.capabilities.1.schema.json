@@ -89,7 +89,8 @@
                     "net",
                     "clock",
                     "rand",
-                    "ffi"
+                    "ffi",
+                    "declassify"
                   ]
                 }
               }
@@ -171,7 +172,8 @@
             "rand",
             "ffi",
             "fs",
-            "net"
+            "net",
+            "declassify"
           ]
         },
         {

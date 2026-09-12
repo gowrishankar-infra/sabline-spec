@@ -33,6 +33,18 @@ reworded, because the programs they held branched on a protected value
 or printed a boolean derived from one, and neither compiles now; and
 one new L1 case records that refusal, `L1-audit-secret-branched-on`.
 
+**Two defects in this repository's own tools, both from 0.7.**
+`schemas/velaris.capabilities.1.schema.json` enumerates the effect
+names twice - the grants a baseline may hold, and the effects a
+function may declare - and 0.7 added `declassify` to neither, so a
+baseline naming it was rejected as invalid. And `tools/validate.py`
+parsed a grant by its prefix, with a fallthrough that read anything
+unrecognised as a bare `net`: `declassify` was taken as a grant of
+every host, so a baseline holding both reported every `net:` grant as
+redundant. Both are fixed here, and the plain-effect list in the
+validator is now one constant rather than two literals, so the next
+effect cannot be added to one and not the other.
+
 ## 0.7.0 - An eighth effect, and what the audit says about secrets - 2026-09-12
 
 Tracks velaris-lang 6.0.0, which added `Secret of T` - a value the

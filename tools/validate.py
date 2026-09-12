@@ -66,8 +66,16 @@ def norm(p: str) -> str:
     return "/" + text if rooted else (text or ".")
 
 
+# The effects a grant names on their own, with nothing after a colon.
+# `declassify` joined them in 0.7; before that "declassify" fell
+# through parts() to the net branch and read as a grant of every
+# host, so a baseline holding it reported every net: grant as
+# redundant. velaris-spec 3.1.
+PLAIN = ("io", "env", "clock", "rand", "declassify")
+
+
 def parts(g: str) -> tuple:
-    if g in ("io", "env", "clock", "rand"):
+    if g in PLAIN:
         return (g,)
     kind, _, rest = g.partition(":")
     if kind == "ffi":
@@ -98,7 +106,7 @@ def host_matches(pattern: str, host: str) -> bool:
 def covers(b: tuple, c: tuple) -> bool:
     if b[0] != c[0]:
         return False
-    if b[0] in ("io", "env", "clock", "rand"):
+    if b[0] in PLAIN:
         return True
     if b[0] == "ffi":
         return b[1] is None or b[1] == c[1]
