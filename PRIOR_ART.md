@@ -64,12 +64,21 @@ Implementation: <https://github.com/lampepfl/tacit>.
   Velaris marks the results of two builtins and nothing else - a
   secret that reaches a program through standard input, its arguments,
   the network or the host language is an ordinary `Text`, and a
-  program cannot mark one itself. Velaris bounds explicit flow only:
-  a comparison over a secret yields an ordinary `Bool`, deliberately,
-  so a program may learn a secret through its own control flow and
-  then print what it learned. Neither is a non-interference result,
-  but TACIT's is the stronger of the two, and it is checked over Scala
-  3's whole type system rather than over one wrapper type.
+  program cannot mark one itself. Velaris also has no generic code
+  over secrets unless a signature says `Secret of T` explicitly, where
+  TACIT's checking follows capabilities through polymorphism. Neither
+  is a non-interference result: velaris-lang 7.0.0 bounds what a
+  program can do with a secret's value and says nothing about how long
+  it runs or whether it stops. TACIT's is the stronger of the two, and
+  it is checked over Scala 3's whole type system rather than over one
+  wrapper type.
+
+  velaris-lang 6.0.0, published for one day, let a comparison over a
+  secret give an ordinary boolean, which made the whole type a
+  decoration - a loop of comparisons reads the value out. 7.0.0 closed
+  that. This paragraph records it because the entry would otherwise
+  read as though the comparison had been thought through from the
+  start; it had not.
 
 ## CaMeL
 
@@ -93,9 +102,8 @@ Prompt Injections by Design." arXiv:2503.18813, 2025.
   that remains is the one that matters: CaMeL tags *every* value with
   its provenance and its permitted readers, computed as the program
   runs, and checks a policy at each tool call; Velaris marks the
-  results of two builtins at compile time, has no notion of provenance
-  or of a reader, and lets a comparison over a marked value give an
-  ordinary Bool. CaMeL's design is aimed at untrusted *data* changing
+  results of two builtins at compile time and has no notion of
+  provenance or of a reader. CaMeL's design is aimed at untrusted *data* changing
   what a program does; nothing here addresses that.
 
 ## WASI

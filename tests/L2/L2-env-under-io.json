@@ -12,7 +12,7 @@
   "known_limit": null,
   "input": {
     "fixture": "sandbox",
-    "source": "fn main() uses io, env {\n    let path = env(\"PATH\", \"\")\n    if path == \"\" {\n        print(\"READ IT (nothing there)\")\n    }\n    print(\"READ IT\")\n}\n",
+    "source": "fn main() uses io, env {\n    let path = env(\"PATH\", \"\")\n    print(\"READ IT\")\n}\n",
     "allow": "io",
     "args": []
   },

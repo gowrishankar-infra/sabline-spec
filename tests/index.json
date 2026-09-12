@@ -4,7 +4,7 @@
   "levels": {
     "1": {
       "name": "Declaration",
-      "cases": 306
+      "cases": 307
     },
     "2": {
       "name": "Enforcement",
@@ -2317,6 +2317,14 @@
       "level": 1,
       "kind": "audit",
       "file": "L1/L1-audit-secret-kept.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-secret-branched-on",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-secret-branched-on.json",
       "known_limit": false,
       "requires": []
     },

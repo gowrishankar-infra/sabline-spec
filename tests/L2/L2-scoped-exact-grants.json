@@ -13,8 +13,8 @@
   "known_limit": null,
   "input": {
     "fixture": "sandbox",
-    "source": "fn main() uses io, env, fs, net {\n    check read_file(\"{DATA}/a.txt\") {\n        ok t {\n            write_file(\"{OUT}/copy.txt\", t)\n            check fetch_status(\"http://127.0.0.1:{PORT_A}/\") {\n                ok c {\n                    print(format(\"all grants used, status {}, path set: {}\",\n                                 c, length(env(\"PATH\", \"\")) > 0))\n                }\n                fail w {\n                    print(\"fetch failed: \" + w)\n                }\n            }\n        }\n        fail w {\n            print(\"read failed: \" + w)\n        }\n    }\n}\n",
-    "allow": "io,env,fs:read:{DATA},fs:write:{OUT}@5,net:127.0.0.1:{PORT_A}@5",
+    "source": "fn main() uses io, env, fs, net, declassify {\n    check read_file(\"{DATA}/a.txt\") {\n        ok t {\n            write_file(\"{OUT}/copy.txt\", t)\n            check fetch_status(\"http://127.0.0.1:{PORT_A}/\") {\n                ok c {\n                    let path = declassify(env(\"PATH\", \"\"),\n                    \"whether PATH is set at all is not its contents\")\n                    print(format(\"all grants used, status {}, path set: {}\",\n                                 c, length(path) > 0))\n                }\n                fail w {\n                    print(\"fetch failed: \" + w)\n                }\n            }\n        }\n        fail w {\n            print(\"read failed: \" + w)\n        }\n    }\n}\n",
+    "allow": "declassify,io,env,fs:read:{DATA},fs:write:{OUT}@5,net:127.0.0.1:{PORT_A}@5",
     "args": []
   },
   "expect": {

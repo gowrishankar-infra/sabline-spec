@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.7.0, 2026-09-12. Dedicated to the public domain under CC0 1.0;
+Version 0.8.0, 2026-09-12. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -18,10 +18,14 @@ velaris-lang 4.3.2; none of the three changed a rule. Version 0.6.0
 tracked velaris-lang 5.0.0, which made `io` the budget a run gets when
 nobody writes one: sections 4.4 and 4.6 are restated, and one
 conformance case that assumed the old default is replaced by one that
-writes its grants down (section 10). Version 0.7.0 tracks velaris-lang
+writes its grants down (section 10). Version 0.7.0 tracked velaris-lang
 6.0.0, which added `Secret of T`: section 3.1 gains an eighth effect,
 `declassify`, and section 8.6 is new - the `secrets` object of
 `velaris.audit/1`, which says whether a program ever lets a secret out.
+Version 0.8.0 tracks velaris-lang 7.0.0, which closed a hole in that
+type the same day 6.0.0 shipped; no rule of this format changes, and
+8.6 says more plainly what `declassifies: false` does and does not
+claim.
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
@@ -1029,18 +1033,23 @@ which is what a reader wants at that moment.
 ever let a secret out* - and `declassifies` answers it without running
 the program. `false` means the values those builtins returned reach
 nothing that emits them, by the static rule velaris-lang SPEC.md
-section 3.1 states. `true` means they may, and `declassifications`
-says where and with what stated reason.
+section 3.1 states: no operation that emits and no operation that can
+fail takes one, every operation over one gives one, and no branch is
+taken on one. `true` means a secret may leave, and
+`declassifications` says where and with what stated reason.
 
 **What it does not say.**
 
 - It does not say the reasons are true. A reason is text a program's
   author wrote; nothing checks it.
-- It bounds explicit flow only. A comparison over such a value gives an
-  ordinary boolean the program may emit, so a program with
-  `declassifies: false` can still tell a reader things about the value
-  through its own control flow. velaris-lang SPEC.md section 3.1 states
-  that choice and why it was made.
+- It is not a non-interference result. It says nothing about what a
+  program controls that is not a value - how long it runs, how much it
+  allocates, whether it stops at all - nor about what an operator can
+  learn by running the same program many times. In velaris-lang 6.0.0
+  this bullet said more: a comparison over such a value gave an
+  ordinary boolean, so a program with `declassifies: false` could read
+  a secret out a character at a time and print it. 7.0.0 closed that,
+  and the bullet is narrowed to what is still true.
 - It covers only values those builtins produced. A secret a program
   receives some other way - standard input, its arguments, the network,
   the host language - is an ordinary value, and `sources` says nothing
@@ -1574,15 +1583,32 @@ Compile-time codes for the static rule: E300 (T1 and T2), E530 (T4),
 E310 (T5).
 
 The reference's `Secret of T` (velaris-lang SPEC.md section 3.1, and
-section 8.6 here) adds three compile-time codes of its own. They are
+section 8.6 here) adds four compile-time codes of its own. They are
 not part of the static rule this document specifies, and an
 implementation without such a type gives none of them: E560, a value
-that must not escape given to something that emits it; E561, a
-`declassify` without a reason written in the call, or given something
-that is not one; E562, a Secret of a Secret.
+that must not escape given to something that emits it or to something
+that can fail; E561, a `declassify` without a reason written in the
+call, or given something that is not one; E562, a Secret of a Secret;
+E563 (velaris-lang 7.0.0), an `if` or `while` branching on a value
+derived from one.
 
 ## Appendix C. Changes
 
+- **0.8.0**, 2026-09-12: tracks velaris-lang 7.0.0. No rule of this
+  format changes: `declassify` is still the eighth effect and `secrets`
+  still holds the same three fields. What changed is in the reference's
+  type system, and two places here describe it. **8.6** said the rule
+  behind `secrets` bounds explicit flow only, and that a program with
+  `declassifies: false` could still tell a reader about a secret
+  through its own control flow. That was true of velaris-lang 6.0.0,
+  where a comparison over such a value gave an ordinary boolean, and it
+  was a hole: with a length and a character read, a comparison in a
+  loop reads the whole value out. 7.0.0 makes a comparison give another
+  protected value and refuses any branch on one (E563), so the bullet
+  is narrowed to what remains - that this is not a non-interference
+  result, and says nothing about how long a program runs or whether it
+  stops. **Appendix B** lists E563 with the other three. A producer
+  with no such type system is unaffected by either.
 - **0.7.0**, 2026-09-12: tracks velaris-lang 6.0.0, which added
   `Secret of T` - a value the type system will not let a program emit.
   Two things follow for this format. **3.1** gains an eighth effect,

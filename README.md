@@ -11,7 +11,7 @@ JSON documents that report and record all of it.
 defined by the corpus in [tests/](tests), at the three levels of
 [CONFORMANCE.md](CONFORMANCE.md).**
 
-Version 0.7.0, 2026-09-12. First extracted from velaris-lang 3.1.1;
+Version 0.8.0, 2026-09-12. First extracted from velaris-lang 3.1.1;
 version 0.2 tracked velaris-lang 3.3.0, which fixed the five defects
 the extraction found; version 0.3 tracked velaris-lang 4.0.0, which
 reads and writes the baseline of section 9; version 0.4 tracked
@@ -22,11 +22,13 @@ tracked velaris-lang 4.2.1; version 0.5.3 tracked velaris-lang 4.3.2,
 and none of those three changed a rule. Version 0.6.0 tracked
 velaris-lang 5.0.0, which made `io` - the console alone - the budget a
 run gets when nobody writes one, where it used to be all seven
-effects: sections 4.4 and 4.6 are restated. Version 0.7.0 tracks
+effects: sections 4.4 and 4.6 are restated. Version 0.7.0 tracked
 velaris-lang 6.0.0, which added a type for values a program may not
 emit: `declassify` is an eighth effect (section 3.1), and section 8.6
 is new - the `secrets` object of `velaris.audit/1`, which says whether
-a program ever lets a secret out.
+a program ever lets a secret out. Version 0.8.0 tracks velaris-lang
+7.0.0, which closed a hole in that type; no rule here changes, and 8.6
+says more plainly what it does and does not claim.
 
 ## What it covers
 
@@ -63,7 +65,7 @@ a program ever lets a secret out.
   (`velaris attest`), unsigned, and its releases carry one signed with
   cosign and with sigstore-python.
 - **Conformance** at three levels - L1 Declaration, L2 Enforcement, L3
-  Ratchet - defined by a corpus of 455 JSON cases that an
+  Ratchet - defined by a corpus of 456 JSON cases that an
   implementation in any language runs its own way, with a runner
   contract ([CONFORMANCE.md](CONFORMANCE.md), [tests/](tests)). No level
   needs a theorem prover.
@@ -97,7 +99,7 @@ and lists it in section 11 as an open question.
 |---|---|
 | [SPEC.md](SPEC.md) | the specification |
 | [CONFORMANCE.md](CONFORMANCE.md) | the three levels of conformance, the behaviours each requires, and how to claim one |
-| [tests/](tests) | the conformance corpus: 455 cases, the runner contract ([tests/README.md](tests/README.md)) and the case schema |
+| [tests/](tests) | the conformance corpus: 456 cases, the runner contract ([tests/README.md](tests/README.md)) and the case schema |
 | [schemas/](schemas) | JSON Schema (draft 2020-12) for both documents and for the predicate |
 | [examples/audits/](examples/audits) | four `velaris.audit/1` documents produced by velaris-lang 3.1.1, unedited |
 | [examples/velaris-lang.capabilities.json](examples/velaris-lang.capabilities.json) | the `velaris.capabilities/1` baseline velaris-lang 4.0.0 writes for those four programs |

@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.8.0 - What the secrets section does not claim - 2026-09-12
+
+Tracks velaris-lang 7.0.0, which closed a hole in the type 6.0.0
+introduced, the same day 6.0.0 shipped. **No rule of this format
+changes**: `declassify` is still the eighth effect of section 3.1,
+`secrets` still holds the same three fields, and an implementation with
+no such type system is unaffected. Two places here describe the change,
+and both narrow a claim rather than making one.
+
+**8.6.** The section said the rule behind `secrets` bounds explicit
+flow only, and that a program with `declassifies: false` could still
+tell a reader about a secret through its own control flow. That was
+true of velaris-lang 6.0.0, where a comparison over a protected value
+gave an ordinary boolean - and it was a hole, not a trade: with a
+length and a character read, a comparison in a loop reads the whole
+value out and the program prints it. 7.0.0 makes a comparison give
+another protected value and refuses any branch on one, so the bullet is
+narrowed to what remains true - that this is not a non-interference
+result, and says nothing about how long a program runs, how much it
+allocates, whether it stops, or what an operator learns by running it
+repeatedly.
+
+**Appendix B.** E563 joins E560, E561 and E562 as a compile-time code
+the reference's type gives and this format does not require: an `if` or
+`while` branching on a value derived from a protected one. E560 also
+covers an operation that can fail, because a failure's reason is text
+the program can print.
+
+The corpus grows from 455 cases to 456. Two L1 audit cases are
+reworded, because the programs they held branched on a protected value
+or printed a boolean derived from one, and neither compiles now; and
+one new L1 case records that refusal, `L1-audit-secret-branched-on`.
+
 ## 0.7.0 - An eighth effect, and what the audit says about secrets - 2026-09-12
 
 Tracks velaris-lang 6.0.0, which added `Secret of T` - a value the
