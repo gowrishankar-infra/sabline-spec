@@ -98,6 +98,7 @@ and lists it in section 11 as an open question.
 | [REGISTRY_SUBMISSION.md](REGISTRY_SUBMISSION.md) | the pull request listing the predicate type with in-toto: its branch is pushed, and the steps left before it is opened |
 | [MCP_PROPOSAL.md](MCP_PROPOSAL.md) | a draft, not sent: a capability declaration for Model Context Protocol tools |
 | [NIST_SUBMISSION.md](NIST_SUBMISSION.md) | a draft, not sent: input to NIST's AI Agent Standards Initiative |
+| [CATALOGUE_SUBMISSION.md](CATALOGUE_SUBMISSION.md) | a draft, not sent: an entry for the agentlanguages.dev catalogue, and what it asks of one |
 | [PROVENANCE.md](PROVENANCE.md) | dates and archive identifiers |
 | [CITATION.cff](CITATION.cff) | how to cite this repository |
 | [tools/validate.py](tools/validate.py) | checks the schemas, the examples and the corpus |

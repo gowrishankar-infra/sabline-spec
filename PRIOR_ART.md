@@ -148,6 +148,229 @@ Persistent-State AI Control." arXiv:2607.02514, 2026.
   record does not say the paper influenced the ratchet, which shipped
   in velaris-lang 4.0.0 after it was posted.
 
+## The AI-first language field
+
+Allan, A., ed. *Agent Languages*, <https://agentlanguages.dev>,
+mirrored at
+<https://research.tedneward.com/places/agentlanguages.html>. Read at
+the version of 11 September 2026, when it tracked 41 projects; the
+framing essay is "Three Camps, Alike in Dignity,"
+<https://negroniventurestudios.com/2026/05/20/three-camps-alike-in-dignity/>.
+Catalogue text is CC BY 4.0.
+
+A catalogue of languages designed for models rather than for people now
+exists, and it sorts them into three camps that disagree about what the
+problem is: **Syntactic**, which strips ambiguity at the token level;
+**Verification**, which makes contracts mechanically checkable; and
+**Orchestration**, which treats the matter as agent coordination rather
+than as a language problem. Velaris belongs in Verification and
+Orchestration - contracts a prover discharges, and effects and budgets
+gating what a run may do. Velaris is not in the catalogue; this section
+was written before submitting it, and the entries below were read at
+their own repositories and not only in the catalogue.
+
+Nothing in this field is cited by velaris-lang, and the record does not
+say that any of it influenced the design. The honest summary is that
+the field has converged, independently and in public, on most of what
+Velaris does. Effects declared in signatures; a prover with a runtime
+fallback where it cannot settle an obligation; a machine-readable
+record of what was checked; a policy an operator writes and a runtime
+enforces - each of these appears in projects listed below, several of
+them older than the Velaris release that first shipped it. What the
+catalogue does not show is one project combining all four.
+
+**Boruna.** <https://github.com/escapeboy/boruna>, MIT, Rust, working;
+v3.2.0 at reading, though the catalogue's entry still records v0.2.0
+and 34 commits. Orchestration and Verification.
+
+- **What it does:** a deterministic, capability-safe language (`.ax`)
+  and workflow engine for auditable AI systems. A function declares its
+  side effects in a `!{net.fetch, fs.write}` clause after the return
+  type, drawn from a fixed set of eleven capabilities; a VM capability
+  gateway checks every call against an operator's policy, which can
+  restrict capabilities, reachable endpoints, invocable models, and
+  token and call budgets per step. `requires` preconditions are
+  enforced at run time and trap with a reproducible counterexample, and
+  a function may declare an `intent` string captured into the evidence
+  record. Runs produce hash-chained tamper-evident evidence bundles -
+  SHA-256 chained from a genesis entry holding the workflow definition
+  hash, so that altering an entry breaks the chain - covering inputs,
+  outputs, model responses, policy decisions and approvals, verifiable
+  offline with `boruna evidence verify`; a recorded workflow replays to
+  identical outputs. Four versioned specifications, an MCP server, and
+  a stability policy with dated support windows.
+- **How this differs:** this is the closest work to Velaris in the
+  catalogue, and on the runtime and provenance side it is not
+  meaningfully behind. Three differences are real. Boruna parses
+  `ensures` but does not enforce it and integrates no prover, where
+  Velaris discharges contracts with Z3 and checks at run time only what
+  the prover could not settle. Boruna's evidence describes a run - what
+  executed, and what the model returned - where `velaris.audit/1`
+  describes a source text's declared surface without running it, and
+  velaris-spec binds that to existing supply-chain infrastructure
+  through an in-toto predicate type and writes findings as SARIF, which
+  Boruna does neither of; Boruna's bundles are checksummed but not yet
+  signed, which its own documentation records as an open gap. Velaris
+  has nothing answering to Boruna's deterministic replay, approval
+  gates or envelope encryption. On deny-by-default Boruna is the
+  stricter of the two: its default policy grants nothing, where a
+  Velaris run with no budget gets all seven effects (SPEC.md section
+  4.6).
+
+**Thermite.** <https://github.com/dollspace-gay/Thermite>, MIT, Rust
+and Lean 4, working. Verification, listed as also spanning
+Orchestration.
+
+- **What it does:** every function declares `req`, `ens` and `fx`
+  clauses - precondition, postcondition and permitted effects, the last
+  checked for subsumption up the call graph - and the Forge driver
+  settles each obligation separately on a five-rung assurance ladder:
+  L4 reconstruction in Lean with LRAT proof replay, L3 an all-input
+  proof through Verus or Z3, L2 bounded model checking with the bound
+  recorded, L1 an always-active runtime contract check, L0 an explicit
+  trust escape. A counterexample is a failure and never a downgrade.
+  The per-clause assurance manifest records which engine settled each
+  obligation and at what level, `forge audit` re-derives the recorded
+  trust chain, and a hosted executable is confined by a seccomp filter
+  derived from its `fx` clauses. Mutation testing checks contracts for
+  vacuity; there is a conformance directory with certificate oracles.
+- **How this differs:** of everything here this is nearest to the whole
+  of what Velaris does - contracts, a prover, effects, a runtime check
+  where the proof does not reach, and a machine-readable record of what
+  was checked - and on verification it is well ahead: three engines, a
+  graded ladder, proof reconstruction and vacuity testing, against
+  Velaris's single Z3 tier. The difference worth stating is who writes
+  the policy. Thermite's confinement is derived from the program's own
+  `fx` clauses, so an operator cannot narrow it without editing the
+  program; a Velaris budget is written by the operator, may be narrower
+  than what the program declares, and is refused against at each
+  operation. Thermite's manifest is a verification report about
+  obligations; `velaris.audit/1` is a description of a program's
+  declared capability surface, published as a separate format with a
+  conformance corpus and an in-toto predicate type. Velaris has no
+  counterpart to proof reconstruction or to the assurance ladder.
+
+**Vera.** <https://github.com/aallan/vera>, MIT, Python, working,
+v0.1.13 at reading. Verification, also spanning Orchestration; written
+by the catalogue's own editor.
+
+- **What it does:** mandatory `requires`, `ensures` and `effects`
+  clauses on every function, with no opt-out, sorted into three tiers -
+  Z3's decidable fragment on a ten-second budget, Z3 with hints
+  (specified, not implemented), and compiled runtime guards for what
+  neither settles - with `vera verify --json` reporting which
+  obligation landed in which tier. Ten effects, including `Inference`
+  for model calls as a typed algebraic effect and a `DB` effect that
+  requires literal query provenance, so that string-assembled SQL is a
+  compile error. Parameters are referenced by type and binding depth
+  (`@Int.0`) rather than by name. 244 conformance programs and a
+  fourteen-chapter draft specification.
+- **How this differs:** the verification design is close enough to
+  Velaris's to be worth stating plainly - mandatory contracts, a
+  prover, a runtime guard where the prover does not reach, a
+  conformance corpus, a written specification - and Vera reached it
+  independently. Velaris's separable part is the operator's budget:
+  Vera's effects are declared and checked, but its README describes no
+  budget an operator writes to bound which paths, hosts or modules a
+  run may reach, no refusal at the operation, and no audit, provenance
+  or attestation record. Velaris has no counterpart to Vera's
+  information-flow rule for SQL.
+
+**AILANG.** <https://github.com/sunholo-data/ailang>, Apache-2.0, Go,
+working, v0.20.1. Verification.
+
+- **What it does:** row-polymorphic Hindley-Milner inference with
+  effects declared in signatures as effect rows (`! {IO, FS}`) over
+  five capability categories - IO, FS, Net, Clock, AI - granted at the
+  command line with `--caps` and not wideable from inside the program,
+  with per-effect traces and deterministic replay.
+- **How this differs:** effects in the signature plus a grant the
+  operator passes at the command line is Velaris's arrangement, arrived
+  at separately. AILANG's grants are whole categories, where a Velaris
+  grant is scoped to paths, hosts, modules and operation counts; and
+  AILANG has no contracts, no prover, and no audit or attestation
+  record.
+
+**Mog.** <https://github.com/voltropy/mog>, MIT, Rust, working.
+Syntactic.
+
+- **What it does:** a script declares `requires` or `optional` for
+  capabilities (fs, http, log) and the host grants them in a `.mogdecl`
+  declaration; the runtime refuses a call to anything unregistered, and
+  there is no ambient authority.
+- **How this differs:** the same shape of declaration plus host grant,
+  at the granularity of the capability rather than of the resource. No
+  contracts, no prover, no record; the project describes its own
+  security model as unaudited.
+
+**Hale.** <https://github.com/hale-lang/hale>, Apache-2.0, working,
+v0.16.0. Verification.
+
+- **What it does:** compile-time effect certificates - `@no_syscall`,
+  `@deterministic`, `@budget`, `@effects(only: ...)` - proven
+  transitively through helpers and imported libraries with no runtime
+  cost, above which sit named architectural claims over the program's
+  locus graph (`forbid reaches(A, B)`, `count publishers(topic T) <=
+  1`), rejected rather than guessed at wherever the graph will not
+  resolve statically. Machine-readable topology artifacts can be
+  versioned, re-checked in CI and diffed to track architectural change;
+  binaries are attested with ES256 signatures over artifact bytes.
+- **How this differs:** the versioned, diffable topology artifact
+  checked in CI is the nearest thing in the catalogue to the capability
+  ratchet of section 9, and is recorded here as such, though it tracks
+  a locus graph rather than a capability surface, and the record does
+  not describe a baseline that a change must not exceed. Hale's
+  guarantees are static and lower to no runtime code, where Velaris
+  refuses at the operation. Hale signs artifacts but does not use
+  in-toto.
+
+**Contracts and provers, without a budget.** Several projects mandate
+contracts and discharge them mechanically, with no operator-written
+grant and no provenance record. **Intent**
+(<https://github.com/lhaig/intent>, Apache-2.0, Go) makes
+`requires`/`ensures`/`invariant` the product and the generated code the
+derivative, discharges them with Z3, and lowers what it cannot prove to
+runtime checks that behave identically across Rust, JavaScript and
+WebAssembly. **Vow** (<https://github.com/vow-lang/vow>, MIT,
+self-hosted) lowers contracts to ESBMC bounded model checking and
+returns counterexamples as re-runnable inputs, with blame attributed to
+caller or callee, sound only within its unwinding bounds. **NanoLang**
+(<https://github.com/jordanhubbard/nanolang>, Apache-2.0, C) requires a
+shadow test block on every function and proves its core in Coq - 193
+theorems, no axioms, no `Admitted` - while documenting plainly that
+effects, async, the FFI and the VM lie outside the proved fragment.
+**Prove** (code.botwork.se, source under a licence forbidding use as
+training data) pairs refinement types and hard postconditions with
+refutation challenges that require the author to say why a plausible
+mutation is wrong. Velaris differs from all four in the same way: they
+verify a program, and none of them bounds what a run may reach, records
+what it declared, or refuses an operation.
+
+**Further from Velaris.** **Pact**
+(<https://github.com/KikotVit/pact-lang>, MIT) puts intent, effects
+(`needs db, time, rng`) and errors in the signature and swaps effect
+implementations for deterministic tests, with no prover. **Lumen**
+(<https://github.com/alliecatowo/lumen>, MIT) has algebraic effects
+with handlers and writes policy into the source as grants (`grant Chat
+max_tokens 1024`) rather than into configuration - the opposite of
+Velaris's division, in which the grant is the operator's and sits
+outside the program - with no audit record. **Zero** (Vercel Labs,
+<https://github.com/vercel-labs/zerolang>, Apache-2.0, early) passes
+capability objects explicitly into `main` and puts its effort into
+stable error codes and typed repair plans as JSON. **MoonBit**
+(<https://www.moonbitlang.com>, the most mature entry in the
+catalogue) has conventional effect typing and prunes ill-typed
+continuations during generation with a semantics-aware sampler.
+**Quasar** (arXiv:2506.12202, University of Pennsylvania) is
+paper-only: it transpiles a Python subset and infers user-approval
+gates for sensitive operations by static analysis, with
+conformal-prediction reliability bounds. **Tacit**
+(<https://github.com/weetster/tacit>, Apache-2.0 or MIT) makes a
+BLAKE3 content-addressed AST the source of truth, with mandatory effect
+rows at unit boundaries; this is a different project from the TACIT
+capability-tracking work cited above, by a different author, and the
+two should not be conflated.
+
 ## Also close
 
 These two are not cited by velaris-lang, and are listed because the
