@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.6.0, 2026-09-12. Dedicated to the public domain under CC0 1.0;
+Version 0.7.0, 2026-09-12. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -15,17 +15,20 @@ and added a conformance corpus any implementation can run, in
 4.2.0, which writes the in-toto Statements of section 8.5; versions
 0.5.1 and 0.5.2 tracked velaris-lang 4.2.1, and version 0.5.3 tracked
 velaris-lang 4.3.2; none of the three changed a rule. Version 0.6.0
-tracks velaris-lang 5.0.0, which made `io` the budget a run gets when
+tracked velaris-lang 5.0.0, which made `io` the budget a run gets when
 nobody writes one: sections 4.4 and 4.6 are restated, and one
 conformance case that assumed the old default is replaced by one that
-writes its grants down (section 10).
+writes its grants down (section 10). Version 0.7.0 tracks velaris-lang
+6.0.0, which added `Secret of T`: section 3.1 gains an eighth effect,
+`declassify`, and section 8.6 is new - the `secrets` object of
+`velaris.audit/1`, which says whether a program ever lets a secret out.
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
 
 This document specifies:
 
-- the seven effects a Velaris program can declare, and the rule that
+- the eight effects a Velaris program can declare, and the rule that
   makes a function's declaration cover everything a call to it can
   reach (section 3);
 - the grammar an operator uses to grant effects, narrowed to paths,
@@ -66,7 +69,7 @@ them. Until it is resolved, the conformance corpus decides (section
 |---|---|
 | program | one or more `.vel` files: an entry file and what it imports |
 | operator | whoever runs a program and chooses its budget |
-| effect | one of the seven names in section 3.1 |
+| effect | one of the eight names in section 3.1 |
 | declaration | a function's `uses` clause |
 | budget | the grants an operator gives a run |
 | grant | one item of a budget (section 4) |
@@ -114,10 +117,14 @@ A function declares what it may do:
 
 The effects are `io` (the console: `print`, `read_line`, `args`),
 `env` (environment variables, through `env()`), `fs` (files), `net`
-(network), `clock` (the time), `rand` (randomness) and `ffi` (calling
-the host language, §12). `env` became its own effect in 3.0; before
-that it was part of `io`, which meant an io-only budget could read
-every secret in the environment.
+(network), `clock` (the time), `rand` (randomness), `ffi` (calling the
+host language, §12) and `declassify` (turning a `Secret` into an
+ordinary value, §3.1). `env` became its own effect in 3.0; before that
+it was part of `io`, which meant an io-only budget could read every
+secret in the environment. `declassify` became the eighth in 6.0: it
+reaches nothing outside the program, but it is the one way a value the
+type system protects stops being protected, and an operator has the
+same reason to refuse it as to refuse `net`.
 
 The rule is transitive and checked at compile time: a function may
 only perform effects it declares, and calling a function requires
@@ -145,15 +152,17 @@ else. That is the default in 5.0 for `velaris file.vel`,
 `allow`, and the ceilings of both doors. Before 5.0 the first three
 granted all seven effects. `--deny` narrows whatever `--allow` gave,
 so a denial alone narrows `io`; `--allow all` is a command-line
-shorthand for the seven effects, written by the operator and never
-read from a caller's budget, and it writes one line to standard error
-when it is used.
+shorthand for every effect - the seven, and `declassify` from 6.0 -
+written by the operator and never read from a caller's budget, and it
+writes one line to standard error when it is used. `all` means all: an
+operator who writes it has waived every gate, which is why writing it
+is recorded.
 
 A grant names an effect, and may narrow it:
 
 | Grant | Permits |
 |---|---|
-| `io`, `env`, `clock`, `rand` | that effect |
+| `io`, `env`, `clock`, `rand`, `declassify` | that effect |
 | `fs` | any path, read and write |
 | `fs:read`, `fs:write` | one direction, any path |
 | `fs:read:P`, `fs:write:P` | one direction, for paths that resolve under `P` |
@@ -189,22 +198,36 @@ granted host name resolves is DNS's business.
 
 ## 3. Effects
 
-### 3.1 The seven effects
+### 3.1 The eight effects
 
-| Effect | Covers | Operations in the reference (Appendix A) |
-|---|---|---|
-| `io` | the console: standard output, standard error, standard input, the program's command-line arguments, its exit status | `print`, `log`, `ask`, `read_line`, `args`, `exit_with` |
-| `env` | reading environment variables | `env` |
-| `fs` | the file system: reading a file, writing a file, asking whether a path exists | `read_file` (read), `write_file` (write), `file_exists` (existence) |
-| `net` | the network: one HTTP or HTTPS request | `fetch`, `post`, `fetch_status`, `request` |
-| `clock` | reading the current time | `now` |
-| `rand` | drawing a random number | `random` |
-| `ffi` | calling into the host language - Python, in the reference - and using host objects | `py`, `py_int`, `py_float`, `py_json`, `py_new`, `py_do`, `py_field`, `py_close` |
+| Effect | Covers | Operations in the reference (Appendix A) | Added |
+|---|---|---|---|
+| `io` | the console: standard output, standard error, standard input, the program's command-line arguments, its exit status | `print`, `log`, `ask`, `read_line`, `args`, `exit_with` | |
+| `env` | reading environment variables | `env` | |
+| `fs` | the file system: reading a file, writing a file, asking whether a path exists | `read_file` (read), `read_file_secret` (read, 6.0), `write_file` (write), `file_exists` (existence) | |
+| `net` | the network: one HTTP or HTTPS request | `fetch`, `post`, `fetch_status`, `request` | |
+| `clock` | reading the current time | `now` | |
+| `rand` | drawing a random number | `random` | |
+| `ffi` | calling into the host language - Python, in the reference - and using host objects | `py`, `py_int`, `py_float`, `py_json`, `py_new`, `py_do`, `py_field`, `py_close` | |
+| `declassify` | turning a value the type system protects into an ordinary one | `declassify` | 0.7 |
 
 Effect names are lower case and matched exactly. The list is closed in
-this version; a new effect is a new version of this document. The
-reference text's list for `io` ("`print`, `read_line`, `args`") names
-examples; the table above is the complete list for the reference.
+this version; a new effect is a new version of this document, and
+`declassify` is why this one is 0.7. The reference text's list for `io`
+("`print`, `read_line`, `args`") names examples; the table above is the
+complete list for the reference.
+
+`declassify` differs from the other seven in what it covers: it reaches
+nothing outside the program. It is an effect because the reference's
+type system marks certain values as ones a program may not emit
+(velaris-lang SPEC.md section 3.1, `Secret of T`), and `declassify` is
+the only operation that removes the mark. Declaring it, propagating it
+through the call graph and refusing it from a budget all work exactly
+as they do for the other seven, and nothing in sections 4 to 7 treats
+it specially. An implementation with no such type system has no
+operation covered by `declassify`, and a program written for it never
+declares one; the effect is still part of the grammar, so a budget
+naming it parses everywhere.
 
 Every other operation of the language is pure: it needs no effect and
 is not checked against a budget. That includes reading JSON, all text
@@ -251,9 +274,9 @@ The reference reports T1 and T2 as E300, T4 as E530, and T5 as E310 -
 the same code as a runtime refusal (Appendix B), used here at compile
 time.
 
-A `uses` clause names effects, and the seven are the only ones. A
-conforming checker MUST reject a `uses` clause naming anything else,
-before running the program, naming the seven.
+A `uses` clause names effects, and the eight of section 3.1 are the
+only ones. A conforming checker MUST reject a `uses` clause naming
+anything else, before running the program, naming the effects it knows.
 
 *Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
 reference accepted any identifier in a `uses` clause: `uses io, teleport`
@@ -271,7 +294,7 @@ reference still listed `teleport` in that document's `effects`,
 Writing the conformance corpus found it. From 4.1.0 an audit leaves a
 name that is not an effect out of all three, whether or not `ok` is
 true; the E300 problem still names it. A producer MUST NOT put any name
-but the seven in `effects` or `functions[].effects`.
+but an effect of section 3.1 in `effects` or `functions[].effects`.
 
 ## 4. The grant grammar
 
@@ -282,7 +305,7 @@ A budget is written as text: grants separated by commas, such as
 
 | Form | Grants |
 |---|---|
-| `io`, `env`, `clock`, `rand` | that effect |
+| `io`, `env`, `clock`, `rand`, `declassify` | that effect |
 | `ffi` | `ffi`, any module |
 | `ffi:M` | `ffi`, for the module M only (section 5.3) |
 | `fs` | `fs`, any path, both directions |
@@ -313,8 +336,8 @@ parse, and MUST NOT drop an item it did not understand.
       the rest of the item to the named modules (section 5.3); the rest
       MUST be a module name, so `ffi:` with no module and `ffi:M@N` are
       errors (section 5.3). Then, while the next item is not empty,
-      contains neither `:` nor `@`, and is not one of the seven effect
-      names, add it as another module and move past it. So `ffi:math,json`
+      contains neither `:` nor `@`, and is not one of the effect names
+      of section 3.1, add it as another module and move past it. So `ffi:math,json`
       names two modules; `ffi:math,io` names one module and grants `io`;
       `ffi:math,io,json` is an error, because `json` comes after `io`;
       `ffi:math,random` names the Python module `random`, while
@@ -373,8 +396,8 @@ open question Q2.
 
 The reference also takes a list of effects to remove - `--deny net,ffi`
 on its command line, `deny=` in its library - applied after the grants.
-Each denied name MUST be one of the seven effects; it removes the
-effect with its scope and count. A denial cannot be scoped:
+Each denied name MUST be one of the effects of section 3.1; it removes
+the effect with its scope and count. A denial cannot be scoped:
 `--deny fs:write` is an error.
 
 When no grants are given, a denial narrows the runtime's default budget
@@ -806,6 +829,7 @@ was added.
 | `ffi_any` | boolean | true when the module argument of some `py`, `py_int`, `py_float`, `py_json` or `py_new` call, anywhere in the program as loaded, is not a literal - a module named by a value built while running, which `ffi_modules` cannot list | 4.0 |
 | `counts` | object or null | `fs` and `net`: for each, the largest bound of section 9.4 on the operations of that effect one call to a function defined in the audited file can perform (`0` when none of them declares the effect), or `null` when the text fixes no bound or the bound exceeds 2^53. For a file whose `main` calls every other function, a bound on one run. The whole field is `null` when no bound was determined, as when `ok` is false. | 4.2 |
 | `prover` | boolean | true when a prover decided the `status` of the promises: one was present and the program compiled. False otherwise - no prover, or `ok` false - and then no `status` is `"proven"` and a `proven_share` of 0 says nothing about what a prover would prove. | 4.2 |
+| `secrets` | object or null | which builtins handed the program a value the type system will not let it emit, whether the program declassifies one, and with what reasons (section 8.6). `null` when the program could not be loaded. | 0.7 |
 
 Two scopes are at work, and they differ. `effects`, `functions`,
 `loops_unshown`, `contract_coverage` and `counts` describe the functions
@@ -829,8 +853,8 @@ For each name in `effects`, in order:
   `net:E` for each entry E of `hosts`, an IPv6 host bracketed and any
   `, @ [ ] %` in a host percent-encoded (section 5.2). Each `net_hosts`
   entry is already in this form.
-- any other name: the name itself (always one of the seven, since
-  `effects` holds no other name, section 3.2).
+- any other name: the name itself (always an effect of section 3.1,
+  since `effects` holds no other name, section 3.2).
 
 The results are joined with commas. Because the paths and hosts are
 escaped and every name is an effect, `safe_command` always parses,
@@ -981,6 +1005,51 @@ reference writes them:
 is the Statement `velaris attest examples/effects.vel` writes in
 velaris-lang at tag `v4.2.0`, with `SOURCE_DATE_EPOCH` set to that
 commit's time, as the release workflow runs it.
+
+### 8.6 secrets
+
+*New in 0.7 (velaris-lang 6.0.0).* `secrets` is an object added to
+`velaris.audit/1` within version 1, so a consumer that does not know
+it ignores it (section 8.1) and a producer that does not implement the
+reference's `Secret of T` writes it with empty values.
+
+| Field | Type | Meaning |
+|---|---|---|
+| `sources` | array of strings | sorted, without repeats: the name of every builtin the program as loaded reaches that returns a value the type system will not let the program emit. In the reference: `env` and `read_file_secret` (velaris-lang SPEC.md section 3.1). |
+| `declassifies` | boolean | true when the program as loaded contains at least one call to `declassify` |
+| `declassifications` | array | one object per such call, each with `reason` (the text written in the call), `function` (the name of the function the call is in) and `line` (integer). Sorted by `function`, then `line`, then `reason`. Empty when `declassifies` is false. |
+
+The whole field is `null` when the program could not be loaded, as when
+it does not parse; then nothing was determined. It is **not** null
+merely because `ok` is false: a program refused for handing a secret to
+something that emits it still reports the sources that made the secret,
+which is what a reader wants at that moment.
+
+**What it is for.** A consumer asks one question - *does this program
+ever let a secret out* - and `declassifies` answers it without running
+the program. `false` means the values those builtins returned reach
+nothing that emits them, by the static rule velaris-lang SPEC.md
+section 3.1 states. `true` means they may, and `declassifications`
+says where and with what stated reason.
+
+**What it does not say.**
+
+- It does not say the reasons are true. A reason is text a program's
+  author wrote; nothing checks it.
+- It bounds explicit flow only. A comparison over such a value gives an
+  ordinary boolean the program may emit, so a program with
+  `declassifies: false` can still tell a reader things about the value
+  through its own control flow. velaris-lang SPEC.md section 3.1 states
+  that choice and why it was made.
+- It covers only values those builtins produced. A secret a program
+  receives some other way - standard input, its arguments, the network,
+  the host language - is an ordinary value, and `sources` says nothing
+  about it.
+- `declassify` is an effect, so it is in `effects` and in
+  `safe_command` like any other (sections 3.1, 8.3), and an operator
+  can run the program without granting it. Withholding the grant makes
+  each `declassify` a refusal at the moment it is reached, not a
+  compile error: the program stops there.
 
 ## 9. velaris.capabilities/1
 
@@ -1504,8 +1573,35 @@ one using `db.vel` declares `ffi`.
 Compile-time codes for the static rule: E300 (T1 and T2), E530 (T4),
 E310 (T5).
 
+The reference's `Secret of T` (velaris-lang SPEC.md section 3.1, and
+section 8.6 here) adds three compile-time codes of its own. They are
+not part of the static rule this document specifies, and an
+implementation without such a type gives none of them: E560, a value
+that must not escape given to something that emits it; E561, a
+`declassify` without a reason written in the call, or given something
+that is not one; E562, a Secret of a Secret.
+
 ## Appendix C. Changes
 
+- **0.7.0**, 2026-09-12: tracks velaris-lang 6.0.0, which added
+  `Secret of T` - a value the type system will not let a program emit.
+  Two things follow for this format. **3.1** gains an eighth effect,
+  `declassify`, the one operation that removes the mark: it reaches
+  nothing outside the program, but it is declared, propagated and
+  refused exactly as the other seven are, so nothing in sections 4 to 7
+  treats it specially and a budget naming it parses everywhere. An
+  implementation with no such type system has no operation covered by
+  it. **8.6** is new: `velaris.audit/1` gains a `secrets` object -
+  which builtins handed the program such a value, whether it ever
+  declassifies one, and with what stated reasons - so that a consumer
+  can ask whether a program lets a secret out without running it. It is
+  an added field within version 1, and a consumer that does not know it
+  ignores it. What it does not claim is written there: the reasons are
+  unchecked text, the rule bounds explicit flow only, and it covers
+  only the values those builtins produced. The corpus grows from 444
+  cases to 455: eight L1 cases for the new field and the refusals
+  around it, three L2 cases for the grant, and one L2 case reworded
+  because the program it held no longer compiles.
 - **0.6.0**, 2026-09-12: tracks velaris-lang 5.0.0, which made `io` the
   budget a run gets when nobody writes one. Two sections are restated.
   **4.6** said the reference's command line and library grant all seven

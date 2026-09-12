@@ -1,0 +1,24 @@
+{
+  "id": "L2-declassify-granted",
+  "level": 2,
+  "kind": "run",
+  "description": "declassify when declassify is allowed",
+  "spec": [
+    "3.1"
+  ],
+  "from": "check_sandbox.py HONEST declassify-granted",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "fixture": "sandbox",
+    "source": "fn main() uses io, env, declassify {\n    let key = env(\"VELARIS_NOT_SET\", \"opened\")\n    print(declassify(key, \"this demo shows what declassify does\"))\n}\n",
+    "allow": "io,env,declassify",
+    "args": []
+  },
+  "expect": {
+    "outcome": "completed",
+    "stdout_includes": [
+      "opened"
+    ]
+  }
+}

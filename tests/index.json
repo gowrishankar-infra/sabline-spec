@@ -4,11 +4,11 @@
   "levels": {
     "1": {
       "name": "Declaration",
-      "cases": 298
+      "cases": 306
     },
     "2": {
       "name": "Enforcement",
-      "cases": 37
+      "cases": 40
     },
     "3": {
       "name": "Ratchet",
@@ -2313,6 +2313,70 @@
       "requires": []
     },
     {
+      "id": "L1-audit-secret-kept",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-secret-kept.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-secret-declassified",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-secret-declassified.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-secret-from-a-file",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-secret-from-a-file.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-no-secret-at-all",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-no-secret-at-all.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-secret-printed",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-secret-printed.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-secret-returned-as-plain",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-secret-returned-as-plain.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-declassify-reason-not-literal",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-declassify-reason-not-literal.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L1-audit-declassify-effect-undeclared",
+      "level": 1,
+      "kind": "audit",
+      "file": "L1/L1-audit-declassify-effect-undeclared.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
       "id": "L1-audit-declared-not-used",
       "level": 1,
       "kind": "audit",
@@ -2593,6 +2657,14 @@
       "requires": []
     },
     {
+      "id": "L2-declassify-not-granted",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-declassify-not-granted.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
       "id": "L2-fs-symlink-escape",
       "level": 2,
       "kind": "run",
@@ -2649,6 +2721,22 @@
       "level": 2,
       "kind": "run",
       "file": "L2/L2-clock-under-clock.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-secret-kept-under-env",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-secret-kept-under-env.json",
+      "known_limit": false,
+      "requires": []
+    },
+    {
+      "id": "L2-declassify-granted",
+      "level": 2,
+      "kind": "run",
+      "file": "L2/L2-declassify-granted.json",
       "known_limit": false,
       "requires": []
     },

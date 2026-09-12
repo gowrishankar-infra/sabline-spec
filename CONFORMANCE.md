@@ -67,7 +67,7 @@ An implementation conforming at L1 does all of the following.
   that performs an effect it does not declare (T1), calls a function
   without declaring what it declares (T2), passes an effectful
   function as a value (T4), calls an effectful function in a contract
-  (T5), or names anything but the seven effects in `uses`. Cases:
+  (T5), or names anything but an effect of 3.1 in `uses`. Cases:
   `L1-audit-undeclared-effect`, `-declaration-propagates`,
   `-effectful-function-as-value`, `-effectful-call-in-contract`,
   `-unknown-effect-name`.
@@ -76,13 +76,13 @@ An implementation conforming at L1 does all of the following.
   declarations; each function's declaration and whether it can fail;
   the literal paths, hosts and modules the program names, over every
   file it loads, and whether one is built while running (`read_any`,
-  `write_any`, `any`, `ffi_any`). Cases: the 13 `L1-audit-*` cases
+  `write_any`, `any`, `ffi_any`). Cases: the 17 `L1-audit-*` cases
   that compile.
 - **D5. Emits `velaris.audit/1`** (8) that validates against
   [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json),
-  whose `effects` holds only the seven names even when `ok` is false,
+  whose `effects` holds only names of 3.1 even when `ok` is false,
   and whose `safe_command` is derived as 8.3 says and always parses.
-  Cases: all 18 `L1-audit-*` cases.
+  Cases: all 26 `L1-audit-*` cases.
 
 ## L2 Enforcement
 
@@ -104,7 +104,7 @@ following for every operation of SPEC.md 3.1.
   Cases: `L2-redirect-to-ungranted-host-is-a-failure`,
   `L2-redirect-to-granted-host-is-followed`.
 - **E5. Checks what a run attempts, not what it declares** (G5), so an
-  honest program runs under the budget it needs. Cases: the nine
+  honest program runs under the budget it needs. Cases: the eleven
   `L2-*` cases whose outcome is `completed`.
 - **E6. Holds every escape route the reference's sandbox suite holds,
   that the corpus can state without a host language**:

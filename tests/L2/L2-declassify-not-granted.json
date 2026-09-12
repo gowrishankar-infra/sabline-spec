@@ -1,19 +1,19 @@
 {
-  "id": "L2-env-under-io",
+  "id": "L2-declassify-not-granted",
   "level": 2,
   "kind": "run",
-  "description": "env() with only io granted",
+  "description": "declassify() with env and io granted but not declassify",
   "spec": [
     "3.1",
     "6 G2"
   ],
-  "from": "check_sandbox.py ESCAPES env-under-io",
+  "from": "check_sandbox.py ESCAPES declassify-not-granted",
   "requires": [],
   "known_limit": null,
   "input": {
     "fixture": "sandbox",
-    "source": "fn main() uses io, env {\n    let path = env(\"PATH\", \"\")\n    if path == \"\" {\n        print(\"READ IT (nothing there)\")\n    }\n    print(\"READ IT\")\n}\n",
-    "allow": "io",
+    "source": "fn main() uses io, env, declassify {\n    let key = env(\"PATH\", \"\")\n    print(\"READ IT \" + declassify(key, \"this demo prints it\"))\n}\n",
+    "allow": "io,env",
     "args": []
   },
   "expect": {

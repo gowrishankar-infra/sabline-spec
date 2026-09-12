@@ -1,0 +1,25 @@
+{
+  "id": "L1-audit-declassify-reason-not-literal",
+  "level": 1,
+  "kind": "audit",
+  "description": "declassify needs its reason written in the call, because the audit reads it without running the program (E561)",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS declassify-reason-not-literal",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn main() uses io, env, declassify {\n    let key = env(\"API_KEY\", \"\")\n    let why = \"built while running\"\n    print(declassify(key, why))\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": false,
+    "problems_include": [
+      "E561"
+    ]
+  }
+}

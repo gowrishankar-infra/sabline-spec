@@ -1,0 +1,25 @@
+{
+  "id": "L1-audit-declassify-effect-undeclared",
+  "level": 1,
+  "kind": "audit",
+  "description": "declassify without 'uses declassify' is refused like any other effect (E300)",
+  "spec": [
+    "3.2",
+    "8"
+  ],
+  "from": "check_library.py AUDITS declassify-effect-undeclared",
+  "requires": [],
+  "known_limit": null,
+  "input": {
+    "files": {
+      "main.vel": "fn main() uses io, env {\n    let key = env(\"API_KEY\", \"\")\n    print(declassify(key, \"why\"))\n}\n"
+    },
+    "entry": "main.vel"
+  },
+  "expect": {
+    "ok": false,
+    "problems_include": [
+      "E300"
+    ]
+  }
+}

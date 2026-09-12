@@ -31,7 +31,7 @@
     {"if": {"properties": {"kind": {"const": "bound"}}}, "then": {"properties": {"level": {"const": 3}, "input": {"$ref": "#/$defs/bound_input"}, "expect": {"$ref": "#/$defs/counts_pair"}}}}
   ],
   "$defs": {
-    "effect": {"enum": ["io", "env", "fs", "net", "clock", "rand", "ffi"]},
+    "effect": {"enum": ["io", "env", "fs", "net", "clock", "rand", "ffi", "declassify"]},
     "count": {"type": ["integer", "null"], "minimum": 0},
     "file_name": {"description": "A '/'-separated path relative to the case's root, as a tree names its files.", "type": "string", "pattern": "^[^/\\\\]+(/[^/\\\\]+)*$"},
     "tree": {"type": "object", "propertyNames": {"$ref": "#/$defs/file_name"}, "additionalProperties": {"type": "string"}},
@@ -65,7 +65,8 @@
         "ffi_any": {"type": "boolean"},
         "fs_paths": {"type": "object"},
         "net_hosts": {"type": "object"},
-        "safe_command": {"type": "string", "pattern": "^velaris <file> --allow .+$"}
+        "safe_command": {"type": "string", "pattern": "^velaris <file> --allow .+$"},
+        "secrets": {"description": "SPEC.md 8.6, added in 0.7. Present only in a case that checks the field; a case written before 0.7 omits it and says nothing about it.", "type": "object", "required": ["sources", "declassifies", "declassifications"], "additionalProperties": false, "properties": {"sources": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "declassifies": {"type": "boolean"}, "declassifications": {"type": "array", "items": {"type": "object", "required": ["reason", "function", "line"], "additionalProperties": false, "properties": {"reason": {"type": "string"}, "function": {"type": "string", "minLength": 1}, "line": {"type": "integer", "minimum": 1}}}}}}
       }}
     ]},
     "run_input": {"type": "object", "required": ["fixture", "source", "args"], "additionalProperties": false, "properties": {"fixture": {"const": "sandbox"}, "source": {"type": "string"}, "allow": {"type": "string"}, "deny": {"type": "string"}, "args": {"type": "array", "items": {"type": "string"}}}},

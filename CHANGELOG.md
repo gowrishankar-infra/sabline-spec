@@ -1,5 +1,65 @@
 # Changelog
 
+## 0.7.0 - An eighth effect, and what the audit says about secrets - 2026-09-12
+
+Tracks velaris-lang 6.0.0, which added `Secret of T` - a value the
+reference's type system will not let a program print, write, send or
+pass to the host language. Two things follow for this format: one new
+effect, and one new field. Nothing else changes: no grant form, no
+refusal code, no parsing rule, no existing field.
+
+**3.1, the effects.** `declassify` is the eighth, and it is different
+from the other seven in what it covers: it reaches nothing outside the
+program. It is an effect because the reference marks certain values as
+ones a program may not emit, and `declassify` is the only operation
+that removes the mark - so declaring it, propagating it through the
+call graph and refusing it from a budget all matter, and all work
+exactly as they do for the other seven. Nothing in sections 4 to 7
+treats it specially: `declassify` is a grant like `io`, a denial like
+`io`, and a name in `effects` like `io`. An implementation with no such
+type system has no operation covered by it and a program written for
+one never declares it; the effect is still in the grammar, so a budget
+naming it parses everywhere.
+
+**8.6, `secrets`.** `velaris.audit/1` gains an object saying which
+builtins handed the program such a value (`sources`), whether it ever
+declassifies one (`declassifies`), and with what stated reasons and in
+which functions (`declassifications`). A consumer asks one question of
+it - *does this program ever let a secret out* - and gets an answer
+without running the program. It is an added field within version 1, so
+a consumer that does not know it ignores it (8.1), and a producer with
+no such type system writes empty values.
+
+The section says what the field does not claim, because it would
+otherwise be read as more than it is: the reasons are text a program's
+author wrote and nothing checks them; the rule behind it bounds
+explicit flow only, so a program with `declassifies: false` can still
+tell a reader things about a secret through its own control flow; and
+it covers only the values those builtins produced, not a secret that
+arrives through standard input, the arguments, the network or the host
+language.
+
+**The corpus grows from 444 cases to 455.** Eight new L1 cases: the
+`secrets` field for a program that holds a secret and never lets it
+out, for one that declassifies, for one whose secret comes from a file,
+and for one with no secret at all; and the four refusals around it - a
+secret given to something that emits it, a signature that does not say
+so returning one, a `declassify` whose reason is not written in the
+call, and a `declassify` without the effect declared. Three new L2
+cases: the `declassify` grant refused, the same grant allowed, and a
+secret read and compared without any grant beyond `env`. One existing
+L2 case, `L2-env-under-io`, is reworded: the program it held printed
+what `env()` returned, which no longer compiles, so it now compares
+instead - the case still tests what it always tested, that an `io`-only
+budget refuses `env` at run time.
+
+PRIOR_ART.md's TACIT entry said this format had no counterpart to
+TACIT's information-flow control. That was true until velaris-lang
+6.0.0; it now says what there is, and what TACIT still has that this
+does not - capture checking over every value's type rather than one
+wrapper type, and a stronger result than bounding explicit flow.
+CaMeL's entry is corrected the same way.
+
 ## 0.6.0 - The default budget is io, not all seven effects - 2026-09-12
 
 Tracks velaris-lang 5.0.0. Two sections are restated and one

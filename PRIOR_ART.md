@@ -45,8 +45,31 @@ Implementation: <https://github.com/lampepfl/tacit>.
   system but effect names in signatures plus an operator's budget
   written as text and enforced by the interpreter at each operation,
   in a small language a model learns from a card rather than Scala 3;
-  this format has no counterpart to TACIT's information-flow control
-  over classified data, and no grant for running commands.
+  and there is no grant for running commands.
+
+  On information-flow control this file said, until 0.7, that the
+  format had no counterpart at all. That was true until velaris-lang
+  6.0 (2026-09-12), which added `Secret of T`: `env()` and
+  `read_file_secret()` return one, no builtin that declares an effect
+  accepts an argument carrying one, a list, map or record holding one
+  carries it, and `declassify(value, reason)` is the only way out -
+  itself an effect, so it appears in a signature, in this format's
+  `effects`, in the budget an operator writes, and in the audit's
+  `secrets` section with the reason written in the call. SPEC.md
+  section 3.1 of velaris-lang states it; section 8.6 here states what
+  the audit reports.
+
+  What TACIT still has that this does not: its capture checking tracks
+  *every* value's captured capabilities as part of the type, where
+  Velaris marks the results of two builtins and nothing else - a
+  secret that reaches a program through standard input, its arguments,
+  the network or the host language is an ordinary `Text`, and a
+  program cannot mark one itself. Velaris bounds explicit flow only:
+  a comparison over a secret yields an ordinary `Bool`, deliberately,
+  so a program may learn a secret through its own control flow and
+  then print what it learned. Neither is a non-interference result,
+  but TACIT's is the stronger of the two, and it is checked over Scala
+  3's whole type system rather than over one wrapper type.
 
 ## CaMeL
 
@@ -61,10 +84,19 @@ Prompt Injections by Design." arXiv:2503.18813, 2025.
   readers - and security policies are checked when a tool is called, so
   untrusted data cannot change the control flow or leave through a flow
   the policy forbids.
-- **How this differs:** this format tracks nothing about data - a
-  budget bounds which effects, paths, hosts and modules a run may reach,
-  not which values may flow to them - and its grants apply per run to
-  operations, where CaMeL's policies apply per tool call to data.
+- **How this differs:** a budget bounds which effects, paths, hosts and
+  modules a run may reach, not which values may flow to them, and its
+  grants apply per run to operations where CaMeL's policies apply per
+  tool call to data. Until 0.7 this file said the format tracked
+  nothing about data at all; from velaris-lang 6.0 it tracks one thing,
+  `Secret of T` (section 3.1 there, section 8.6 here). The difference
+  that remains is the one that matters: CaMeL tags *every* value with
+  its provenance and its permitted readers, computed as the program
+  runs, and checks a policy at each tool call; Velaris marks the
+  results of two builtins at compile time, has no notion of provenance
+  or of a reader, and lets a comparison over a marked value give an
+  ordinary Bool. CaMeL's design is aimed at untrusted *data* changing
+  what a program does; nothing here addresses that.
 
 ## WASI
 
