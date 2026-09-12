@@ -1,6 +1,6 @@
 # Conformance
 
-Version 0.5.3, 2026-09-12. What an implementation must do to claim that
+Version 0.6.0, 2026-09-12. What an implementation must do to claim that
 it conforms to the Velaris capability format - `velaris.capabilities`
 conformance - at each of three levels, and how it shows that it does.
 Dedicated to the public domain under CC0 1.0, like the rest of this
@@ -59,7 +59,10 @@ An implementation conforming at L1 does all of the following.
   runs, and never grants part of it (4.2). Cases: the 225
   `L1-budget-malformed-*` cases, and the refused `L1-budget-*` cases:
   a module after an effect in the continuation form, a raw comma in a
-  path, a scoped denial, an unknown denial.
+  path, a scoped denial, an unknown denial. A denial is tested against
+  the grants the case writes (`L1-budget-deny-from-grants-given`);
+  what a denial alone narrows is the runtime's default budget (4.6),
+  which this document does not fix and no case tests.
 - **D3. Checks declarations before running** (3.2): refuses a program
   that performs an effect it does not declare (T1), calls a function
   without declaring what it declares (T2), passes an effectful
@@ -111,7 +114,8 @@ following for every operation of SPEC.md 3.1.
     `-ffi-under-io`, `-ffi-handle-under-io`, `-clock-under-io`,
     `-rand-under-io`, `-env-under-io`);
   - an effect two helpers below `main` (`L2-effect-behind-two-helpers`);
-  - denials, one and several (`L2-deny-one`, `L2-deny-several`);
+  - denials, one and several, each against a budget the case grants
+    (`L2-deny-one`, `L2-deny-several`);
   - a module outside `ffi:`, through `py`, a dotted module name,
     `py_json` and `py_new` (`L2-ffi-module-outside-list`,
     `-ffi-submodule-path`, `-ffi-through-py-json`,
@@ -206,7 +210,7 @@ following.
 Run every case of the levels claimed, as [tests/README.md](tests/README.md)
 says, and report each result. A claim is made in these words:
 
-> *Implementation* *version* conforms to velaris-spec 0.5.3 at L1[, L2]
+> *Implementation* *version* conforms to velaris-spec 0.6.0 at L1[, L2]
 > [and L3], against the conformance corpus at velaris-spec commit
 > *sha* (*n* cases), on *platform*. Not run: *case ids, and why*.
 

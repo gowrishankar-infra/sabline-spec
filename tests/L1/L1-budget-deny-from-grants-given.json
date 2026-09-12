@@ -1,15 +1,16 @@
 {
-  "id": "L1-budget-deny-from-all-seven",
+  "id": "L1-budget-deny-from-grants-given",
   "level": 1,
   "kind": "budget",
-  "description": "denying net and ffi, with no grants given, leaves the other five unscoped",
+  "description": "denying net and ffi from a budget that grants all seven leaves the other five unscoped",
   "spec": [
     "4.4"
   ],
-  "from": "check_library.py BUDGETS deny-from-all-seven",
+  "from": "check_library.py BUDGETS deny-from-grants-given",
   "requires": [],
   "known_limit": null,
   "input": {
+    "allow": "io,env,fs,net,clock,rand,ffi",
     "deny": "net,ffi"
   },
   "expect": {

@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.5.3, 2026-09-12. Dedicated to the public domain under CC0 1.0;
+Version 0.6.0, 2026-09-12. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -13,8 +13,12 @@ and added a conformance corpus any implementation can run, in
 [tests/](tests), with the levels of conformance in
 [CONFORMANCE.md](CONFORMANCE.md); version 0.5 tracked velaris-lang
 4.2.0, which writes the in-toto Statements of section 8.5; versions
-0.5.1 and 0.5.2 tracked velaris-lang 4.2.1, and version 0.5.3 tracks
-velaris-lang 4.3.2. None of the three changes a rule.
+0.5.1 and 0.5.2 tracked velaris-lang 4.2.1, and version 0.5.3 tracked
+velaris-lang 4.3.2; none of the three changed a rule. Version 0.6.0
+tracks velaris-lang 5.0.0, which made `io` the budget a run gets when
+nobody writes one: sections 4.4 and 4.6 are restated, and one
+conformance case that assumed the old default is replaced by one that
+writes its grants down (section 10).
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
@@ -44,12 +48,12 @@ SPEC.md, EMBEDDING.md and THREAT_MODEL.md cover those.
 
 **Conventions.** MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
 read as described in RFC 2119 and RFC 8174 when, and only when, they
-appear in capitals. "The reference" means velaris-lang 4.3.2. A
+appear in capitals. "The reference" means velaris-lang 5.0.0. A
 paragraph marked *Reference behaviour* records what the reference does
 at a point this document does not yet settle; each such point is also
 an open question in section 11. A paragraph marked *Resolved in 0.2*,
-*0.3*, *0.4* or *0.5* records a point that an earlier version left
-open, or stated wrongly, and that version settles, naming the
+*0.3*, *0.4*, *0.5* or *0.6* records a point that an earlier version
+left open, or stated wrongly, and that version settles, naming the
 velaris-lang release that made the reference match.
 
 Where this document and the reference disagree, that is a bug in one of
@@ -134,6 +138,16 @@ operator's decision, given as `--allow` / `--deny` on the command line
 or `allow=` in the library, and enforced by the runtime at the moment
 an effect is attempted, whatever the source declares. A refusal stops
 the program and cannot be caught.
+
+An operator who writes no budget gets `io` - the console, and nothing
+else. That is the default in 5.0 for `velaris file.vel`,
+`velaris.run(source)` with no `allow`, `velaris.Pool(...)` with no
+`allow`, and the ceilings of both doors. Before 5.0 the first three
+granted all seven effects. `--deny` narrows whatever `--allow` gave,
+so a denial alone narrows `io`; `--allow all` is a command-line
+shorthand for the seven effects, written by the operator and never
+read from a caller's budget, and it writes one line to standard error
+when it is used.
 
 A grant names an effect, and may narrow it:
 
@@ -359,10 +373,16 @@ open question Q2.
 
 The reference also takes a list of effects to remove - `--deny net,ffi`
 on its command line, `deny=` in its library - applied after the grants.
-When no grants are given, the starting budget is all seven effects,
-unscoped. Each denied name MUST be one of the seven effects; it removes
-the effect with its scope and count. A denial cannot be scoped:
+Each denied name MUST be one of the seven effects; it removes the
+effect with its scope and count. A denial cannot be scoped:
 `--deny fs:write` is an error.
+
+When no grants are given, a denial narrows the runtime's default budget
+(4.6), which this format does not fix. For the reference that is `io`
+from velaris-lang 5.0, so `--deny net` alone leaves `io`; until 5.0 the
+starting budget was all seven effects unscoped, so the same command
+left five. A case in the conformance corpus therefore always writes the
+grants a denial applies to.
 
 ### 4.5 A budget given as a list
 
@@ -376,13 +396,24 @@ error; the reference HTTP door joins its list in no defined order.
 ### 4.6 When no budget is given
 
 This format defines what a budget grants. It does not define what a
-runtime does when the operator gives no budget at all. The reference
-command line (`velaris file.vel`) and library (`velaris.run(source)`
-with no `allow`) then grant all seven effects, unscoped. What makes a
-run deny-by-default is the budget, not the program or the format. The
-reference's MCP tool `velaris_run` and its HTTP `POST /run` default to
-`io` alone. A tool built on this format SHOULD require an explicit
-budget, or default to one that grants no more than `io`.
+runtime does when the operator gives no budget at all. A tool built on
+this format SHOULD require an explicit budget, or default to one that
+grants no more than `io`.
+
+From velaris-lang 5.0 the reference does the second everywhere: the
+command line (`velaris file.vel`), the library (`velaris.run(source)`
+with no `allow`), the worker pool (`velaris.Pool(...)` with no
+`allow`), the MCP tool `velaris_run` and the HTTP `POST /run` all grant
+`io` alone, and so do the two doors' ceilings. Until 5.0 the command
+line, the library and the pool granted all seven effects, unscoped,
+and this section recorded that; the two doors were narrowed earlier
+(the MCP server in 3.4, the HTTP door in 4.0). The reference's command
+line takes `--allow all` as a shorthand for the seven effects, written
+only by the operator and never read from a caller's budget, and writes
+one line to its standard error when it is used.
+
+What makes a run deny-by-default is the budget, not the program or the
+format.
 
 The reference's two doors also have a ceiling, the most a request may
 ask for, compared under section 5.5. For the MCP server it is `io`
@@ -1475,6 +1506,26 @@ E310 (T5).
 
 ## Appendix C. Changes
 
+- **0.6.0**, 2026-09-12: tracks velaris-lang 5.0.0, which made `io` the
+  budget a run gets when nobody writes one. Two sections are restated.
+  **4.6** said the reference's command line and library grant all seven
+  effects, unscoped, when given no budget; from 5.0 they grant `io`,
+  and so do the worker pool and both doors, so every place a budget
+  comes from in the reference now answers the same way. The SHOULD for
+  other implementations is unchanged, and what a runtime does with no
+  budget is still outside this format. **4.4** said that when no grants
+  are given a denial starts from all seven effects; it now says a
+  denial narrows the runtime's default budget, which this format does
+  not fix, and that a conformance case always writes the grants its
+  denial applies to. One case changes with it:
+  `L1-budget-deny-from-all-seven` becomes
+  `L1-budget-deny-from-grants-given`, which grants the seven in its
+  own text and denies two of them, and a case asserting the reference's
+  new default is recorded in `tests/index.json` as excluded rather than
+  required of everyone. The corpus is still 444 cases. `--allow all`,
+  the reference's shorthand for the seven effects, is an operator's
+  command-line word and not part of the grammar of sections 4 and 5: a
+  budget a caller sends over a door still cannot contain it.
 - **0.5.3**, 2026-09-12: tracks velaris-lang 4.3.2. No rule, field,
   schema or case changes; the corpus is still 444 cases. velaris-lang
   4.3.0 added `Money of CUR` and 4.3.1 made a proof that runs out of

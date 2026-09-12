@@ -13,6 +13,7 @@
   "input": {
     "fixture": "sandbox",
     "source": "fn main() uses io, fs {\n    write_file(\"{ROOT}/wrote.txt\", \"escaped\")\n    print(\"WROTE IT\")\n}\n",
+    "allow": "io,fs",
     "deny": "fs",
     "args": []
   },

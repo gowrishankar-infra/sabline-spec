@@ -78,9 +78,12 @@ WebAssembly System Interface, WebAssembly Community Group,
 - **How this differs:** grants here are text an operator writes, not
   handles passed to the program; they are enforced by an interpreter in
   the same process, not at a virtual machine's boundary; and the
-  reference implementation gives a run with no budget all seven
-  effects (SPEC.md section 4.6), so deny-by-default holds only once an
-  operator writes a budget.
+  reference implementation gives a run with no budget `io` - the
+  console and nothing else (SPEC.md section 4.6). Until velaris-lang
+  5.0 (2026-09-12) it gave all seven effects, and this paragraph said
+  that deny-by-default held only once an operator wrote a budget. That
+  was true until 5.0; what remains is that a program given nothing can
+  still print, where a WASI module given nothing cannot.
 
 ## in-toto and SLSA
 
@@ -212,10 +215,15 @@ and 34 commits. Orchestration and Verification.
   Boruna does neither of; Boruna's bundles are checksummed but not yet
   signed, which its own documentation records as an open gap. Velaris
   has nothing answering to Boruna's deterministic replay, approval
-  gates or envelope encryption. On deny-by-default Boruna is the
-  stricter of the two: its default policy grants nothing, where a
-  Velaris run with no budget gets all seven effects (SPEC.md section
-  4.6).
+  gates or envelope encryption. On deny-by-default Boruna is still the
+  stricter of the two, but by much less than this entry first said.
+  Its default policy grants nothing. Until velaris-lang 5.0
+  (2026-09-12) a Velaris run with no budget got all seven effects, and
+  this paragraph said so; from 5.0 it gets `io` - print, read a line,
+  and the command-line arguments - and every other effect is refused
+  (SPEC.md section 4.6). So the gap is now one effect, not seven: a
+  Velaris program given no budget can write to the console, and a
+  Boruna one cannot.
 
 **Thermite.** <https://github.com/dollspace-gay/Thermite>, MIT, Rust
 and Lean 4, working. Verification, listed as also spanning

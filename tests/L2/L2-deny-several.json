@@ -13,6 +13,7 @@
   "input": {
     "fixture": "sandbox",
     "source": "fn main() uses io, net {\n    check fetch_status(\"https://example.com\") {\n        ok code {\n            print(\"REACHED IT\")\n        }\n        fail why {\n            print(\"failed\")\n        }\n    }\n}\n",
+    "allow": "io,fs,net,ffi",
     "deny": "fs,net,ffi",
     "args": []
   },

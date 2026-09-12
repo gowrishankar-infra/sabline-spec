@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.6.0 - The default budget is io, not all seven effects - 2026-09-12
+
+Tracks velaris-lang 5.0.0. Two sections are restated and one
+conformance case is rewritten; the corpus is still 444 cases, and no
+effect, grant, refusal code, schema or field changes.
+
+**4.6, when no budget is given.** Until velaris-lang 5.0 the
+reference's command line (`velaris file.vel`), library
+(`velaris.run(source)` with no `allow`) and worker pool granted all
+seven effects, unscoped, and this section said so. From 5.0 all three
+grant `io` - print, read a line, and the command-line arguments - as
+the MCP server and the HTTP door already did, so every place a budget
+comes from in the reference answers the same way. What a runtime does
+with no budget is still outside this format, and the SHOULD is
+unchanged: require an explicit budget, or default to one that grants
+no more than `io`. The reference now satisfies it.
+
+**4.4, denials.** The old text said that when no grants are given a
+denial starts from all seven effects, unscoped. That tied the denial
+algorithm to one runtime's default, and the reference's default has
+now changed. It says instead that a denial narrows the runtime's
+default budget, which 4.6 leaves to the runtime, and that a
+conformance case always writes the grants its denial applies to.
+
+**The corpus.** `L1-budget-deny-from-all-seven`, which denied `net`
+and `ffi` with no grants and expected the other five, becomes
+`L1-budget-deny-from-grants-given`, which grants all seven in its own
+text and denies the same two, expecting the same five: the same
+algorithm, stated without reference to any default. `L2-deny-one` and
+`L2-deny-several` gain the grants their denials remove from, so no
+case's outcome depends on an implementation's default any more. Five
+cases in the reference's own suites assert the new default and the
+refusal it produces; all five are recorded in `tests/index.json` as
+excluded, because the default is the runtime's choice and the
+refusal's wording is not stable.
+
+**`--allow all`** is the reference's command-line shorthand for the
+seven effects, and prints one line to standard error when an operator
+uses it. It is not part of the grammar of sections 4 and 5: a budget a
+caller sends to the HTTP door or the MCP server cannot contain it, and
+no case parses it.
+
 ## 0.5.3 - 2026-09-12
 
 Tracks velaris-lang 4.3.2. No rule, field, schema or conformance case

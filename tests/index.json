@@ -425,10 +425,10 @@
       "requires": []
     },
     {
-      "id": "L1-budget-deny-from-all-seven",
+      "id": "L1-budget-deny-from-grants-given",
       "level": 1,
       "kind": "budget",
-      "file": "L1/L1-budget-deny-from-all-seven.json",
+      "file": "L1/L1-budget-deny-from-grants-given.json",
       "known_limit": false,
       "requires": []
     },
@@ -3577,6 +3577,31 @@
   ],
   "excluded": [
     {
+      "from": "check_library.py BUDGETS deny-narrows-the-default",
+      "description": "a denial with no grants narrows the default budget, which is io from 5.0",
+      "reason": "a denial with no grants narrows the runtime's default budget, which velaris-spec 4.6 leaves to the runtime"
+    },
+    {
+      "from": "check_sandbox.py ESCAPES default-refuses-fs",
+      "description": "a program that writes a file, with no --allow at all",
+      "reason": "a run given no budget is outside the format (velaris-spec 4.6); what it grants is the reference's choice, which from 5.0 is io"
+    },
+    {
+      "from": "check_sandbox.py ESCAPES default-refusal-names-the-effect-and-the-flag",
+      "description": "the refusal under the default says which effect and how to grant it",
+      "reason": "about the wording of this implementation's messages, which STABILITY.md does not hold stable and the corpus never compares"
+    },
+    {
+      "from": "check_sandbox.py ESCAPES default-refuses-net",
+      "description": "a program that reaches the network, with no --allow at all",
+      "reason": "a run given no budget is outside the format (velaris-spec 4.6); what it grants is the reference's choice, which from 5.0 is io"
+    },
+    {
+      "from": "check_sandbox.py ESCAPES deny-narrows-the-default",
+      "description": "--deny narrows what the default granted; it does not widen it back to every effect",
+      "reason": "a denial with no grants narrows the runtime's default budget (velaris-spec 4.4, 4.6), which the format leaves to the runtime"
+    },
+    {
       "from": "check_sandbox.py ESCAPES ffi-reach-codecs-through-json",
       "description": "reaching codecs through a granted json",
       "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
@@ -3612,9 +3637,14 @@
       "reason": "needs a Python host to run the granted call; the corpus runs no host code"
     },
     {
-      "from": "check_sandbox.py HONEST no-budget-given",
-      "description": "everything when nothing is restricted",
-      "reason": "a run given no budget is outside the format (velaris-spec 4.6); what it grants is the reference's choice, not a rule"
+      "from": "check_sandbox.py HONEST default-budget-is-io",
+      "description": "a run with no --allow may print",
+      "reason": "a run given no budget is outside the format (velaris-spec 4.6); what it grants is the reference's choice, which from 5.0 is io"
+    },
+    {
+      "from": "check_sandbox.py HONEST allow-all-still-grants-everything",
+      "description": "--allow all grants what a run with no budget used to get",
+      "reason": "`all` is this command line's shorthand, not part of the budget grammar the corpus tests"
     },
     {
       "from": "check_sandbox.py HONEST ffi-deep-attribute-inside-grant",

@@ -64,9 +64,15 @@ effect names. `expect`: `{"valid": false}` or `{"valid": true, "grants":
 G}`.
 
 Parse `allow` as a budget (SPEC.md sections 4 and 5). If `deny` is
-given, apply it as a denial (4.4) - to the budget from `allow`, or,
-when `allow` is absent, to all seven effects unscoped. `allow` present
-and empty is the empty budget.
+given, apply it as a denial (4.4) to the budget from `allow`. `allow`
+present and empty is the empty budget.
+
+A case that gives `deny` always gives `allow` too. What a denial alone
+narrows is the runtime's default budget, which SPEC.md 4.6 leaves to
+the runtime, so no case makes an implementation's default part of the
+test. (Until velaris-spec 0.6.0 one case did, applying a denial to all
+seven effects; the reference's default changed in velaris-lang 5.0 and
+the case was rewritten to write its grants down.)
 
 - `valid: false`: the implementation must refuse the budget as a whole.
 - `valid: true`: the budget parses, and means `G`:
@@ -106,9 +112,12 @@ wording of `warnings` are never compared.
 
 ### `run` (level 2)
 
-`input`: `fixture` (always `"sandbox"`), `source`, `allow` and/or
-`deny` as for `budget`, and `args`, the program's arguments. `expect`:
-an `outcome` and what the run must and must not leave behind.
+`input`: `fixture` (always `"sandbox"`), `source`, `allow` and, where
+the case denies, `deny` as well, both as for `budget`, and `args`, the
+program's arguments. `expect`: an `outcome` and what the run must and
+must not leave behind. Every `run` case names its budget: as with
+`budget` cases, no case leaves the implementation's default (SPEC.md
+4.6) to do the work.
 
 Set up the fixture, put the values of the placeholders into `source`,
 `allow`, `deny`, `args` and every string of `expect`, and run the

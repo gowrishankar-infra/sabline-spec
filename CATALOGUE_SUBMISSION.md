@@ -98,7 +98,7 @@ crossrefs:
   - slug: boruna
     name: Boruna
     camp: orchestration
-    relation: "Same diagnosis, and the closest neighbour here. Both declare effects on the function and gate them at run time against an operator's policy. Boruna records the run - hash-chained evidence bundles that replay to identical outputs - where Velaris records the source text, as a separately published format with an in-toto predicate and SARIF output. Boruna parses ensures without enforcing it and has no prover; Velaris discharges contracts with Z3. Boruna grants nothing by default, where Velaris without a budget grants all seven effects."
+    relation: "Same diagnosis, and the closest neighbour here. Both declare effects on the function and gate them at run time against an operator's policy. Boruna records the run - hash-chained evidence bundles that replay to identical outputs - where Velaris records the source text, as a separately published format with an in-toto predicate and SARIF output. Boruna parses ensures without enforcing it and has no prover; Velaris discharges contracts with Z3. Boruna grants nothing by default, where Velaris without a budget grants io - the console alone - since velaris-lang 5.0, and granted all seven effects before it."
   - slug: thermite
     name: Thermite
     camp: verification
@@ -172,7 +172,7 @@ limitation as much as a feature.
 ## 4. Before sending
 
 - Re-read the entry against the current release. It is written against
-  velaris-lang 4.4.0 and velaris-spec 0.5.3; if either moves first,
+  velaris-lang 5.0.0 and velaris-spec 0.6.0; if either moves first,
   check the corpus count, the effect list and the benchmark figures.
 - Check the four `crossrefs` slugs still resolve to files in
   `src/content/languages/` - `boruna.md`, `thermite.md`, `vera.md`,

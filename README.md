@@ -11,15 +11,18 @@ JSON documents that report and record all of it.
 defined by the corpus in [tests/](tests), at the three levels of
 [CONFORMANCE.md](CONFORMANCE.md).**
 
-Version 0.5.3, 2026-09-12. First extracted from velaris-lang 3.1.1;
+Version 0.6.0, 2026-09-12. First extracted from velaris-lang 3.1.1;
 version 0.2 tracked velaris-lang 3.3.0, which fixed the five defects
 the extraction found; version 0.3 tracked velaris-lang 4.0.0, which
 reads and writes the baseline of section 9; version 0.4 tracked
 velaris-lang 4.1.0, and added the conformance corpus and an in-toto
 predicate type; version 0.5 tracked velaris-lang 4.2.0, which writes
 Statements of that type (`velaris attest`); versions 0.5.1 and 0.5.2
-tracked velaris-lang 4.2.1; version 0.5.3 tracks velaris-lang 4.3.2.
-None of the three changes a rule.
+tracked velaris-lang 4.2.1; version 0.5.3 tracked velaris-lang 4.3.2,
+and none of those three changed a rule. Version 0.6.0 tracks
+velaris-lang 5.0.0, which made `io` - the console alone - the budget a
+run gets when nobody writes one, where it used to be all seven
+effects: sections 4.4 and 4.6 are restated.
 
 ## What it covers
 
