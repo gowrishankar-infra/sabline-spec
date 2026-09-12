@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.5.2, 2026-09-11. Dedicated to the public domain under CC0 1.0;
+Version 0.5.3, 2026-09-12. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -13,7 +13,8 @@ and added a conformance corpus any implementation can run, in
 [tests/](tests), with the levels of conformance in
 [CONFORMANCE.md](CONFORMANCE.md); version 0.5 tracked velaris-lang
 4.2.0, which writes the in-toto Statements of section 8.5; versions
-0.5.1 and 0.5.2 track velaris-lang 4.2.1 and change no rule.
+0.5.1 and 0.5.2 tracked velaris-lang 4.2.1, and version 0.5.3 tracks
+velaris-lang 4.3.2. None of the three changes a rule.
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
@@ -43,7 +44,7 @@ SPEC.md, EMBEDDING.md and THREAT_MODEL.md cover those.
 
 **Conventions.** MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
 read as described in RFC 2119 and RFC 8174 when, and only when, they
-appear in capitals. "The reference" means velaris-lang 4.2.1. A
+appear in capitals. "The reference" means velaris-lang 4.3.2. A
 paragraph marked *Reference behaviour* records what the reference does
 at a point this document does not yet settle; each such point is also
 an open question in section 11. A paragraph marked *Resolved in 0.2*,
@@ -1474,6 +1475,12 @@ E310 (T5).
 
 ## Appendix C. Changes
 
+- **0.5.3**, 2026-09-12: tracks velaris-lang 4.3.2. No rule, field,
+  schema or case changes; the corpus is still 444 cases. velaris-lang
+  4.3.0 added `Money of CUR` and 4.3.1 made a proof that runs out of
+  time say so; neither touches the capability format, so this version
+  moves only the reference's version number and the documents that
+  name it.
 - **0.5.2**, 2026-09-11: tracks velaris-lang 4.2.1. No rule, field,
   schema or case changes. Two drafts, not sent, sit beside the
   specification: MCP_PROPOSAL.md, a capability declaration for Model

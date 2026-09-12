@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.5.3 - 2026-09-12
+
+Tracks velaris-lang 4.3.2. No rule, field, schema or conformance case
+changes; the corpus is still 444 cases.
+
+velaris-lang has had three releases since 0.5.2 was written against
+4.2.1: 4.3.0 added `Money of CUR`, an exact decimal whose `split` is
+proven to add back up; 4.3.1 made a proof that exhausts its time say
+so rather than fall silently back to a runtime check; and 4.3.2
+corrected the language card's stated size and rewrote the MCP registry
+manifest for that registry's current schema. None of the three touches
+the capability format - no effect, no grant, no refusal code, no field
+of `velaris.audit/1` or `velaris.capabilities/1`, and no case of the
+corpus. This version therefore changes only the places that name the
+reference implementation's current release: SPEC.md's header and its
+"The reference" convention, README.md, CONFORMANCE.md's version and
+its claim template, CITATION.cff, PROVENANCE.md and the statement of
+what the reference implementation is in NIST_SUBMISSION.md.
+
+Statements about when a feature arrived - "velaris-lang 4.2.0 and
+later write such Statements", "From velaris-lang 4.2.0 the reference
+implementation writes Statements of the type" - are history and are
+left alone, as are the `v4.2.0` artifacts in REGISTRY_SUBMISSION.md's
+verification recipe, which names a specific release on purpose.
+
 ## 0.5.2 - 2026-09-11
 
 Tracks velaris-lang 4.2.1. No rule, field, schema or conformance case

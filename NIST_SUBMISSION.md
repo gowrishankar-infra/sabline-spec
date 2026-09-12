@@ -164,7 +164,7 @@ and nothing about code not written in Velaris.
   model, four because they need a Python host. The corpus is generated from the reference implementation's
   test suites and checked for drift in both repositories' CI, so the
   corpus and the implementation cannot say different things.
-- **The reference implementation** is velaris-lang 4.2.1 (MIT), one
+- **The reference implementation** is velaris-lang 4.3.2 (MIT), one
   Python file. It passes the corpus at all three levels, and its test
   suites run on every push on Linux, Windows and macOS.
 - **Agent protocols.** The grammar and its covering rule - when one set

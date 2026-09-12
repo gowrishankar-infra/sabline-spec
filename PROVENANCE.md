@@ -19,6 +19,7 @@ those services.
 | v0.5, the producer of the predicate recorded; `counts` and `prover` in `velaris.audit/1` | tag `v0.5` on commit `f6ac9896b9204ea3b658b3d685c5b21ee257069f` | tagged 2026-09-11T19:51:32+05:30 |
 | v0.5.1, the author's name with a capital S | tag `v0.5.1` on commit `907f7fc76412dbd76c851f3e7f194d5517a2f24e` | tagged 2026-09-11T20:42:58+05:30 |
 | v0.5.2, the MCP and NIST drafts, and the in-toto pull request's state | tag `v0.5.2` | 2026-09-11 |
+| v0.5.3, tracking velaris-lang 4.3.2 | tag `v0.5.3` | 2026-09-12 |
 
 ## velaris-lang, the reference implementation
 
@@ -28,7 +29,7 @@ the reference implementation of this specification.
 | What | Identifier | Date |
 |---|---|---|
 | First commit of the effect system: `uses` clauses and the transitive effect checker. It is also that repository's first commit. | `dcb44e2310291fa546405434f4698148413f3cdd` | 2026-08-17T00:21:33+05:30 |
-| The version this one tracks | 4.2.1, tag `v4.2.1` | 2026-09-11 |
+| The version this one tracks | 4.3.2, tag `v4.3.2` | 2026-09-12 |
 
 ## Software Heritage
 
