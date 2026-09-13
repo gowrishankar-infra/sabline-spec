@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.8.0, 2026-09-12. Dedicated to the public domain under CC0 1.0;
+Version 0.9.0, 2026-09-14. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -25,7 +25,12 @@ writes its grants down (section 10). Version 0.7.0 tracked velaris-lang
 Version 0.8.0 tracks velaris-lang 7.0.0, which closed a hole in that
 type the same day 6.0.0 shipped; no rule of this format changes, and
 8.6 says more plainly what `declassifies: false` does and does not
-claim.
+claim. Version 0.9.0 tracks velaris-lang 8.0.0: `velaris.audit/1` gains
+`ffi_native` (section 8.2), an added field within version 1 that says,
+per named Python module, whether native code ships with it - found from
+files on disk without importing the module. No rule of this format
+changes; 8.0.0's breaking changes are in the reference's runtime and
+error codes (Appendix B lists E204, E317 and E318), not in this format.
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
@@ -834,6 +839,7 @@ was added.
 | `counts` | object or null | `fs` and `net`: for each, the largest bound of section 9.4 on the operations of that effect one call to a function defined in the audited file can perform (`0` when none of them declares the effect), or `null` when the text fixes no bound or the bound exceeds 2^53. For a file whose `main` calls every other function, a bound on one run. The whole field is `null` when no bound was determined, as when `ok` is false. | 4.2 |
 | `prover` | boolean | true when a prover decided the `status` of the promises: one was present and the program compiled. False otherwise - no prover, or `ok` false - and then no `status` is `"proven"` and a `proven_share` of 0 says nothing about what a prover would prove. | 4.2 |
 | `secrets` | object or null | which builtins handed the program a value the type system will not let it emit, whether the program declassifies one, and with what reasons (section 8.6). `null` when the program could not be loaded. | 0.7 |
+| `ffi_native` | object | per top-level Python module the program names (keys are a subset of `ffi_modules`), whether it or code it ships is native - a compiled extension (`.so`/`.pyd`/`.dylib`) or built into the interpreter - decided from files on disk **without importing** the module: `"native"` when one is found, `"unknown"` otherwise and never `"false"`, since a pure-Python module can import a native one without that showing in its own files. It reflects the packages installed on the producing machine, so it is not reproducible across machines. Empty when no module is named. | 0.9 |
 
 Two scopes are at work, and they differ. `effects`, `functions`,
 `loops_unshown`, `contract_coverage` and `counts` describe the functions
@@ -1592,8 +1598,34 @@ call, or given something that is not one; E562, a Secret of a Secret;
 E563 (velaris-lang 7.0.0), an `if` or `while` branching on a value
 derived from one.
 
+The reference's version 8.0.0 adds three more codes of its own, none
+part of the static rule this document specifies, and an implementation
+need not give them: **E204**, a function named like a built-in, which
+the reference refuses rather than shadow (its SPEC.md 10.1); **E317**, a
+network request whose socket peer is a proxy the run's `net` grants do
+not cover (an ambient `HTTP_PROXY`/`HTTPS_PROXY`); and **E318**, a
+`read_file` of a documented credential location, pointed at the
+reference's `read_file_secret`. E317 tightens the reference's
+enforcement of section 6 G4/G5 to the socket's peer, not only the URL;
+E318 is a reference policy over which files a plain read may touch.
+
 ## Appendix C. Changes
 
+- **0.9.0**, 2026-09-14: tracks velaris-lang 8.0.0. No rule of this
+  format changes. `velaris.audit/1` gains one field within version 1
+  (section 8.2, 8.1's compatibility rule): `ffi_native`, per named
+  Python module whether native code ships with it, decided from files on
+  disk without importing the module - `"native"` or `"unknown"`, never
+  `"false"`. It reflects the producing machine's installed packages, so
+  it is not reproducible across machines, and an attestation embedding it
+  (section 8.5) says only what that machine found. A producer without
+  the notion writes it empty or omits it, and a consumer ignores a field
+  it does not know (section 8.1). 8.0.0's breaking changes are in the
+  reference's runtime and error codes (Appendix B adds E204, E317, E318),
+  not in this format, so no conformance case changes and the corpus is
+  unchanged. Section 2 still quotes velaris-lang SPEC.md sections 6, 7
+  and 7.1 word for word - those sections did not change in 8.0 - so
+  `tools/check_sync.py` still passes.
 - **0.8.0**, 2026-09-12: tracks velaris-lang 7.0.0. No rule of this
   format changes: `declassify` is still the eighth effect and `secrets`
   still holds the same three fields. What changed is in the reference's

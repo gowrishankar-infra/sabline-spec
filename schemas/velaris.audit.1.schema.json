@@ -175,6 +175,13 @@
       "description": "Added in 4.2. True when a prover decided the status of the promises: one was present and the program compiled. When false, no status is proven, and a proven_share of 0 says nothing about what a prover would prove (SPEC.md 8.2).",
       "type": "boolean"
     },
+    "ffi_native": {
+      "description": "Added in 0.9 (velaris-lang 8.0). Per top-level Python module named in the program (the keys are a subset of ffi_modules), whether it or code it ships is native - a compiled extension (.so/.pyd/.dylib) or a module built into the interpreter - decided from the files on disk WITHOUT importing the module. \"native\" when a compiled extension is found; \"unknown\" otherwise, and never \"false\", because a pure-Python module can import a native one without that being visible from its own files. The verdict reflects the packages installed on the machine that produced the audit, so it is not reproducible across machines and an attestation embedding it says only what that machine found. Empty when the program names no module. A producer without this notion may write it empty or omit it (a consumer must ignore fields it does not know).",
+      "type": "object",
+      "additionalProperties": {
+        "enum": ["native", "unknown"]
+      }
+    },
     "secrets": {
       "description": "Added in 0.7 (velaris-lang 6.0). Which builtins handed this program a value the type system will not let it emit, whether the program ever declassifies one, and with what stated reasons (velaris-spec SPEC.md section 8.6). sources holds builtin names, sorted and without repeats - env and read_file_secret in the reference. declassifies is true when the program as loaded holds at least one declassify call, and declassifications names each one, sorted by function, then line, then reason. The whole field is null when the program could not be loaded; it is not null merely because ok is false. An implementation with no such type system writes empty values. The reasons are text a program's author wrote and nothing checks them, and the rule behind the field bounds explicit flow only.",
       "type": [

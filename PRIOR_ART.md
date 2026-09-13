@@ -419,6 +419,149 @@ rows at unit boundaries; this is a different project from the TACIT
 capability-tracking work cited above, by a different author, and the
 two should not be conflated.
 
+## Agents as operating systems
+
+Pirch, L., Horlboge, M., Großmann, P., Asif, S. M., Kireev, K., Holz, T.
+and Rieck, K. "Toward Securing AI Agents Like Operating Systems."
+arXiv:2605.14932, 14 May 2026 (under submission).
+
+- **What it does:** reads an LLM agent as an operating system and carries
+  OS security mechanisms across. Its Table I maps the LLM to the *user* -
+  "an untrusted actor whose actions must be mediated" - the agent runtime
+  to the kernel, tools to system calls, skills to programs, the context to
+  memory, files to storage and the gateway to the network. From that it
+  argues for process isolation, sandboxing, "permission declarations and
+  runtime enforcement", interface filtering and a minimal trusted computing
+  base, notes that a "declarative skill format or a constrained tool
+  language can make it easier to analyze requested permissions and harder
+  to hide arbitrary behavior", and finds that of the agents it tested one
+  resisted seven attacks where a baseline resisted none. It observes that
+  fine-grained permission control "remains uncommon in practice".
+- **How this differs:** the analogy fits Velaris more than most - the
+  interpreter is the kernel, the effect-declaring builtins are classes of
+  system call, and the budget is the permission set enforced at each call.
+  Two things do not map. The paper's untrusted principal issues calls one
+  turn at a time, and its table has no step for reading a whole program
+  *before* it runs, which is what `velaris.audit/1` is; and the paper wants
+  permissions per skill or tool, where a Velaris budget covers the whole
+  run. The paper has no counterpart to a baseline a change must not exceed
+  (the ratchet), and Velaris none to its process isolation between skills
+  or to separating instructions from data in the context. The record does
+  not say the paper influenced the design, which predates it.
+
+## Authorization decided outside the program
+
+**aiAuthZ.** Kodathala, S. V. "aiAuthZ: Off-Host, Identity-Bound
+Authorization for AI Agents." arXiv:2607.05518, 6 July 2026 (technical
+report).
+
+- **What it does:** a gateway on infrastructure the agent holds no
+  credentials for decides each tool call as it happens. It checks a
+  per-message HMAC-SHA256 signature binding the call to a user, session,
+  message and single-use nonce; then a role policy; then an argument policy
+  the agent can neither read nor change - path and URL allow/deny lists,
+  recipient allowlists, per-tool rate limits, written as YAML with user
+  policy over workspace; and it hash-chains every decision. It reports 0%
+  attack success across fifteen models with the gateway in place, at under
+  0.03 ms a decision.
+- **How this differs:** aiAuthZ's argument rules resemble a Velaris
+  budget's paths, hosts and counts, but it binds each decision to a
+  verified human identity and runs *outside* the agent's host, deciding at
+  the call. Velaris knows no identity, enforces in the same process as the
+  program, and describes a program before it runs rather than logging
+  decisions after. The two are complementary: a gateway of this shape could
+  sit in front of a host that runs Velaris.
+
+**The agents.txt draft.** Dutta, S. "AGENTS.TXT: Strict Policy File for
+Automated Clients." `draft-srijal-agents-policy-00`, an individual IETF
+Internet-Draft, 7 October 2025 (expired 10 April 2026).
+
+- **What it does:** a plain-text file at `/agents.txt` in which a *site*
+  lists paths an automated client may or may not reach (`/status ALLOW`,
+  `/admin DISALLOW`, optional `key=value` parameters), with a SHA-256 on
+  its first line so that a malformed or altered file "MUST result in
+  treating the entire site as restricted".
+- **How this differs:** the direction is opposite. agents.txt is a site
+  declaring, to clients it does not control, what they may do to it; a
+  Velaris budget is written by whoever runs a program, about what that run
+  may reach, and the interpreter enforces it against the program regardless
+  of what the program says. One is a request a well-behaved client honours;
+  the other is a guard the runtime imposes.
+
+## Embedded scripting
+
+Languages embedded in a host application, which bound a script by what the
+host exposes rather than by what the script declares. Listed because the
+comparison is often drawn, and the difference is the same in each case.
+
+- **Starlark** (Bazel, <https://github.com/bazelbuild/starlark>): "By
+  default, user code cannot interact with the environment"; deterministic
+  and hermetic, values freeze, recursion is an error, loops are finite. The
+  host predeclares any builtins a script may call.
+- **Rhai** (<https://rhai.rs>): "sand-boxed so a script can never read from
+  outside its own environment"; the host registers the Rust functions a
+  script may call, and limits are counts - call depth, string and array
+  size, `max_operations`.
+- **Luau** (<https://luau.org>): the `io` library "has been removed
+  entirely", most of `os`, `package` and `debug` with it; globals are
+  read-only; an interrupt handler stops a long run. Its gradual type
+  checker gives warnings, not a security boundary.
+- **Shopify Functions** (<https://shopify.dev/docs/apps/build/functions>):
+  a WebAssembly module whose input is fixed by a GraphQL query you define,
+  with an instruction limit (11 million) and no clock or randomness; some
+  functions may make one host-mediated `fetch` the platform performs.
+- **V8 isolates** (Cloudflare Workers, Deno Subhosting): tenants are
+  isolated in V8, the platform's own APIs and bindings define what code can
+  reach, no filesystem, CPU and memory bounded.
+
+**How this differs:** in all of them the grant is *the set of functions the
+host provides*, and the script declares nothing about what it will use.
+Velaris inverts both halves: each function declares its effects in its
+signature, checked statically up the call graph; the operator's budget
+scopes those effects to paths, hosts, modules and counts and is refused
+against at each operation; and `velaris.audit/1` reports both from the
+source before anything runs. None of these embeds a prover or a written
+capability record.
+
+## Code mode
+
+An agent writes a program that calls tools, instead of emitting tool calls
+one at a time. The question this format asks of each is what can be said
+about the code *before* it runs.
+
+- **Cloudflare Code Mode** (<https://blog.cloudflare.com/code-mode/>, Sept
+  2025): an MCP server's schema becomes a TypeScript API the model writes
+  against, run in a Worker isolate where "the global `fetch()` and
+  `connect()` functions throw errors" and bindings supply already-authorized
+  clients. Before running, what is known is which MCP servers are bound -
+  not which tools the code will call, and no analysis of the code is
+  described.
+- **Anthropic programmatic tool calling**
+  (<https://platform.claude.com/docs/en/agents-and-tools/tool-use/programmatic-tool-calling>):
+  Claude writes Python in a container where tools appear as functions; each
+  call is returned to the client to run, and `allowed_callers` marks which
+  tools code may call - but the documentation says it "is not a hard
+  API-level block ... Do not rely on `allowed_callers` as a security
+  boundary." Known before running: which tools were offered to the code.
+- **Mastra** (<https://mastra.ai/docs/agents/code-mode>) and **TanStack AI**
+  (<https://tanstack.com/ai/latest/docs/code-mode/code-mode>): the model
+  writes TypeScript that calls tools as `external_*` / typed stubs, run in
+  a sandbox or isolate; TanStack strips the types with sucrase and does not
+  check them, and lists no pre-run analysis of the code.
+- **Strands Agents** (<https://strandsagents.com>): the SDK's sandbox runs
+  shell commands and code (`sandbox_shell`, `Sandbox.execute_code`) but, as
+  documented, does not expose the agent's tools to that code; the community
+  `strands-code-agent` does, bounded by an import allowlist.
+
+**How this differs:** each of these knows, at most, which tools the code
+was *offered* before it runs, and nothing about what the code will do with
+them; none describes checking the code, and Anthropic's own docs say its
+caller restriction is not a boundary. Velaris reads the program first and
+reports which effects, paths, hosts and modules each function needs, and
+the runtime refuses anything outside the budget. Its "code" is a small
+language with a prover, not a general-purpose host language in a sandbox,
+which is the trade: less expressive, more that can be said before it runs.
+
 ## Also close
 
 These two are not cited by velaris-lang, and are listed because the

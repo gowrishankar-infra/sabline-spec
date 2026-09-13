@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.9.0 - What ships as native code - 2026-09-14
+
+Tracks velaris-lang 8.0.0. **No rule of this format changes.**
+`velaris.audit/1` gains one field within version 1 (section 8.2, under
+8.1's compatibility rule): **`ffi_native`**, per named Python module
+whether native code - a compiled extension (`.so`/`.pyd`/`.dylib`) or a
+module built into the interpreter - ships with it, decided from files on
+disk **without importing** the module. Its value is `"native"` when one
+is found and `"unknown"` otherwise; never `"false"`, because a
+pure-Python module can import a native one without that showing in its
+own files. It reflects the packages installed on the machine that
+produced the audit, so it is not reproducible across machines, and an
+attestation embedding it (section 8.5) says only what that machine
+found. A producer without the notion writes it empty or omits it, and a
+consumer ignores a field it does not know.
+
+velaris-lang 8.0.0 is a major version, but its breaking changes are in
+the reference's runtime and error codes - a proxy the `net` budget does
+not cover is refused (E317), a function named like a built-in is refused
+(E204), `read_file` of a documented credential location is refused
+(E318), and `velaris add` refuses two redirects - not in this format.
+Appendix B lists the three new codes as the reference's own, not part of
+the static rule this document specifies. No conformance case changes;
+the corpus is unchanged. Section 2 still quotes velaris-lang SPEC.md
+sections 6, 7 and 7.1 word for word, so `tools/check_sync.py` still
+passes.
+
 ## 0.8.0 - What the secrets section does not claim - 2026-09-12
 
 Tracks velaris-lang 7.0.0, which closed a hole in the type 6.0.0
