@@ -9,6 +9,9 @@ usage: python tools/validate.py [--audits DIR] [--capabilities FILE]
   capability/v1 predicate type (SPEC.md 8.5), its predicate valid
   against schemas/capability-predicate.v1.schema.json and its audit
   against the velaris.audit/1 schema;
+- every examples/*receipt.json must be an in-toto Statement v1 of the
+  receipt/v1 predicate type (SPEC.md 8.7), its predicate valid against
+  schemas/receipt-predicate.v1.schema.json, and there must be one;
 - every examples/*.capabilities.json must validate as
   velaris.capabilities/1, with its programs sorted by file and unique,
   and every grant list sorted and reduced - rules of SPEC.md section
@@ -36,6 +39,7 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parent.parent
 PREDICATE_TYPE = "https://gowrishankar-infra.github.io/velaris-lang/capability/v1"
+RECEIPT_TYPE = "https://gowrishankar-infra.github.io/velaris-lang/receipt/v1"
 
 
 def load(path: Path):
@@ -291,6 +295,32 @@ def main(argv: list) -> int:
                 audit, (doc.get("predicate") or {}).get("audit"))]
         report(f"{path.relative_to(ROOT).as_posix()} is an in-toto Statement "
                f"of the capability/v1 predicate", problems)
+
+    receipt_schema = schemas.get("receipt-predicate.v1.schema.json")
+    receipts = sorted((ROOT / "examples").glob("*receipt.json"))
+    if not receipts:
+        report("examples/ holds a receipt the reference wrote",
+               ["no examples/*receipt.json"])
+    for path in receipts:
+        doc = load(path)
+        problems = []
+        if doc.get("_type") != "https://in-toto.io/Statement/v1":
+            problems.append("_type is not https://in-toto.io/Statement/v1")
+        if doc.get("predicateType") != RECEIPT_TYPE:
+            problems.append(f"predicateType is not {RECEIPT_TYPE}")
+        subjects = doc.get("subject") or []
+        if not subjects or not all(
+                isinstance(s.get("name"), str) and len(
+                    (s.get("digest") or {}).get("sha256", "")) == 64
+                for s in subjects):
+            problems.append("every subject needs a name and a sha256 digest")
+        if receipt_schema is None:
+            problems.append("schemas/receipt-predicate.v1.schema.json is "
+                            "missing")
+        else:
+            problems += errors_of(receipt_schema, doc.get("predicate"))
+        report(f"{path.relative_to(ROOT).as_posix()} is an in-toto Statement "
+               f"of the receipt/v1 predicate", problems)
 
     index = load(ROOT / "tests" / "index.json")
     report(f"tests/: {len(index.get('cases', []))} conformance cases, each "

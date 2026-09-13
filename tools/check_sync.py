@@ -17,9 +17,12 @@ heading of any level - and compares it with the text between the
 markers. Line endings, and blank lines at the start and end of a
 block, are ignored. Nothing else is: a changed word is drift.
 
-It also compares schemas/capability-predicate.v1.schema.json with the
-copy velaris-lang publishes at the predicate type's URL, its
-docs/capability/v1/schema.json (SPEC.md 8.5), line endings aside.
+It also compares each predicate type's schema with the copy velaris-lang
+publishes at the type's URL, line endings aside:
+schemas/capability-predicate.v1.schema.json with its
+docs/capability/v1/schema.json (SPEC.md 8.5), and
+schemas/receipt-predicate.v1.schema.json with its
+docs/receipt/v1/schema.json (SPEC.md 8.7).
 
 Exit status: 0 when every block and the schema match, 1 when any
 differs or is missing, 2 on a usage error.
@@ -101,17 +104,21 @@ def main(argv: list) -> int:
                 print("    " + d)
         else:
             print(f"same   {heading!r} ({len(text)} lines)")
-    ours = ROOT / "schemas" / "capability-predicate.v1.schema.json"
-    published = (Path(argv[1]).resolve().parent / "docs" / "capability"
-                 / "v1" / "schema.json")
-    if not published.exists():
-        bad += 1
-        print(f"DRIFT  the predicate schema: {published} is missing")
-    elif lines_of(published) != lines_of(ours):
-        bad += 1
-        print(f"DRIFT  {published} differs from {ours.relative_to(ROOT)}")
-    else:
-        print(f"same   the predicate schema, as velaris-lang publishes it")
+    for kind in ("capability", "receipt"):
+        ours = ROOT / "schemas" / f"{kind}-predicate.v1.schema.json"
+        published = (Path(argv[1]).resolve().parent / "docs" / kind
+                     / "v1" / "schema.json")
+        if not published.exists():
+            bad += 1
+            print(f"DRIFT  the {kind}/v1 predicate schema: {published} is "
+                  f"missing")
+        elif lines_of(published) != lines_of(ours):
+            bad += 1
+            print(f"DRIFT  {published} differs from "
+                  f"{ours.relative_to(ROOT)}")
+        else:
+            print(f"same   the {kind}/v1 predicate schema, as velaris-lang "
+                  f"publishes it")
     return 1 if bad else 0
 
 

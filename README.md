@@ -11,7 +11,7 @@ JSON documents that report and record all of it.
 defined by the corpus in [tests/](tests), at the three levels of
 [CONFORMANCE.md](CONFORMANCE.md).**
 
-Version 0.8.0, 2026-09-12. First extracted from velaris-lang 3.1.1;
+Version 0.10.0, 2026-09-14. First extracted from velaris-lang 3.1.1;
 version 0.2 tracked velaris-lang 3.3.0, which fixed the five defects
 the extraction found; version 0.3 tracked velaris-lang 4.0.0, which
 reads and writes the baseline of section 9; version 0.4 tracked
@@ -26,9 +26,14 @@ effects: sections 4.4 and 4.6 are restated. Version 0.7.0 tracked
 velaris-lang 6.0.0, which added a type for values a program may not
 emit: `declassify` is an eighth effect (section 3.1), and section 8.6
 is new - the `secrets` object of `velaris.audit/1`, which says whether
-a program ever lets a secret out. Version 0.8.0 tracks velaris-lang
-7.0.0, which closed a hole in that type; no rule here changes, and 8.6
-says more plainly what it does and does not claim.
+a program ever lets a secret out. Version 0.8.0 tracked velaris-lang
+7.0.0, which closed a hole in that type; no rule here changed, and 8.6
+says more plainly what it does and does not claim. Version 0.9.0
+tracked velaris-lang 8.0.0, which added `ffi_native` to
+`velaris.audit/1` and changed no rule. Version 0.10.0 tracks
+velaris-lang 8.1.0: section 8.7 is new - `velaris.receipt/1`, a record
+of one run, and the in-toto predicate type that carries it. No rule of
+sections 3 to 7 or 9 changes.
 
 ## What it covers
 
@@ -64,6 +69,19 @@ says more plainly what it does and does not claim.
   From 0.5 the reference implementation writes such statements
   (`velaris attest`), unsigned, and its releases carry one signed with
   cosign and with sigstore-python.
+- **`velaris.receipt/1`**: a record of one run - the budget granted,
+  every refusal by code, effect and line, every declassification with
+  its reason, the run's parameters, how it ended and how long it took -
+  and an in-toto predicate type for it,
+  `https://gowrishankar-infra.github.io/velaris-lang/receipt/v1`, bound
+  to the same subjects as the capability statement, so the two describe
+  the same bytes before and after a run. A receipt holds no value the
+  program computed (section 8.7,
+  [schemas/receipt-predicate.v1.schema.json](schemas/receipt-predicate.v1.schema.json)).
+  From 0.10 the reference implementation writes receipts (`velaris
+  program.vel --receipt FILE`, and as a field of a library run), and from
+  velaris-lang 8.1.0 its releases carry one signed with cosign and with
+  sigstore-python.
 - **Conformance** at three levels - L1 Declaration, L2 Enforcement, L3
   Ratchet - defined by a corpus of 456 JSON cases that an
   implementation in any language runs its own way, with a runner
@@ -82,7 +100,7 @@ SPEC.md section 7 lists what a budget does not bound.
 SPEC.md section 2 quotes velaris-lang SPEC.md sections 6, 7 and 7.1
 word for word, and the rest of the document elaborates them.
 `tools/check_sync.py` compares the quoted text with velaris-lang's, and
-the predicate schema with the copy velaris-lang publishes, and fails on
+the two predicate schemas with the copies velaris-lang publishes, and fails on
 any difference. The corpus in `tests/` is written by velaris-lang's
 `build_conformance.py` from the tables of three of its suites, which
 assert the same expectations against velaris-lang; a drift test
@@ -100,10 +118,12 @@ and lists it in section 11 as an open question.
 | [SPEC.md](SPEC.md) | the specification |
 | [CONFORMANCE.md](CONFORMANCE.md) | the three levels of conformance, the behaviours each requires, and how to claim one |
 | [tests/](tests) | the conformance corpus: 456 cases, the runner contract ([tests/README.md](tests/README.md)) and the case schema |
-| [schemas/](schemas) | JSON Schema (draft 2020-12) for both documents and for the predicate |
+| [schemas/](schemas) | JSON Schema (draft 2020-12) for both documents and for the two predicates |
 | [examples/audits/](examples/audits) | four `velaris.audit/1` documents produced by velaris-lang 3.1.1, unedited |
 | [examples/velaris-lang.capabilities.json](examples/velaris-lang.capabilities.json) | the `velaris.capabilities/1` baseline velaris-lang 4.0.0 writes for those four programs |
 | [examples/capability-statement.json](examples/capability-statement.json) | an in-toto Statement of the predicate type: what `velaris attest examples/effects.vel` writes at velaris-lang v4.2.0 |
+| [examples/run-receipt.json](examples/run-receipt.json) | an in-toto Statement of the receipt predicate type: what `velaris examples/effects.vel --receipt` writes at velaris-lang v8.1.0, with the budget the release workflow grants it |
+| [examples/refused-receipt.json](examples/refused-receipt.json) | the same program's receipt when its budget leaves out `fs`: one refusal, and the run stopped by it |
 | [PRIOR_ART.md](PRIOR_ART.md) | the published work this sits beside, and how it differs |
 | [REGISTRY_SUBMISSION.md](REGISTRY_SUBMISSION.md) | the pull request listing the predicate type with in-toto: its branch is pushed, and the steps left before it is opened |
 | [MCP_PROPOSAL.md](MCP_PROPOSAL.md) | a draft, not sent: a capability declaration for Model Context Protocol tools |
@@ -112,7 +132,7 @@ and lists it in section 11 as an open question.
 | [PROVENANCE.md](PROVENANCE.md) | dates and archive identifiers |
 | [CITATION.cff](CITATION.cff) | how to cite this repository |
 | [tools/validate.py](tools/validate.py) | checks the schemas, the examples and the corpus |
-| [tools/check_sync.py](tools/check_sync.py) | checks the quoted sections and the predicate schema against velaris-lang |
+| [tools/check_sync.py](tools/check_sync.py) | checks the quoted sections and the two predicate schemas against velaris-lang |
 | [CHANGELOG.md](CHANGELOG.md) | versions |
 
 ```

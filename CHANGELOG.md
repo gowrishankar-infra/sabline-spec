@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.10.0 - A record of one run - 2026-09-14
+
+Tracks velaris-lang 8.1.0. **Section 8.7 is new**: `velaris.receipt/1`, and
+the in-toto predicate type
+`https://gowrishankar-infra.github.io/velaris-lang/receipt/v1` that carries
+it. Where the Statement of section 8.5 says what a program may do before it
+runs, a receipt says what one run of it did: the budget it was given, each
+refusal as its code, effect and line, each declassification with the reason
+written in the program, the parameters it ran under (seed, frozen clock,
+time and memory limits, and what operating-system confinement it had), how
+it ended and how long it took. Its subjects are the files that ran, by the
+same digests 8.5 uses, so an audit and a receipt of one program are matched
+by digest.
+
+A receipt MUST NOT hold a value the program handled - not its output,
+input, arguments or environment, not a message quoting one, not the path or
+host a refused operation named, not a declassified value. Section 8.7 also
+says what it does not hide: a program's exit status, the lines it reached,
+how many times it did something and how long it ran are in a receipt, and a
+program that has declassified a value can choose them from it.
+
+`schemas/receipt-predicate.v1.schema.json` is the predicate's schema;
+`tools/check_sync.py` holds it to the copy velaris-lang publishes at the
+type's URL, and `tools/validate.py` holds two receipts velaris-lang wrote
+to it: `examples/run-receipt.json`, of `examples/effects.vel` with the
+budget velaris-lang's release workflow grants it, and
+`examples/refused-receipt.json`, of the same program given no `fs`, with
+the one refusal that stopped it. Appendix B lists the reference's three
+new codes: E515 (an import from outside the directory a program is served
+from), E613 and E614 (a check or audit stopped at its time or memory
+ceiling).
+
+No rule of sections 3 to 7 or 9 changes and no conformance case changes.
+Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and 7.1 word for
+word.
+
 ## 0.9.0 - What ships as native code - 2026-09-14
 
 Tracks velaris-lang 8.0.0. **No rule of this format changes.**

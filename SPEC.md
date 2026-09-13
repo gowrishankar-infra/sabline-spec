@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.9.0, 2026-09-14. Dedicated to the public domain under CC0 1.0;
+Version 0.10.0, 2026-09-14. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -25,12 +25,17 @@ writes its grants down (section 10). Version 0.7.0 tracked velaris-lang
 Version 0.8.0 tracks velaris-lang 7.0.0, which closed a hole in that
 type the same day 6.0.0 shipped; no rule of this format changes, and
 8.6 says more plainly what `declassifies: false` does and does not
-claim. Version 0.9.0 tracks velaris-lang 8.0.0: `velaris.audit/1` gains
+claim. Version 0.9.0 tracked velaris-lang 8.0.0: `velaris.audit/1` gains
 `ffi_native` (section 8.2), an added field within version 1 that says,
 per named Python module, whether native code ships with it - found from
 files on disk without importing the module. No rule of this format
-changes; 8.0.0's breaking changes are in the reference's runtime and
+changed; 8.0.0's breaking changes are in the reference's runtime and
 error codes (Appendix B lists E204, E317 and E318), not in this format.
+Version 0.10.0 tracks velaris-lang 8.1.0: section 8.7 is new -
+`velaris.receipt/1`, a record of one run, and the in-toto predicate type
+that carries it, bound to the same subjects as the Statement of section
+8.5, so an audit and a receipt of one program are the before and the
+after of the same bytes. No rule of sections 3 to 7 or 9 changes.
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
@@ -50,7 +55,10 @@ This document specifies:
   declares the capability surface its programs may have, and the
   comparison that fails a change which widens it (section 9);
 - an in-toto predicate type that carries `velaris.audit/1` with the
-  digests of the files audited (section 8.5).
+  digests of the files audited (section 8.5);
+- `velaris.receipt/1`, a record of one run of a program that holds none
+  of the values it handled, and an in-toto predicate type that carries it
+  with the digests of the files that ran (section 8.7).
 
 It does not specify the rest of the Velaris language - types,
 contracts, proofs, failure - or the time and memory limits a runtime
@@ -1066,6 +1074,115 @@ taken on one. `true` means a secret may leave, and
   each `declassify` a refusal at the moment it is reached, not a
   compile error: the program stops there.
 
+### 8.7 velaris.receipt/1, a record of one run
+
+*New in 0.10.0 (velaris-lang 8.1.0).* An audit (section 8) and the
+Statement of section 8.5 say what a program may do, before it runs.
+A receipt says what one run of it did: the budget it was given, each
+refusal, each declassification with the reason written for it, the
+parameters it ran under, how it ended and how long it took. It is bound to
+the files that ran by the same digests section 8.5 uses, so an audit of a
+program and a receipt of one of its runs can be matched by those digests.
+
+**Predicate type:**
+<https://gowrishankar-infra.github.io/velaris-lang/receipt/v1>. That URL
+is where the type's description and schema are published, on the
+reference's documentation site;
+[schemas/receipt-predicate.v1.schema.json](schemas/receipt-predicate.v1.schema.json)
+is the schema, and `tools/check_sync.py` fails if the published copy
+differs.
+
+A receipt is an in-toto Statement v1 of that type:
+
+```json
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {"name": "examples/effects.vel", "digest": {"sha256": "..."}}
+  ],
+  "predicateType": "https://gowrishankar-infra.github.io/velaris-lang/receipt/v1",
+  "predicate": {
+    "schema": "velaris.receipt/1",
+    "producer": {"name": "velaris-lang", "version": "8.1.0"},
+    "wall_time_ms": 41.7,
+    "budget": "clock,fs:read:/work/report.txt,fs:write:/work/report.txt,io,rand",
+    "run_parameters": {"seed": null, "freeze_time": null, "timeout": null,
+                       "max_memory_mb": null, "confinement": "none"},
+    "effects_used": {"clock": 1, "fs": 2, "io": 4, "rand": 1},
+    "refusals": [],
+    "declassifications": [],
+    "exit": {"status": 0, "outcome": "ok", "code": null},
+    "complete": true
+  }
+}
+```
+
+- **`subject`.** The first subject MUST be the program that ran: its
+  `name` is its path as the producer was given it, `/`-separated, or
+  `<source>` for a program given as text with no file, and its `digest`
+  MUST include `sha256` of the exact text that ran, as UTF-8. The files it
+  imported SHOULD follow, one subject each, by the sha256 of their bytes
+  and named as section 8.5 names them. For the same bytes a producer
+  SHOULD write the subjects a Statement of section 8.5 writes.
+- **`predicate`** is a `velaris.receipt/1` document:
+
+| Field | Type | Meaning |
+|---|---|---|
+| `schema` | string | `"velaris.receipt/1"` |
+| `producer` | object | `name` of the implementation that ran the program, and optionally `uri` and `version` |
+| `specification` | string | optional: the version of this document the producer followed, as `velaris-spec 0.10.0` |
+| `startedAt` | string | optional: when the run started, RFC 3339 in UTC, by the producer's clock |
+| `wall_time_ms` | number | how long the run took, in milliseconds, by the producer's clock |
+| `budget` | string | the budget the run was given, in the grammar of section 4 |
+| `run_parameters` | object | `seed` (integer or null) and `freeze_time` (RFC 3339 or null), which fix the run's randomness and clock; `timeout` (seconds or null) and `max_memory_mb` (integer or null), the limits it ran under; optionally `max_read_bytes`; and `confinement`, a word naming the operating-system confinement the run had - `"none"` when the budget was the only boundary |
+| `effects_used` | object or null | each effect and how many operations of it the budget let through; `null` when the producer could not tell, as when the run was stopped from outside |
+| `refusals` | array | one object per distinct refusal: `code`; `effect`, one of the eight names of section 3.1, or null; `line`; `stopped`, whether the refusal ended the run (a redirect refused under section 6 G4 does not); `times` |
+| `declassifications` | array | one object per distinct declassification: `reason`, the text written in the program; `line`; `times` |
+| `exit` | object | `status`, the exit status the producer reported (integer or null); `outcome`, one of `ok`, `refused`, `failed`, `did_not_compile`, `timeout`, `out_of_memory`; `code`, the code of the error that ended the run, or null |
+| `complete` | boolean | false when the run was stopped from outside before it could report. What is listed happened, and each `times` is at least the number given |
+
+**What a receipt MUST NOT hold.** A producer MUST NOT put in a receipt a
+value the program handled: not its output, its input, its arguments or its
+environment; not a message that quotes one; not the path, host or module a
+refused operation named, which the program may have built from a value it
+declassified; not a declassified value. A refusal is its code, its effect
+and its line; a declassification is the reason written in the program (in
+the reference a literal, E561).
+
+**What it does not hide.** A receipt records what a program did, and a
+program controls some of that without handing the receipt a value: its
+exit status, the line at which it was refused or stopped, how many times
+it did something, and how long it ran. A program that has declassified a
+value may choose any of these from it. A consumer that must not learn a
+declassified value from a receipt must not grant `declassify` - the same
+advice section 8.6 gives about output.
+
+**What a receipt says**, when its signature verifies: that the signer ran
+the named producer on the bytes the subjects name, under this budget and
+these parameters, and saw this run. It does not say the run was confined
+by more than the budget unless `confinement` says so; it is no stronger
+than the machine the producer ran on; and it says nothing about any other
+run of the same program.
+
+**Parsing rules** are those of section 8.5: in-toto's, the monotonic
+principle included; fields may be added within v1, and a consumer MUST
+ignore a field it does not know; a change of meaning is `.../receipt/v2`.
+
+*Reference behaviour (velaris-lang 8.1.0).* The reference writes a
+receipt for every run through `velaris.run` and `velaris.Pool.run`, as
+the result's `receipt`; for `velaris program.vel --receipt FILE`; and for
+a run through its HTTP door or MCP server when the request asks
+(`"receipt": true`). A run killed by its time or memory limit still has a
+receipt, marked incomplete, holding what its worker reported before it was
+killed. The reference signs none; its release workflow signs one, for the
+run of `examples/effects.vel` whose Statement of section 8.5 it also signs,
+with cosign and with sigstore-python, and verifies both.
+[examples/run-receipt.json](examples/run-receipt.json) is a receipt the
+reference wrote for that run, and
+[examples/refused-receipt.json](examples/refused-receipt.json) one it
+wrote for the same program given no `fs`, which stopped at its first
+refusal.
+
 ## 9. velaris.capabilities/1
 
 *Resolved in 0.3 (velaris-lang 4.0.0).* Versions 0.1 and 0.2 defined a
@@ -1609,8 +1726,30 @@ reference's `read_file_secret`. E317 tightens the reference's
 enforcement of section 6 G4/G5 to the socket's peer, not only the URL;
 E318 is a reference policy over which files a plain read may touch.
 
+The reference's version 8.1.0 adds three more of its own, none part of
+the static rule: **E515**, an import from outside the directory a program
+is served from, or of a file there that is not a `.vel` file - its HTTP
+door and MCP server hold a program's imports to the directory they serve;
+and **E613** and **E614**, a check or an audit that ran past its time or
+its memory ceiling and was stopped, so that source written to stall the
+checker is answered rather than waited on. A `velaris.audit/1` document
+reporting E613 or E614 has `ok` false and determines nothing (section
+8.4).
+
 ## Appendix C. Changes
 
+- **0.10.0**, 2026-09-14: tracks velaris-lang 8.1.0. **8.7 is new**:
+  `velaris.receipt/1`, a record of one run - the budget, each refusal and
+  declassification, the parameters, how the run ended and how long it
+  took - and the in-toto predicate type `.../receipt/v1` that carries it,
+  bound by digest to the subjects a Statement of 8.5 names. A receipt MUST
+  NOT hold a value the program handled, and 8.7 says what it still does
+  not hide: what a program controls that is not a value. Its schema is
+  `schemas/receipt-predicate.v1.schema.json`, and `tools/check_sync.py`
+  holds it to the copy the reference publishes. **Appendix B** lists the
+  reference's E515, E613 and E614. No rule of sections 3 to 7 or 9
+  changes, no conformance case changes, and section 2 still quotes
+  velaris-lang SPEC.md sections 6, 7 and 7.1 word for word.
 - **0.9.0**, 2026-09-14: tracks velaris-lang 8.0.0. No rule of this
   format changes. `velaris.audit/1` gains one field within version 1
   (section 8.2, 8.1's compatibility rule): `ffi_native`, per named

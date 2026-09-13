@@ -1,0 +1,46 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "examples/effects.vel",
+      "digest": {
+        "sha256": "51411dd586cf374e03d89e27d52465052c5240807c3e9027cb08c2ab5b100463"
+      }
+    }
+  ],
+  "predicateType": "https://gowrishankar-infra.github.io/velaris-lang/receipt/v1",
+  "predicate": {
+    "schema": "velaris.receipt/1",
+    "producer": {
+      "name": "velaris-lang",
+      "uri": "https://github.com/gowrishankar-infra/velaris-lang",
+      "version": "8.1.0"
+    },
+    "specification": "velaris-spec 0.10.0",
+    "startedAt": "2026-09-13T23:50:48.089Z",
+    "wall_time_ms": 4.5,
+    "budget": "clock,fs:read:/tmp/velaris-receipt-example/report.txt,fs:write:/tmp/velaris-receipt-example/report.txt,io,rand",
+    "run_parameters": {
+      "seed": null,
+      "freeze_time": null,
+      "timeout": null,
+      "max_memory_mb": null,
+      "max_read_bytes": 67108864,
+      "confinement": "none"
+    },
+    "effects_used": {
+      "rand": 1,
+      "io": 3,
+      "clock": 1,
+      "fs": 2
+    },
+    "refusals": [],
+    "declassifications": [],
+    "exit": {
+      "status": 0,
+      "outcome": "ok",
+      "code": null
+    },
+    "complete": true
+  }
+}
