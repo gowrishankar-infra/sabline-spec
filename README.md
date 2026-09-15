@@ -63,7 +63,8 @@ sections 3 to 7 or 9 changes.
   capabilities check`). The provisional `/0` form of 0.1 and 0.2 is
   superseded; its schema is kept for the record.
 - **An in-toto predicate type** for `velaris.audit/1`,
-  `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`, so
+  `https://velaris-lang.dev/capability/v1` (named at the reference's earlier
+  documentation address until 0.11, and read as the same type), so
   a signed statement can say which source files an audit describes
   (section 8.5, [schemas/capability-predicate.v1.schema.json](schemas/capability-predicate.v1.schema.json)).
   From 0.5 the reference implementation writes such statements
@@ -73,7 +74,7 @@ sections 3 to 7 or 9 changes.
   every refusal by code, effect and line, every declassification with
   its reason, the run's parameters, how it ended and how long it took -
   and an in-toto predicate type for it,
-  `https://gowrishankar-infra.github.io/velaris-lang/receipt/v1`, bound
+  `https://velaris-lang.dev/receipt/v1` (at the earlier address until 0.11), bound
   to the same subjects as the capability statement, so the two describe
   the same bytes before and after a run. A receipt holds no value the
   program computed (section 8.7,

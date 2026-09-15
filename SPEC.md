@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.10.0, 2026-09-14. Dedicated to the public domain under CC0 1.0;
+Version 0.11.0, 2026-09-15. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -36,6 +36,12 @@ Version 0.10.0 tracks velaris-lang 8.1.0: section 8.7 is new -
 that carries it, bound to the same subjects as the Statement of section
 8.5, so an audit and a receipt of one program are the before and the
 after of the same bytes. No rule of sections 3 to 7 or 9 changes.
+Version 0.11.0 tracks velaris-lang 8.3.0: both predicate types are named at
+velaris-lang.dev, a domain the reference's project holds, and each earlier
+name is accepted for verification (sections 8.5 and 8.7); a receipt gains
+`stop` and `run_parameters.profile` within version 1; and sections 8.8,
+comparing receipts, and 8.9, a run under an evaluation profile, are new. No
+rule of sections 3 to 7 or 9 changes.
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
@@ -929,9 +935,20 @@ so that a signed in-toto Statement can say it. It closes open question
 Q11.
 
 **Predicate type:**
-<https://gowrishankar-infra.github.io/velaris-lang/capability/v1>. That
-URL is where the type's description and schema are published, on the
-reference's documentation site, and it resolves to them.
+<https://velaris-lang.dev/capability/v1>. That URL is where the type's
+description and schema are published, on the reference's documentation
+site, and it resolves to them.
+
+**Also accepted for verification:**
+`https://gowrishankar-infra.github.io/velaris-lang/capability/v1`, this
+type's name until 0.11.0, which velaris-lang 4.2.0 to 8.2.1 wrote and whose
+address now redirects to the one above. A consumer SHOULD read a Statement
+naming it as a Statement of this type, and MUST NOT read a Statement of any
+other type as one of this type. A producer MUST write the name above.
+*Changed in 0.11.0*: the reference's project holds velaris-lang.dev, where
+the earlier name was an address under its maintainer's account name.
+`velaris.dev` has never been this type's domain, and names no type this
+document defines.
 
 A Statement of this type is an in-toto Statement v1
 (<https://github.com/in-toto/attestation>):
@@ -942,7 +959,7 @@ A Statement of this type is an in-toto Statement v1
   "subject": [
     {"name": "examples/effects.vel", "digest": {"sha256": "..."}}
   ],
-  "predicateType": "https://gowrishankar-infra.github.io/velaris-lang/capability/v1",
+  "predicateType": "https://velaris-lang.dev/capability/v1",
   "predicate": {
     "producer": {"name": "velaris-lang",
                  "uri": "https://github.com/gowrishankar-infra/velaris-lang"},
@@ -1022,7 +1039,8 @@ reference writes them:
 [examples/capability-statement.json](examples/capability-statement.json)
 is the Statement `velaris attest examples/effects.vel` writes in
 velaris-lang at tag `v4.2.0`, with `SOURCE_DATE_EPOCH` set to that
-commit's time, as the release workflow runs it.
+commit's time, as the release workflow runs it. It names the type by its
+earlier name, as every Statement of that release does.
 
 ### 8.6 secrets
 
@@ -1085,9 +1103,12 @@ the files that ran by the same digests section 8.5 uses, so an audit of a
 program and a receipt of one of its runs can be matched by those digests.
 
 **Predicate type:**
-<https://gowrishankar-infra.github.io/velaris-lang/receipt/v1>. That URL
-is where the type's description and schema are published, on the
-reference's documentation site;
+<https://velaris-lang.dev/receipt/v1>. That URL is where the type's
+description and schema are published, on the reference's documentation
+site. **Also accepted for verification:**
+`https://gowrishankar-infra.github.io/velaris-lang/receipt/v1`, its name
+until 0.11.0, which velaris-lang 8.1.0 to 8.2.1 wrote, read as section 8.5
+reads the earlier name of its type;
 [schemas/receipt-predicate.v1.schema.json](schemas/receipt-predicate.v1.schema.json)
 is the schema, and `tools/check_sync.py` fails if the published copy
 differs.
@@ -1100,7 +1121,7 @@ A receipt is an in-toto Statement v1 of that type:
   "subject": [
     {"name": "examples/effects.vel", "digest": {"sha256": "..."}}
   ],
-  "predicateType": "https://gowrishankar-infra.github.io/velaris-lang/receipt/v1",
+  "predicateType": "https://velaris-lang.dev/receipt/v1",
   "predicate": {
     "schema": "velaris.receipt/1",
     "producer": {"name": "velaris-lang", "version": "8.1.0"},
@@ -1134,11 +1155,12 @@ A receipt is an in-toto Statement v1 of that type:
 | `startedAt` | string | optional: when the run started, RFC 3339 in UTC, by the producer's clock |
 | `wall_time_ms` | number | how long the run took, in milliseconds, by the producer's clock |
 | `budget` | string | the budget the run was given, in the grammar of section 4 |
-| `run_parameters` | object | `seed` (integer or null) and `freeze_time` (RFC 3339 or null), which fix the run's randomness and clock; `timeout` (seconds or null) and `max_memory_mb` (integer or null), the limits it ran under; optionally `max_read_bytes`; and `confinement`, a word naming the operating-system confinement the run had - `"none"` when the budget was the only boundary |
+| `run_parameters` | object | `seed` (integer or null) and `freeze_time` (RFC 3339 or null), which fix the run's randomness and clock; `timeout` (seconds or null) and `max_memory_mb` (integer or null), the limits it ran under; optionally `max_read_bytes`; and `confinement`, a word naming the operating-system confinement the run had - `"none"` when the budget was the only boundary; optionally, from 0.11.0, `profile`, the name of a profile the run was held to beyond its budget, as `"eval"` (section 8.9) |
 | `effects_used` | object or null | each effect and how many operations of it the budget let through; `null` when the producer could not tell, as when the run was stopped from outside |
 | `refusals` | array | one object per distinct refusal: `code`; `effect`, one of the eight names of section 3.1, or null; `line`; `stopped`, whether the refusal ended the run (a redirect refused under section 6 G4 does not); `times` |
 | `declassifications` | array | one object per distinct declassification: `reason`, the text written in the program; `line`; `times` |
 | `exit` | object | `status`, the exit status the producer reported (integer or null); `outcome`, one of `ok`, `refused`, `failed`, `did_not_compile`, `timeout`, `out_of_memory`; `code`, the code of the error that ended the run, or null |
+| `stop` | object | optional, from 0.11.0: present when a stop was asked for from outside the run - `asked`, what asked; `honoured`, how it was honoured; `after_ms`, when it was asked, from the run's start; `grace_seconds` (section 8.9) |
 | `complete` | boolean | false when the run was stopped from outside before it could report. What is listed happened, and each `times` is at least the number given |
 
 **What a receipt MUST NOT hold.** A producer MUST NOT put in a receipt a
@@ -1181,7 +1203,116 @@ with cosign and with sigstore-python, and verifies both.
 reference wrote for that run, and
 [examples/refused-receipt.json](examples/refused-receipt.json) one it
 wrote for the same program given no `fs`, which stopped at its first
-refusal.
+refusal. Both name the type by its earlier name, as every receipt
+velaris-lang 8.1.0 to 8.2.1 wrote does.
+
+### 8.8 Comparing receipts
+
+*New in 0.11.0 (velaris-lang 8.3.0). The document this section describes
+is provisional.* A receipt names no path a run read and no host it reached:
+what it names is what the run was granted (`budget`), what it used
+(`effects_used`), what was refused and what was declassified. Two
+comparisons follow from that, and neither runs anything.
+
+**Against an audit** of the program (section 8), or a Statement of section
+8.5, a difference is:
+
+- an effect in `effects_used` with a count above zero, or the effect of a
+  refusal, that the audit's `effects` does not hold;
+- a host of the budget's `net:` grants that `net_hosts.hosts` does not name
+  (a host granted with a port is named by the same host with that port, or
+  with none); not compared when `net_hosts.any` is true;
+- a path of the budget's `fs:` grants in which `fs_paths` names no path of
+  that direction; not compared when `read_any` or `write_any` is true. A
+  path in a budget is absolute on the machine that ran it and a path in an
+  audit is as the program wrote it, so a granted path is named when it ends
+  with a path the audit names, or with a directory holding one;
+- a module of the budget's `ffi:` grants that `ffi_modules` does not name;
+  not compared when `ffi_any` is true;
+- a declassification whose reason and line `secrets.declassifications` does
+  not hold;
+- an `fs` or `net` count above the audit's `counts` bound, where that bound
+  is a number;
+- where the audit comes with subjects (a Statement of 8.5), a receipt whose
+  first subject's digest is not the audit's first subject's, or which names
+  a digest the audit's subjects do not.
+
+**Against earlier receipts** of the same subjects - the same set of
+digests; a receipt of other subjects is not compared - a difference is a
+host, a path or a module granted, or an effect used, that no earlier receipt
+has; a count in `effects_used` above the largest any earlier receipt holds
+for that effect; a declassification when no earlier receipt has one; and a
+declassification reason no earlier receipt holds.
+
+The reference writes the result as `velaris.receipts-diff/1`:
+
+```json
+{
+  "schema": "velaris.receipts-diff/1",
+  "receipt": "run.json",
+  "subjects": [{"name": "task.vel", "digest": {"sha256": "..."}}],
+  "against_audit": {
+    "source": "the audit of task.vel",
+    "differences": [{"kind": "host", "what": "collector.example.org:443",
+                     "detail": "the budget granted it; the audit names no such host"}],
+    "not_compared": []
+  },
+  "against_receipts": {
+    "compared": ["earlier.json"],
+    "left_out": [{"file": "other.json", "why": "a receipt of other subjects"}],
+    "differences": [{"kind": "count_above_maximum", "what": "fs",
+                     "detail": "9 fs operation(s); the most in an earlier run was 1"}]
+  },
+  "problems": [],
+  "differences": 2,
+  "exit": 1
+}
+```
+
+`kind` is `effect`, `host`, `path`, `module`, `declassification`, `count` or
+`subject` against an audit, and `new_host`, `new_path`, `new_module`,
+`count_above_maximum`, `first_declassification` or `new_declassification`
+against earlier receipts. The exit status is 0 with no difference, 1 with
+any, and 2 when a comparison could not be made: a file that is not a receipt
+of a type this document defines, an audit that cannot be read, or no earlier
+receipt of the same subjects.
+
+**What a comparison does not say.** A receipt is a claim, and comparing
+claims does not make them true: a receipt edited to omit an effect compares
+clean against an audit that has it. Receipts compared as signed Statements,
+matched by their subjects, say what their signers saw.
+
+### 8.9 A run under an evaluation profile
+
+*New in 0.11.0 (velaris-lang 8.3.0).* A receipt whose
+`run_parameters.profile` is `"eval"` records a run held to a profile beyond
+its budget. A producer that writes that name MUST have held the run to all
+of:
+
+- no `net`, `ffi` or `env` in the budget, and no `fs` grant without a path;
+- a time limit and a memory limit (`timeout` and `max_memory_mb` not null);
+- the receipt written where no `fs` grant of the budget reaches, or sent to a
+  URL;
+- a stop asked for from outside the run honoured - at the next point the
+  program can see it, or by ending the run after a grace period - and
+  recorded in `stop`.
+
+`run_parameters.confinement` names the operating-system confinement that was
+applied, not the confinement that was asked for. The reference writes
+`landlock-net` (Linux, Landlock ABI 4 or later: no file written, removed or
+made outside the granted write directories and the run's own temporary
+directory, no program started, no TCP connection made or listened for),
+`landlock` (the same, except TCP), `job-one-process` (Windows: the run's
+process cannot start another), `sandbox-exec` (macOS: no network, no fork, no
+file written outside the granted write directories and the run's temporary
+directory) and `none`. No level confines reads.
+
+`stop`, when present, has `asked`, what asked for the stop (a signal, or a
+stop file appearing); `honoured`, one of `at a call or loop turn`, `worker
+killed after the grace period` or `the run had already ended`; `after_ms`,
+when it was asked, from the run's start; and `grace_seconds`. A run stopped
+at a call or loop turn has `exit.code` `E615` and `complete` true; a run
+whose worker was killed has `exit.code` `E615` and `complete` false.
 
 ## 9. velaris.capabilities/1
 
@@ -1663,7 +1794,9 @@ the question.
   that carries an audit with the digests of the files audited, so a
   signed Statement can say which source it describes. From
   velaris-lang 4.2.0 the reference writes Statements of it too
-  (`velaris attest`, section 8.5), and signs none.
+  (`velaris attest`, section 8.5), and signs none. From 0.11.0 the type
+  is named `https://velaris-lang.dev/capability/v1`, and the name above is
+  accepted for verification (section 8.5).
 
 ## Appendix A. The reference binding
 
@@ -1736,8 +1869,28 @@ checker is answered rather than waited on. A `velaris.audit/1` document
 reporting E613 or E614 has `ok` false and determines nothing (section
 8.4).
 
+The reference's version 8.3.0 adds two more of its own, neither part of the
+static rule: **E615**, a run under its evaluation profile (section 8.9) asked
+to stop from outside, which stopped at the next call or loop turn or had its
+worker killed; and **E616**, a run the reference replayed with recorded tool
+responses that made a call the recording does not hold in that place.
+
 ## Appendix C. Changes
 
+- **0.11.0**, 2026-09-15: tracks velaris-lang 8.3.0. **8.5 and 8.7**: the
+  predicate types are named at velaris-lang.dev, a domain the reference's
+  project holds; their earlier names, on the reference's GitHub Pages
+  address, are accepted for verification, and a producer writes the new
+  ones. `velaris.dev` names no type of this document. **8.7**: a receipt
+  gains `stop` and `run_parameters.profile` within version 1, and both
+  schemas name the new types. **8.8 is new**: what a receipt compared with
+  an audit, and with earlier receipts of the same subjects, can name as a
+  difference, and the reference's provisional `velaris.receipts-diff/1`.
+  **8.9 is new**: what a receipt of a run under an evaluation profile
+  asserts, the confinement words the reference writes, and `stop`.
+  **Appendix B** lists the reference's E615 and E616. No rule of sections 3
+  to 7 or 9 changes, no conformance case changes, and section 2 still quotes
+  velaris-lang SPEC.md sections 6, 7 and 7.1 word for word.
 - **0.10.0**, 2026-09-14: tracks velaris-lang 8.1.0. **8.7 is new**:
   `velaris.receipt/1`, a record of one run - the budget, each refusal and
   declassification, the parameters, how the run ended and how long it

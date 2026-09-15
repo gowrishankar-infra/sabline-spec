@@ -38,8 +38,15 @@ from pathlib import Path
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parent.parent
-PREDICATE_TYPE = "https://gowrishankar-infra.github.io/velaris-lang/capability/v1"
-RECEIPT_TYPE = "https://gowrishankar-infra.github.io/velaris-lang/receipt/v1"
+# 0.11.0: the types are named at velaris-lang.dev; a Statement written by
+# velaris-lang 4.2 to 8.2.1 names them at the earlier address, and is read as
+# the same type (sections 8.5 and 8.7). The examples are those Statements.
+PREDICATE_TYPE = "https://velaris-lang.dev/capability/v1"
+RECEIPT_TYPE = "https://velaris-lang.dev/receipt/v1"
+PREDICATE_TYPES = (PREDICATE_TYPE,
+                   "https://gowrishankar-infra.github.io/velaris-lang/capability/v1")
+RECEIPT_TYPES = (RECEIPT_TYPE,
+                 "https://gowrishankar-infra.github.io/velaris-lang/receipt/v1")
 
 
 def load(path: Path):
@@ -278,8 +285,9 @@ def main(argv: list) -> int:
         problems = []
         if doc.get("_type") != "https://in-toto.io/Statement/v1":
             problems.append("_type is not https://in-toto.io/Statement/v1")
-        if doc.get("predicateType") != PREDICATE_TYPE:
-            problems.append(f"predicateType is not {PREDICATE_TYPE}")
+        if doc.get("predicateType") not in PREDICATE_TYPES:
+            problems.append(f"predicateType is not {PREDICATE_TYPE}, or the "
+                            f"earlier spelling of it")
         subjects = doc.get("subject") or []
         if not subjects or not all(
                 isinstance(s.get("name"), str) and len(
@@ -306,8 +314,9 @@ def main(argv: list) -> int:
         problems = []
         if doc.get("_type") != "https://in-toto.io/Statement/v1":
             problems.append("_type is not https://in-toto.io/Statement/v1")
-        if doc.get("predicateType") != RECEIPT_TYPE:
-            problems.append(f"predicateType is not {RECEIPT_TYPE}")
+        if doc.get("predicateType") not in RECEIPT_TYPES:
+            problems.append(f"predicateType is not {RECEIPT_TYPE}, or the "
+                            f"earlier spelling of it")
         subjects = doc.get("subject") or []
         if not subjects or not all(
                 isinstance(s.get("name"), str) and len(

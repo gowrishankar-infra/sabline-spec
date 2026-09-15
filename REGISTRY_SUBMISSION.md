@@ -122,7 +122,7 @@ does not match any digest in statement".
 
 ## The type URI
 
-It is `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`,
+It is `https://velaris-lang.dev/capability/v1` (from velaris-spec 0.11.0; Statements written by velaris-lang 4.2.0 to 8.2.1, the one verified above among them, name it `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`),
 on velaris-lang's documentation site, where it resolves to the
 description and the schema. On 2026-09-11, again at the time of this
 version, `velaris.dev` answered every path with a Vercel

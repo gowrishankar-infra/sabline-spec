@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.11.0 - Names on a domain the project holds - 2026-09-15
+
+Tracks velaris-lang 8.3.0. **The two predicate types are renamed**:
+`https://velaris-lang.dev/capability/v1` (section 8.5) and
+`https://velaris-lang.dev/receipt/v1` (section 8.7), on a domain the
+reference's project holds. Until now they were named on the reference's
+GitHub Pages address, under its maintainer's account name, which now
+redirects to velaris-lang.dev. Every Statement and receipt written before
+velaris-lang 8.3.0 names the earlier address, so each earlier name is
+accepted for verification - a consumer reads it as the same type - and a
+producer writes the new name. `velaris.dev` was never this format's domain;
+it is registered to someone else, and it names no type defined here.
+`schemas/capability-predicate.v1.schema.json` and
+`schemas/receipt-predicate.v1.schema.json` name the new types, and
+`tools/validate.py` accepts both names for the examples, which are the
+Statements velaris-lang 4.2.0 and 8.1.0 wrote.
+
+A receipt gains two optional fields within version 1: `run_parameters.profile`
+and `stop`. **Section 8.8 is new**: what a receipt compared with an audit,
+and with earlier receipts of the same subjects, can name as a difference,
+and the shape of the reference's provisional `velaris.receipts-diff/1`.
+**Section 8.9 is new**: what a receipt of a run under an evaluation profile
+(`profile: "eval"`) asserts - no net, ffi or env, time and memory limits,
+the receipt outside the budget, a stop honoured and recorded - the
+confinement words the reference writes, and `stop`. Appendix B lists the
+reference's E615 and E616.
+
+No rule of sections 3 to 7 or 9 changes and no conformance case changes.
+Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and 7.1 word for
+word.
+
 ## 0.10.0 - A record of one run - 2026-09-14
 
 Tracks velaris-lang 8.1.0. **Section 8.7 is new**: `velaris.receipt/1`, and
