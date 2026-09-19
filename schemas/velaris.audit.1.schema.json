@@ -175,6 +175,36 @@
       "description": "Added in 4.2. True when a prover decided the status of the promises: one was present and the program compiled. When false, no status is proven, and a proven_share of 0 says nothing about what a prover would prove (SPEC.md 8.2).",
       "type": "boolean"
     },
+    "confinement": {
+      "description": "Added in 0.12 (velaris-lang 8.4). What the operating system holds of a run under safe_command, beside the budget: for each of three systems the level and the reason, stated for a system where every mechanism the producer uses there is available, and the granted Python modules that widen what is asked of the operating system. Derived from the budget alone, so it is the same wherever the audit is made. Null when safe_command's budget does not parse.",
+      "type": ["object", "null"],
+      "required": ["systems", "widened_by"],
+      "properties": {
+        "systems": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["level", "reason"],
+            "properties": {
+              "level": {"enum": ["full", "partial", "none"]},
+              "reason": {"type": "string"}
+            }
+          }
+        },
+        "widened_by": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["module", "widens"],
+            "properties": {
+              "module": {"description": "A top-level Python module the budget grants, or * for plain ffi.", "type": "string", "minLength": 1},
+              "widens": {"type": "array", "items": {"enum": ["fs", "net", "all"]}},
+              "known": {"description": "False for a module the producer has no entry for, which it treats as all.", "type": "boolean"}
+            }
+          }
+        }
+      }
+    },
     "ffi_native": {
       "description": "Added in 0.9 (velaris-lang 8.0). Per top-level Python module named in the program (the keys are a subset of ffi_modules), whether it or code it ships is native - a compiled extension (.so/.pyd/.dylib) or a module built into the interpreter - decided from the files on disk WITHOUT importing the module. \"native\" when a compiled extension is found; \"unknown\" otherwise, and never \"false\", because a pure-Python module can import a native one without that being visible from its own files. The verdict reflects the packages installed on the machine that produced the audit, so it is not reproducible across machines and an attestation embedding it says only what that machine found. Empty when the program names no module. A producer without this notion may write it empty or omit it (a consumer must ignore fields it does not know).",
       "type": "object",

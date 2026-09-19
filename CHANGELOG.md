@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.12.0 - What the operating system held - 2026-09-19
+
+Tracks velaris-lang 8.4.0, which asks the operating system to hold a run's
+budget as well as enforcing it in the interpreter. **A receipt's
+`run_parameters.confinement` is a level**: `full` when the operating system
+held every file, network and process limit of the budget, `partial` when it
+held some, `none` when the budget was the only boundary. Three optional
+fields are added beside it within version 1: `confinement_reason`, each limit
+that was not held and why; `confinement_layers`, the producer's names for the
+mechanisms it applied; and `os_policy_sha256`, the digest of the policy the
+producer derived from the budget. Until now `confinement` was `none`, or
+under the reference's evaluation profile the name of a mechanism
+(`landlock-net`, `landlock`, `job-one-process`, `sandbox-exec`); a receipt
+written before 0.12.0 still validates and is read as it was written.
+
+**`velaris.audit/1` gains `confinement`** within version 1 (section 8.2):
+for a run under `safe_command`, the level and the reason on each of three
+systems, and the granted Python modules that widen what is asked of the
+operating system, each with what it widens it to. It is derived from the
+budget alone and reads nothing of the producing machine, so an audit is
+still the same bytes wherever it is made.
+
+**Section 8.9**: a producer that writes the evaluation profile's name must
+not have run the program at `none`. Appendix B lists the reference's E319,
+which no program reaches. `schemas/receipt-predicate.v1.schema.json` and
+`schemas/velaris.audit.1.schema.json` hold the new fields.
+
+No rule of sections 3 to 7 or 9 changes and no conformance case changes.
+Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and 7.1 word for
+word.
+
 ## 0.11.0 - Names on a domain the project holds - 2026-09-15
 
 Tracks velaris-lang 8.3.0. **The two predicate types are renamed**:

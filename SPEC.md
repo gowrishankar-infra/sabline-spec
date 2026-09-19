@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.11.0, 2026-09-15. Dedicated to the public domain under CC0 1.0;
+Version 0.12.0, 2026-09-19. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -41,6 +41,12 @@ velaris-lang.dev, a domain the reference's project holds, and each earlier
 name is accepted for verification (sections 8.5 and 8.7); a receipt gains
 `stop` and `run_parameters.profile` within version 1; and sections 8.8,
 comparing receipts, and 8.9, a run under an evaluation profile, are new. No
+rule of sections 3 to 7 or 9 changes.
+Version 0.12.0 tracks velaris-lang 8.4.0, which asks the operating system to
+hold a run's budget as well: a receipt's `run_parameters.confinement` is a
+level - `full`, `partial` or `none` - with `confinement_reason`,
+`confinement_layers` and `os_policy_sha256` beside it, and `velaris.audit/1`
+gains `confinement`, both within version 1 (sections 8.2, 8.7 and 8.9). No
 rule of sections 3 to 7 or 9 changes.
 Conformance is defined by that corpus (section 10), not by this text.
 
@@ -854,6 +860,7 @@ was added.
 | `prover` | boolean | true when a prover decided the `status` of the promises: one was present and the program compiled. False otherwise - no prover, or `ok` false - and then no `status` is `"proven"` and a `proven_share` of 0 says nothing about what a prover would prove. | 4.2 |
 | `secrets` | object or null | which builtins handed the program a value the type system will not let it emit, whether the program declassifies one, and with what reasons (section 8.6). `null` when the program could not be loaded. | 0.7 |
 | `ffi_native` | object | per top-level Python module the program names (keys are a subset of `ffi_modules`), whether it or code it ships is native - a compiled extension (`.so`/`.pyd`/`.dylib`) or built into the interpreter - decided from files on disk **without importing** the module: `"native"` when one is found, `"unknown"` otherwise and never `"false"`, since a pure-Python module can import a native one without that showing in its own files. It reflects the packages installed on the producing machine, so it is not reproducible across machines. Empty when no module is named. | 0.9 |
+| `confinement` | object or null | what the operating system holds of a run under `safe_command`, beside the budget (section 8.7, `run_parameters.confinement`): `systems`, an object whose keys are `linux`, `macos` and `windows` and whose values each have `level` - `"full"`, `"partial"` or `"none"` - and `reason`, text saying what is not held and why, stated for a system where every mechanism the producer uses there is available; and `widened_by`, an array of `{"module", "widens", "known"}`, one for each granted Python module that widens what the producer asks of the operating system - `widens` holds `"fs"` (any path), `"net"` (any host) or `"all"` (nothing enforced), and `known` is false for a module the producer has no entry for, which it treats as `"all"`. It is derived from the budget alone and reads nothing of the producing machine, so it is reproducible across machines; what one run actually got is in that run's receipt. `null` when `safe_command`'s budget does not parse, and absent from a producer that asks nothing of the operating system. | 0.12 |
 
 Two scopes are at work, and they differ. `effects`, `functions`,
 `loops_unshown`, `contract_coverage` and `counts` describe the functions
@@ -1128,7 +1135,10 @@ A receipt is an in-toto Statement v1 of that type:
     "wall_time_ms": 41.7,
     "budget": "clock,fs:read:/work/report.txt,fs:write:/work/report.txt,io,rand",
     "run_parameters": {"seed": null, "freeze_time": null, "timeout": null,
-                       "max_memory_mb": null, "confinement": "none"},
+                       "max_memory_mb": null, "confinement": "full",
+                       "confinement_reason": "the operating system holds every file, network and process limit of this budget",
+                       "confinement_layers": ["landlock-abi4", "seccomp"],
+                       "os_policy_sha256": "2702413c15253be6589ce6f39dbfbb129c9578d6ce62576d996f895b6faa9994"},
     "effects_used": {"clock": 1, "fs": 2, "io": 4, "rand": 1},
     "refusals": [],
     "declassifications": [],
@@ -1155,7 +1165,7 @@ A receipt is an in-toto Statement v1 of that type:
 | `startedAt` | string | optional: when the run started, RFC 3339 in UTC, by the producer's clock |
 | `wall_time_ms` | number | how long the run took, in milliseconds, by the producer's clock |
 | `budget` | string | the budget the run was given, in the grammar of section 4 |
-| `run_parameters` | object | `seed` (integer or null) and `freeze_time` (RFC 3339 or null), which fix the run's randomness and clock; `timeout` (seconds or null) and `max_memory_mb` (integer or null), the limits it ran under; optionally `max_read_bytes`; and `confinement`, a word naming the operating-system confinement the run had - `"none"` when the budget was the only boundary; optionally, from 0.11.0, `profile`, the name of a profile the run was held to beyond its budget, as `"eval"` (section 8.9) |
+| `run_parameters` | object | `seed` (integer or null) and `freeze_time` (RFC 3339 or null), which fix the run's randomness and clock; `timeout` (seconds or null) and `max_memory_mb` (integer or null), the limits it ran under; optionally `max_read_bytes`; and `confinement`, a word for the operating-system confinement the run had - `"none"` when the budget was the only boundary. From 0.12.0 the word is a level: `"full"` when the operating system held every file, network and process limit of the budget, `"partial"` when it held some, `"none"` when it held nothing; and three optional fields say more - `confinement_reason`, text naming each limit that was not held and why (or why nothing was asked); `confinement_layers`, an array of the producer's names for the mechanisms it applied; and `os_policy_sha256`, the lowercase hex sha256 of the policy the producer derived from the budget and asked the operating system to hold, or null. A receipt written before 0.12.0 has none of the three, and its `confinement` is `"none"` or names a mechanism (section 8.9). Optionally, from 0.11.0, `profile`, the name of a profile the run was held to beyond its budget, as `"eval"` (section 8.9) |
 | `effects_used` | object or null | each effect and how many operations of it the budget let through; `null` when the producer could not tell, as when the run was stopped from outside |
 | `refusals` | array | one object per distinct refusal: `code`; `effect`, one of the eight names of section 3.1, or null; `line`; `stopped`, whether the refusal ended the run (a redirect refused under section 6 G4 does not); `times` |
 | `declassifications` | array | one object per distinct declassification: `reason`, the text written in the program; `line`; `times` |
@@ -1297,15 +1307,20 @@ of:
   program can see it, or by ending the run after a grace period - and
   recorded in `stop`.
 
-`run_parameters.confinement` names the operating-system confinement that was
-applied, not the confinement that was asked for. The reference writes
-`landlock-net` (Linux, Landlock ABI 4 or later: no file written, removed or
-made outside the granted write directories and the run's own temporary
-directory, no program started, no TCP connection made or listened for),
-`landlock` (the same, except TCP), `job-one-process` (Windows: the run's
-process cannot start another), `sandbox-exec` (macOS: no network, no fork, no
-file written outside the granted write directories and the run's temporary
-directory) and `none`. No level confines reads.
+`run_parameters.confinement` says what operating-system confinement was
+applied, not what was asked for. *Changed in 0.12.0 (velaris-lang 8.4.0).*
+It is a level - `full`, `partial` or `none` (section 8.7) - and a producer
+that writes the profile's name from 0.12.0 on MUST NOT have run the program
+at `none`: the reference refuses to start such a run. The mechanisms are
+named in `confinement_layers`; the reference writes `landlock-abiN` and
+`seccomp` on Linux, `sandbox-profile` on macOS, and `job-object`,
+`token-privileges-removed` and `low-integrity` on Windows, and its
+THREAT_MODEL.md has the table of what each holds for each grant. Until
+0.12.0 the reference wrote a mechanism in `confinement` itself -
+`landlock-net`, `landlock`, `job-one-process`, `sandbox-exec` - or `none`,
+ran the program under the budget alone where it got `none`, and confined no
+reads; a consumer reading an earlier receipt takes those words as they
+were.
 
 `stop`, when present, has `asked`, what asked for the stop (a signal, or a
 stop file appearing); `honoured`, one of `at a call or loop turn`, `worker
@@ -1875,8 +1890,25 @@ to stop from outside, which stopped at the next call or loop turn or had its
 worker killed; and **E616**, a run the reference replayed with recorded tool
 responses that made a call the recording does not hold in that place.
 
+The reference's version 8.4.0 adds **E319**: an effect its own runtime
+attempted outside the budget, refused by the operating system's confinement.
+It is given only under the reference's fault-injection hook, which exists so
+its suites can show the kernel refusing; no program reaches it.
+
 ## Appendix C. Changes
 
+- **0.12.0**, 2026-09-19: tracks velaris-lang 8.4.0, which asks the
+  operating system to hold a run's budget. **8.7**: `run_parameters.
+  confinement` is a level - `full`, `partial`, `none` - and gains
+  `confinement_reason`, `confinement_layers` and `os_policy_sha256`, all
+  optional, within version 1. **8.2**: `velaris.audit/1` gains `confinement`,
+  the level on each of three systems for a run under `safe_command` and the
+  Python modules that widen it, within version 1. **8.9**: a producer that
+  writes the evaluation profile's name must not have run at `none`, and the
+  mechanism names move to `confinement_layers`. **Appendix B** lists the
+  reference's E319. No rule of sections 3 to 7 or 9 changes, no conformance
+  case changes, and section 2 still quotes velaris-lang SPEC.md sections 6,
+  7 and 7.1 word for word.
 - **0.11.0**, 2026-09-15: tracks velaris-lang 8.3.0. **8.5 and 8.7**: the
   predicate types are named at velaris-lang.dev, a domain the reference's
   project holds; their earlier names, on the reference's GitHub Pages
