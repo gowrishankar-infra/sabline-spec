@@ -11,7 +11,8 @@
   "additionalProperties": false,
   "properties": {
     "schema": {
-      "const": "sabline.capabilities/0"
+      "enum": ["sabline.capabilities/0", "velaris.capabilities/0"],
+      "$comment": "Both names for one format. 0.14.0 renamed the reference implementation from Velaris to Sabline, and a producer writes the sabline.* name; a document written before 0.14.0 carries the velaris.* one, and is the same format at the same version, so a consumer that validates against this schema goes on accepting it. The velaris.* name goes in a version that says so."
     },
     "generated_by": {
       "description": "Informative: what wrote this document.",

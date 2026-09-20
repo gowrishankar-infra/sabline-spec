@@ -53,6 +53,14 @@ them.
   The documents in `examples/` keep `velaris_version` alone: each records
   what a particular release wrote - 3.1.1, 4.0.0, 4.2.0 - and those wrote
   that name and no other.
+
+  The schemas accept both names for the format itself, too: each `schema`
+  field is an `enum` of the `sabline.*` name and the `velaris.*` one where
+  it was a `const` of one. A schema is what a consumer validates a document
+  against, and a document written before 0.14.0 is the same format at the
+  same version - refusing it would have been the rename breaking every
+  document ever written, through the one file whose job is to say what a
+  valid document looks like.
 - **The corpus keeps the names a published implementation opens**, and is
   the one part of this repository that is not renamed: `tests/index.json`
   keeps the `format` `velaris.conformance-corpus/1`, and the three schemas
