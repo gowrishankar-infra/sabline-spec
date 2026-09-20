@@ -995,6 +995,14 @@ escaped and every name is an effect, `safe_command` always parses,
 whether or not `ok` is true, and `parse_budget` of it reproduces the
 grants it was built from.
 
+**What this section defines is the grant list.** A producer may put its
+own command in front of it - the reference writes `sabline <file>
+--allow ` and wrote `velaris <file> --allow ` before 0.14.0 - and that
+prefix is the producer's, not this document's. A conformance case
+therefore compares the grants and not the whole string *(0.14.0; until
+then the corpus compared the string, which required every implementation
+to be called what the reference was called)*.
+
 ### 8.4 What an audit does not tell you
 
 - **It reads literals only.** A path, URL or module named by a value

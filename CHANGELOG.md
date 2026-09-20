@@ -61,6 +61,16 @@ them.
   same version - refusing it would have been the rename breaking every
   document ever written, through the one file whose job is to say what a
   valid document looks like.
+- **A conformance case compares `safe_command` by its grants** (section
+  8.3), not as a whole string. What that section defines is the grant
+  list; the text before `--allow ` is the producer's own command name,
+  which this document does not define. Comparing the string had required
+  every implementation to be called what the reference was called - and
+  the reference was called something else until 0.14.0, so 27 L1 cases
+  read as a changed verdict across the rename when nothing about the
+  grants had changed. A corpus published for an implementation in any
+  language must not ask it to be named a particular thing.
+
 - **The corpus keeps the names a published implementation opens**, and is
   the one part of this repository that is not renamed: `tests/index.json`
   keeps the `format` `velaris.conformance-corpus/1`, and the three schemas
