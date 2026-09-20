@@ -1,6 +1,6 @@
 # The Velaris capability format
 
-Version 0.12.0, 2026-09-19. Dedicated to the public domain under CC0 1.0;
+Version 0.13.0, 2026-09-20. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: velaris-lang,
@@ -48,6 +48,14 @@ level - `full`, `partial` or `none` - with `confinement_reason`,
 `confinement_layers` and `os_policy_sha256` beside it, and `velaris.audit/1`
 gains `confinement`, both within version 1 (sections 8.2, 8.7 and 8.9). No
 rule of sections 3 to 7 or 9 changes.
+Version 0.13.0 tracks velaris-lang 8.5.0, which adds a ninth effect, `tool`
+(sections 3.1, 4.1 and 5.6, and a manifest of tools in 8.10, which is
+provisional); names the host of a URL that only begins fixed (sections 8.2
+and 9.3); and, within version 1 of each document, adds `tools` to the audit
+and an entry for a MAC under a secret key to its `secrets` (8.2, 8.6), and
+`grants_used`, `key_fingerprint`, `tool_calls` and `tool_ceiling` to a
+receipt (8.7). A budget, an audit, a baseline and a receipt that were valid
+under 0.12.0 are valid and mean the same.
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
@@ -135,6 +143,7 @@ conditions must be `Bool`; there is no truthiness.
 There is no undefined behaviour. Every operation either produces a
 value, raises a language error with a code, or fails in the sense of
 §8.
+
 <!-- end verbatim -->
 
 ### 2.2 Effects (velaris-lang SPEC.md section 7)
@@ -147,8 +156,9 @@ A function declares what it may do:
 The effects are `io` (the console: `print`, `read_line`, `args`),
 `env` (environment variables, through `env()`), `fs` (files), `net`
 (network), `clock` (the time), `rand` (randomness), `ffi` (calling the
-host language, §12) and `declassify` (turning a `Secret` into an
-ordinary value, §3.1). `env` became its own effect in 3.0; before that
+host language, §12), `declassify` (turning a `Secret` into an
+ordinary value, §3.1) and, from 8.5, `tool` (calling a tool the host
+process offers, §7.2). `env` became its own effect in 3.0; before that
 it was part of `io`, which meant an io-only budget could read every
 secret in the environment. `declassify` became the eighth in 6.0: it
 reaches nothing outside the program, but it is the one way a value the
@@ -164,6 +174,7 @@ anything it calls, however deep. Violations are E300.
 This is a property of the whole call graph, not a convention. Reading
 a signature tells you the complete set of things a call can do to the
 outside world.
+
 <!-- end verbatim -->
 
 ### 2.3 The budget (velaris-lang SPEC.md section 7.1)
@@ -200,6 +211,10 @@ A grant names an effect, and may narrow it:
 | `net:*.D` | hosts with exactly one label in place of the star |
 | `ffi` | any Python module |
 | `ffi:a,b` | those top-level modules |
+| `tool` | any tool the host offers (8.5, §7.2) |
+| `tool:NAME` | that tool |
+| `tool:NAME:ARG=PATTERN` | that tool, with its argument `ARG` held to the pattern |
+| `tool:NAME@N`, `tool@N` | at most N calls of that tool, or of tools, in the run |
 | `...@N` | and at most N operations of that effect in the run |
 
 Grants are additive. Paths are resolved with `realpath` when the budget
@@ -223,11 +238,12 @@ Outside the rule, and stated as such: a hard link inside a granted
 directory is that directory's content; a file system changed by another
 process between the check and the open is outside the model; where a
 granted host name resolves is DNS's business.
+
 <!-- end verbatim -->
 
 ## 3. Effects
 
-### 3.1 The eight effects
+### 3.1 The nine effects
 
 | Effect | Covers | Operations in the reference (Appendix A) | Added |
 |---|---|---|---|
@@ -238,11 +254,12 @@ granted host name resolves is DNS's business.
 | `clock` | reading the current time | `now` | |
 | `rand` | drawing a random number | `random` | |
 | `ffi` | calling into the host language - Python, in the reference - and using host objects | `py`, `py_int`, `py_float`, `py_json`, `py_new`, `py_do`, `py_field`, `py_close` | |
-| `declassify` | turning a value the type system protects into an ordinary one | `declassify` | 0.7 |
+| `declassify` | turning a value the type system protects into an ordinary one | `declassify`; from 0.13, `hmac_sha256` and `hmac_sha256_chain` (section 8.6) | 0.7 |
+| `tool` | calling a tool the process hosting the run offers | `tool`, `tool_secret` | 0.13 |
 
 Effect names are lower case and matched exactly. The list is closed in
-this version; a new effect is a new version of this document, and
-`declassify` is why this one is 0.7. The reference text's list for `io`
+this version; a new effect is a new version of this document:
+`declassify` is why there was a 0.7, and `tool` why there is a 0.13. The reference text's list for `io`
 ("`print`, `read_line`, `args`") names examples; the table above is the
 complete list for the reference.
 
@@ -257,6 +274,14 @@ it specially. An implementation with no such type system has no
 operation covered by `declassify`, and a program written for it never
 declares one; the effect is still part of the grammar, so a budget
 naming it parses everywhere.
+
+`tool` differs in another way: what it reaches is not fixed by the
+language. A tool is whatever the hosting process says it is, named in a
+manifest the run is given (section 8.10). With no manifest there is no
+tool, and an operation of the effect is refused even when the effect is
+granted. An implementation that hosts no tools has no operation covered by
+`tool`; the effect is still part of the grammar, so a budget naming it
+parses everywhere.
 
 Every other operation of the language is pure: it needs no effect and
 is not checked against a budget. That includes reading JSON, all text
@@ -345,6 +370,10 @@ A budget is written as text: grants separated by commas, such as
 | `net:H:PORT` | `net` to the host H at that port |
 | `net:[A]`, `net:[A]:PORT` | `net` to the IPv6 address A, any port or that port |
 | `net:*.D` | `net` to any host that is one label followed by `.D` (section 5.2) |
+| `tool` | `tool`, any tool, any arguments (section 5.6) |
+| `tool:T` | `tool`, for the tool named T, any arguments |
+| `tool:T:A=P` | `tool`, for the tool T, with its argument A held to the pattern P |
+| `tool@N`, `tool:T@N` | at most N calls of tools, or of the tool T, in the run; `tool@N` written with no tool named also grants every tool |
 | an `fs` or `net` form followed by `@N` | the same, and at most N operations of that effect in the run (section 5.4) |
 
 ### 4.2 Parsing
@@ -686,6 +715,61 @@ worker pool installs the budget again before every program.
 A count bounds how many operations there are - not their size, their
 rate, or what they carry.
 
+### 5.6 tool: names, argument patterns and counts
+
+*New in 0.13.0 (velaris-lang 8.5.0).*
+
+A tool's name T and an argument's name A are ASCII letters, digits, `_`,
+`.` and `-`, beginning with a letter or `_`. A is a top-level key of the
+call's arguments, which are one JSON object.
+
+**Combining.** `tool` anywhere in the budget grants every tool with any
+arguments, and scoped items then add nothing, as with `fs` and `net`
+(section 4.3). `tool:T` anywhere grants T with any arguments, and patterns
+written for T then add nothing: the wider grant wins. Otherwise T is granted
+with each argument that has patterns held to them: patterns for one
+argument are alternatives, and every argument that has any must match one.
+An argument with no pattern is not held by the budget. A tool no item names
+is not granted.
+
+**Matching.** A pattern is matched against the whole value, as written:
+nothing is trimmed, case-folded or normalised. Every character of the
+pattern but `*` matches itself. `*` matches one or more characters, none of
+which is: the character that follows the star in the pattern, if any; one
+of `,` `;` `<` `>` `"` `'` `\`; white space; or a character of Unicode
+general category C (controls, format characters) or Z (separators). A value
+that holds `..` matches only a pattern that holds `..`. A value longer than
+4,096 characters matches nothing. `**` is not a pattern. So `*@corp.com`
+matches `ann@corp.com` and none of `ann@corp.com.evil.example`,
+`eve@evil.example, ann@corp.com`, `eve@evil.example@corp.com` or
+`Ann@Corp.com`.
+
+A text value is matched as it is; a number as its JSON text; a boolean as
+`true` or `false`. A list matches when it is not empty and every item
+matches. An object, a null, and an argument that is not given do not match:
+a held argument MUST be given, because a default the host would fill in is
+not held to the operator's pattern.
+
+**Writing a pattern in a budget.** `,` and `%` are written `%2C` and `%25`.
+A count is a trailing `@` followed by ASCII digits and nothing else, so a
+pattern may hold an `@` of its own; a pattern that ends in `@` and digits
+writes that `@` as `%40`. A count goes on the tool (`tool:T@N`), not on an
+item that holds an argument.
+
+**Counts.** `tool:T@N` permits at most N calls of T in the run and `tool@N`
+at most N calls of tools; the smallest count written for each applies. A
+call is counted after the grants pass and before the host is asked, so a
+call the host then fails has still spent one. The call that would be the
+(N+1)th is refused and the host does not hear of it.
+
+**Refusals.** A call of a tool that is not granted, or with a held argument
+that does not match, is refused (E321 in the reference); past a count, E322.
+Like every refusal it ends the run and the program cannot handle it.
+
+**Covering (section 5.5).** A ceiling that grants `tool` with no count
+covers any tool grants. Otherwise each item asked for MUST be written in
+the ceiling, as canonical text: patterns are not compared for inclusion.
+
 ### 5.5 One budget inside another
 
 The reference uses this relation for the ceilings of its HTTP door and
@@ -860,6 +944,7 @@ was added.
 | `prover` | boolean | true when a prover decided the `status` of the promises: one was present and the program compiled. False otherwise - no prover, or `ok` false - and then no `status` is `"proven"` and a `proven_share` of 0 says nothing about what a prover would prove. | 4.2 |
 | `secrets` | object or null | which builtins handed the program a value the type system will not let it emit, whether the program declassifies one, and with what reasons (section 8.6). `null` when the program could not be loaded. | 0.7 |
 | `ffi_native` | object | per top-level Python module the program names (keys are a subset of `ffi_modules`), whether it or code it ships is native - a compiled extension (`.so`/`.pyd`/`.dylib`) or built into the interpreter - decided from files on disk **without importing** the module: `"native"` when one is found, `"unknown"` otherwise and never `"false"`, since a pure-Python module can import a native one without that showing in its own files. It reflects the packages installed on the producing machine, so it is not reproducible across machines. Empty when no module is named. | 0.9 |
+| `tools` | object or null | `names`: sorted, without repeats, the tool named as literal text in the first argument of every `tool` or `tool_secret` call anywhere in the program as loaded; `any`: true when some such call names its tool with a value built while running. `null` when the program could not be loaded | 0.13 |
 | `confinement` | object or null | what the operating system holds of a run under `safe_command`, beside the budget (section 8.7, `run_parameters.confinement`): `systems`, an object whose keys are `linux`, `macos` and `windows` and whose values each have `level` - `"full"`, `"partial"` or `"none"` - and `reason`, text saying what is not held and why, stated for a system where every mechanism the producer uses there is available; and `widened_by`, an array of `{"module", "widens", "known"}`, one for each granted Python module that widens what the producer asks of the operating system - `widens` holds `"fs"` (any path), `"net"` (any host) or `"all"` (nothing enforced), and `known` is false for a module the producer has no entry for, which it treats as `"all"`. It is derived from the budget alone and reads nothing of the producing machine, so it is reproducible across machines; what one run actually got is in that run's receipt. `null` when `safe_command`'s budget does not parse, and absent from a producer that asks nothing of the operating system. | 0.12 |
 
 Two scopes are at work, and they differ. `effects`, `functions`,
@@ -868,6 +953,19 @@ defined in the audited file. `ffi_modules`, `ffi_any`, `fs_paths` and
 `net_hosts` read the literals of every function loaded, including
 functions in imported files that the program never calls, so they can
 list more than the program's own calls reach.
+
+**A URL that begins fixed** *(0.13.0)*. For `net_hosts`, a URL argument
+names its host when it is a literal, as before, and also when only its
+beginning is fixed: `+` whose leading operands are literals, or `format`
+whose template is a literal, read up to its first `{}`. The fixed beginning
+names the host only when it matches `http://` or `https://`, then one or
+more characters that are not `/`, `?`, `#`, `\` or white space, then `/`.
+The closing `/` is required: what is joined after it is path, query or
+fragment and cannot move the request, whereas `"https://api.example.com" +
+x` can be `https://api.example.com@evil.example/`. A URL that matches
+neither way sets `any`, as before. Until 0.13.0 every URL that was not one
+literal set `any`; an audit of the same program is therefore narrower under
+0.13.0, never wider.
 
 ### 8.3 How safe_command is derived
 
@@ -1058,9 +1156,27 @@ reference's `Secret of T` writes it with empty values.
 
 | Field | Type | Meaning |
 |---|---|---|
-| `sources` | array of strings | sorted, without repeats: the name of every builtin the program as loaded reaches that returns a value the type system will not let the program emit. In the reference: `env` and `read_file_secret` (velaris-lang SPEC.md section 3.1). |
+| `sources` | array of strings | sorted, without repeats: the name of every builtin the program as loaded reaches that returns a value the type system will not let the program emit. In the reference: `env`, `read_file_secret` and, from 0.13.0, `tool_secret` (velaris-lang SPEC.md section 3.1). |
 | `declassifies` | boolean | true when the program as loaded contains at least one call to `declassify` |
 | `declassifications` | array | one object per such call, each with `reason` (the text written in the call), `function` (the name of the function the call is in) and `line` (integer). Sorted by `function`, then `line`, then `reason`. Empty when `declassifies` is false. |
+
+**A MAC under a secret key** *(0.13.0, velaris-lang 8.5.0)*. The reference
+has two operations that take such a value as a key and give back an
+ordinary one: `hmac_sha256(key, message)`, the HMAC-SHA256 of the message
+under the key as lowercase hexadecimal, and `hmac_sha256_chain(key,
+messages)`, which applies it once for each message, each result's 32 bytes
+the next key. A signature is sent in the clear, so its result carries no
+mark; that makes each a way out, and each is held as `declassify` is. It is
+an operation of the `declassify` effect (section 3.1). `declassifies` is
+true when the program as loaded contains a call to either. Each call has an
+entry in `declassifications` with `reason` the fixed text `hmac signature`,
+`function`, `line`, and `builtin`, the operation's name; an entry for
+`declassify` has no `builtin`. The key MUST be such a value and the message
+MUST NOT carry one, or the program does not compile. A consumer that reads
+only `hmac signature` reasons is reading a program that signs; a consumer
+SHOULD still read where the key comes from, because an operation over such
+a value gives such a value, and a MAC under a key a program derived from a
+credential - one character of it - can be matched against guesses.
 
 The whole field is `null` when the program could not be loaded, as when
 it does not parse; then nothing was determined. It is **not** null
@@ -1167,8 +1283,11 @@ A receipt is an in-toto Statement v1 of that type:
 | `budget` | string | the budget the run was given, in the grammar of section 4 |
 | `run_parameters` | object | `seed` (integer or null) and `freeze_time` (RFC 3339 or null), which fix the run's randomness and clock; `timeout` (seconds or null) and `max_memory_mb` (integer or null), the limits it ran under; optionally `max_read_bytes`; and `confinement`, a word for the operating-system confinement the run had - `"none"` when the budget was the only boundary. From 0.12.0 the word is a level: `"full"` when the operating system held every file, network and process limit of the budget, `"partial"` when it held some, `"none"` when it held nothing; and three optional fields say more - `confinement_reason`, text naming each limit that was not held and why (or why nothing was asked); `confinement_layers`, an array of the producer's names for the mechanisms it applied; and `os_policy_sha256`, the lowercase hex sha256 of the policy the producer derived from the budget and asked the operating system to hold, or null. A receipt written before 0.12.0 has none of the three, and its `confinement` is `"none"` or names a mechanism (section 8.9). Optionally, from 0.11.0, `profile`, the name of a profile the run was held to beyond its budget, as `"eval"` (section 8.9) |
 | `effects_used` | object or null | each effect and how many operations of it the budget let through; `null` when the producer could not tell, as when the run was stopped from outside |
-| `refusals` | array | one object per distinct refusal: `code`; `effect`, one of the eight names of section 3.1, or null; `line`; `stopped`, whether the refusal ended the run (a redirect refused under section 6 G4 does not); `times` |
-| `declassifications` | array | one object per distinct declassification: `reason`, the text written in the program; `line`; `times` |
+| `grants_used` | array | optional, from 0.13.0: one object per grant of the budget that let at least one operation through - `grant`, the grant as canonical text (section 4.7), without a count; `times`, how many operations it let through. Sorted by `grant`. It is the operator's text and MUST NOT hold the path, host, module or argument the program gave: `net:api.example.com:443`, never the URL. An operation is counted under the first grant, in the budget's order, that permits it |
+| `refusals` | array | one object per distinct refusal: `code`; `effect`, one of the nine names of section 3.1, or null; `line`; `stopped`, whether the refusal ended the run (a redirect refused under section 6 G4 does not); `times` |
+| `declassifications` | array | one object per distinct declassification: `reason`, the text written in the program; `line`; `times`. From 0.13.0 a MAC under a secret key (section 8.6) is one, with `reason` the text `hmac signature` and `key_fingerprint`: twelve lowercase hexadecimal digits by which a reader tells one key from another and the same key from run to run - in the reference, the first twelve of the sha256 of the bytes `velaris key fingerprint`, a zero byte, and the key - or the text `many`, which a producer writes for a call site once it has named sixteen keys there. It is a function of the key and MUST NOT be reversible to it for a key of a credential's entropy; a producer MUST NOT write the key or the MAC |
+| `tool_calls` | array | from 0.13.0, present only for a run that was given a manifest of tools (section 8.10): one object per place a tool was called - `tool`, its name; `line`; `times`; `secret`, whether the manifest marks its result secret; `held_to`, the budget's and the manifest's items, as canonical text, whose patterns held its arguments. It MUST NOT hold the arguments or the result |
+| `tool_ceiling` | object | from 0.13.0, present with `tool_calls`: `calls` and `cost`, the manifest's ceiling on each (a number or null); `unit`, the manifest's name for its cost unit; `calls_used` and `cost_used`, what the run spent; `manifest_sha256`, the lowercase hex sha256 of the manifest's bytes |
 | `exit` | object | `status`, the exit status the producer reported (integer or null); `outcome`, one of `ok`, `refused`, `failed`, `did_not_compile`, `timeout`, `out_of_memory`; `code`, the code of the error that ended the run, or null |
 | `stop` | object | optional, from 0.11.0: present when a stop was asked for from outside the run - `asked`, what asked; `honoured`, how it was honoured; `after_ms`, when it was asked, from the run's start; `grace_seconds` (section 8.9) |
 | `complete` | boolean | false when the run was stopped from outside before it could report. What is listed happened, and each `times` is at least the number given |
@@ -1329,6 +1448,58 @@ when it was asked, from the run's start; and `grace_seconds`. A run stopped
 at a call or loop turn has `exit.code` `E615` and `complete` true; a run
 whose worker was killed has `exit.code` `E615` and `complete` false.
 
+### 8.10 velaris.tools/1, a manifest of tools (provisional)
+
+*New in 0.13.0 (velaris-lang 8.5.0). Provisional: its fields, and what
+travels between a run and its host, may change in a minor version of this
+document until one says otherwise. The `tool` effect, its grants (sections
+3.1, 4.1 and 5.6) and what a receipt records (section 8.7) are not
+provisional.*
+
+A process that hosts a run gives it a manifest: which tools there are, and
+what the host will accept and spend.
+
+```json
+{"schema": "velaris.tools/1",
+ "tools": {
+   "search": {"description": "Look a phrase up.",
+              "arguments": {"type": "object",
+                            "properties": {"query": {"type": "string"}},
+                            "required": ["query"]},
+              "result": "text", "cost": 1}},
+ "allow": ["tool:search@20"],
+ "ceiling": {"calls": 25, "cost": 40, "unit": "credits"}}
+```
+
+| Field | Meaning |
+|---|---|
+| `tools` | an object, one entry per tool, keyed by its name (section 5.6) |
+| `tools.T.arguments` | a JSON Schema for the call's arguments, which are one object. A producer MUST refuse a manifest that uses a keyword it does not check; the reference checks `type`, `properties`, `required`, `additionalProperties`, `items`, `enum`, `const`, `minLength`, `maxLength`, `minimum`, `maximum`, `minItems` and `maxItems`, and reads `additionalProperties` as false when it is not given |
+| `tools.T.result` | `"text"` (the default) or `"secret"`: a secret result is a value the type system will not let the program emit (section 8.6), and the program MUST ask for it as one |
+| `tools.T.cost` | what one call spends, a number, 0 or more; 0 when absent. The unit is the host's |
+| `allow` | optional: `tool` items in the grammar of section 4, the host's own. A call MUST pass them and the run's budget |
+| `ceiling` | optional: `calls` and `cost`, the most one run may spend of each, and `unit`, a name for the cost unit |
+
+A call is made only when, in this order: the manifest offers the tool; the
+arguments are one JSON object the tool's schema accepts, and a tool whose
+result is secret is asked for as one; the budget's tool items and then the
+manifest's `allow` permit it (section 5.6); no count of section 5.6 is
+passed; and the ceiling's calls and cost, counting this call's `cost`,
+would not be passed. Otherwise it is refused - in the reference E320, E323,
+E321, E322 and E322 - the run ends, and the host is not asked. When the
+host's answer gives a cost, that cost is what is counted, so a run may end
+past its cost ceiling by one call's difference; the next call is refused.
+
+What a tool returns is a value like any other. Nothing in this version
+marks it as the host's words rather than the program's, so a result can
+direct what a program does inside its budget, and cannot take it outside.
+A later version will define that mark.
+
+The reference exchanges calls and answers as JSON objects, one to a line,
+on the run's standard input and output (velaris-lang EMBEDDING.md,
+`velaris.tools-door/1`). That exchange is the reference's and is not part
+of this format.
+
 ## 9. velaris.capabilities/1
 
 *Resolved in 0.3 (velaris-lang 4.0.0).* Versions 0.1 and 0.2 defined a
@@ -1444,10 +1615,17 @@ a git work tree, files git ignores. For each:
    `write_file` (write); the `net_hosts` entry (section 8.2) of the URL
    given to `fetch`, `post` or `fetch_status`, or as the second argument
    of `request`; the module given to `py`, `py_int`, `py_float`,
-   `py_json` or `py_new`, up to its first `.`. For each of the three, a
-   flag says some such argument was built while running.
+   `py_json` or `py_new`, up to its first `.`; and, from 0.13.0, the tool
+   given to `tool` or `tool_secret`. For each of the four, a flag says some
+   such argument was built while running. From 0.13.0 a URL whose
+   beginning is fixed text that holds the `/` ending its host names that
+   host (section 8.2), where fixed text is as step 4 has it.
 6. **Its grants.** For each effect e in step 3, in order:
-   - `io`, `env`, `clock`, `rand`: e.
+   - `io`, `env`, `clock`, `rand`, `declassify`: e.
+   - `tool`: one `tool:T` for each tool named, or `tool` alone when a tool
+     argument was built while running, when none was named, or when a name
+     is not one section 5.6 allows. A baseline records which tools, never
+     their arguments: a grant that holds an argument is not a baseline grant.
    - `ffi`: one `ffi:M` for each module named, or `ffi` alone when a
      module argument was built while running, when none was named, or
      when a module named is empty or holds `,`, `@`, `:` or whitespace.
@@ -1890,6 +2068,14 @@ to stop from outside, which stopped at the next call or loop turn or had its
 worker killed; and **E616**, a run the reference replayed with recorded tool
 responses that made a call the recording does not hold in that place.
 
+The reference's version 8.5.0 adds five for the `tool` effect, none of
+which a program can handle: **E320**, a call with no tool to reach - the
+run was given no manifest, or the manifest does not offer the tool;
+**E321**, a tool or an argument outside the tool grants (section 5.6);
+**E322**, a count or the manifest's ceiling passed; **E323**, arguments the
+tool's schema does not accept, or a secret result asked for as an ordinary
+one; and **E324**, a host that did not keep the reference's exchange.
+
 The reference's version 8.4.0 adds **E319**: an effect its own runtime
 attempted outside the budget, refused by the operating system's confinement.
 It is given only under the reference's fault-injection hook, which exists so
@@ -1897,6 +2083,16 @@ its suites can show the kernel refusing; no program reaches it.
 
 ## Appendix C. Changes
 
+- **0.13.0**, 2026-09-20: tracks velaris-lang 8.5.0. A ninth effect,
+  `tool` (sections 3.1, 4.1, 5.6), with a provisional manifest of tools
+  (8.10); `hmac_sha256` and `hmac_sha256_chain` as operations of
+  `declassify`, named in the audit's `secrets` with the reason `hmac
+  signature` (8.6); `tools` in the audit and the host of a URL that begins
+  fixed in `net_hosts` and in a baseline's grants (8.2, 9.3); and in a
+  receipt `grants_used`, `key_fingerprint`, `tool_calls` and `tool_ceiling`
+  (8.7). Everything valid under 0.12.0 is valid and means the same; the
+  corpus is unchanged, and cases for `tool` will join it when 8.10 stops
+  being provisional. The quoted reference text (section 2) is 8.5.0's.
 - **0.12.0**, 2026-09-19: tracks velaris-lang 8.4.0, which asks the
   operating system to hold a run's budget. **8.7**: `run_parameters.
   confinement` is a level - `full`, `partial`, `none` - and gains

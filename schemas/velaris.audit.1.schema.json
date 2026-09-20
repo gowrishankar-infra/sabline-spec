@@ -212,6 +212,15 @@
         "enum": ["native", "unknown"]
       }
     },
+    "tools": {
+      "description": "Added in 0.13 (velaris-lang 8.5). The tools the program's tool and tool_secret calls name as literal text, and whether any call names one with a value built while running. null when the program could not be loaded.",
+      "type": ["object", "null"],
+      "required": ["names", "any"],
+      "properties": {
+        "names": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "any": {"type": "boolean"}
+      }
+    },
     "secrets": {
       "description": "Added in 0.7 (velaris-lang 6.0). Which builtins handed this program a value the type system will not let it emit, whether the program ever declassifies one, and with what stated reasons (velaris-spec SPEC.md section 8.6). sources holds builtin names, sorted and without repeats - env and read_file_secret in the reference. declassifies is true when the program as loaded holds at least one declassify call, and declassifications names each one, sorted by function, then line, then reason. The whole field is null when the program could not be loaded; it is not null merely because ok is false. An implementation with no such type system writes empty values. The reasons are text a program's author wrote and nothing checks them, and the rule behind the field bounds explicit flow only.",
       "type": [
@@ -264,7 +273,7 @@
   },
   "$defs": {
     "effect_name": {
-      "description": "One of io, env, fs, net, clock, rand, ffi and - from velaris-spec 0.7 (velaris-lang 6.0) - declassify. From velaris-lang 3.3.0 the reference rejects any other identifier in a uses clause (SPEC.md 3.2, Q1 resolved in spec 0.2), and from 4.1.0 it leaves such a name out of the audit that reports the rejection too (SPEC.md 3.2, resolved in spec 0.4), so a 4.1+ producer's effects are always a subset of the effects of SPEC.md 3.1; the schema still accepts any identifier so that documents from earlier producers (2.52 onward), which could carry an unknown name, remain valid.",
+      "description": "One of io, env, fs, net, clock, rand, ffi, from velaris-spec 0.7 (velaris-lang 6.0) declassify, and from 0.13 (velaris-lang 8.5) tool. From velaris-lang 3.3.0 the reference rejects any other identifier in a uses clause (SPEC.md 3.2, Q1 resolved in spec 0.2), and from 4.1.0 it leaves such a name out of the audit that reports the rejection too (SPEC.md 3.2, resolved in spec 0.4), so a 4.1+ producer's effects are always a subset of the effects of SPEC.md 3.1; the schema still accepts any identifier so that documents from earlier producers (2.52 onward), which could carry an unknown name, remain valid.",
       "type": "string",
       "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
     },

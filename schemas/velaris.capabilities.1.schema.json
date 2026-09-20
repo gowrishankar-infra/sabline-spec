@@ -90,7 +90,8 @@
                     "clock",
                     "rand",
                     "ffi",
-                    "declassify"
+                    "declassify",
+                    "tool"
                   ]
                 }
               }
@@ -173,8 +174,14 @@
             "ffi",
             "fs",
             "net",
-            "declassify"
+            "declassify",
+            "tool"
           ]
+        },
+        {
+          "description": "One tool, by name (0.13.0): ASCII letters, digits, '_', '.' and '-', beginning with a letter or '_'. A baseline never holds an argument pattern.",
+          "type": "string",
+          "pattern": "^tool:[A-Za-z_][A-Za-z0-9_.-]*$"
         },
         {
           "description": "One Python module: text up to the first '.', no ',', '@', ':' or whitespace.",

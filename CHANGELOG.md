@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.13.0 - Tools a host offers, and a MAC under a secret key - 2026-09-20
+
+Tracks velaris-lang 8.5.0. Additive: a budget, an audit, a baseline and a
+receipt that were valid under 0.12.0 are valid and mean the same.
+
+- **A ninth effect, `tool`** (sections 3.1, 4.1 and the new 5.6): `tool`,
+  `tool:T`, `tool:T:A=P`, `tool:T@N` and `tool@N`. Section 5.6 states how a
+  pattern is matched - against the whole value, with `*` never standing for
+  the literal that follows it, a separator, white space or a control - and
+  that a held argument must be given.
+- **`velaris.tools/1`**, a manifest of tools (the new section 8.10), is
+  provisional. What travels between a run and its host is the reference's,
+  and is not part of this format.
+- **A MAC under a secret key** (section 8.6): `hmac_sha256` and
+  `hmac_sha256_chain` are operations of `declassify`, and each call is an
+  entry in the audit's `secrets.declassifications` with the reason `hmac
+  signature` and a `builtin` key.
+- **The audit** gains `tools`; `net_hosts`, and a baseline's grants (section
+  9.3), name the host of a URL whose fixed beginning holds the `/` that ends
+  the host. An audit of the same program is narrower than under 0.12.0,
+  never wider.
+- **A receipt** gains `grants_used` - what each grant let through, by the
+  grant's own text - and `key_fingerprint`, `tool_calls` and `tool_ceiling`
+  (section 8.7).
+- The schemas take `tool` wherever an effect is named, `tool:T` as a
+  baseline grant, and the receipt's and the audit's new fields.
+- The corpus is unchanged at 456 cases: cases for `tool` join it when
+  section 8.10 stops being provisional.
+- The quoted reference text (section 2) is velaris-lang 8.5.0's.
+
 ## 0.12.0 - What the operating system held - 2026-09-19
 
 Tracks velaris-lang 8.4.0, which asks the operating system to hold a run's

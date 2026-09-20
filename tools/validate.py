@@ -89,8 +89,8 @@ def parts(g: str) -> tuple:
     if g in PLAIN:
         return (g,)
     kind, _, rest = g.partition(":")
-    if kind == "ffi":
-        return ("ffi", rest or None)
+    if kind in ("ffi", "tool"):            # tool: 0.13.0, one tool by name
+        return (kind, rest or None)
     if kind == "fs":
         d, _, p = rest.partition(":")
         return ("fs", d or None, p or None)
@@ -119,7 +119,7 @@ def covers(b: tuple, c: tuple) -> bool:
         return False
     if b[0] in PLAIN:
         return True
-    if b[0] == "ffi":
+    if b[0] in ("ffi", "tool"):
         return b[1] is None or b[1] == c[1]
     if b[1] is None:
         return True
