@@ -240,8 +240,13 @@ def corpus_problems(caps) -> list:
         seen.add(doc["id"].lower())
         per_level[str(doc["level"])] += 1
         if doc["kind"] == "derive":
+            # both spellings of the version field: 0.14.0 added
+            # sabline_version beside velaris_version rather than renaming
+            # it, and the schema still requires the older one so that a
+            # document written before 0.14.0 stays valid
             body = dict(doc["expect"], schema="sabline.capabilities/1",
-                        sabline_version="0", date="2026-01-01")
+                        sabline_version="0", velaris_version="0",
+                        date="2026-01-01")
             problems += [f"{rel}: {p}" for p in capabilities_problems(caps, body)]
     problems += [f"index.json lists {i}, which has no file"
                  for i in sorted(set(listed) - {p.stem for p in on_disk})]

@@ -6,7 +6,7 @@
   "type": "object",
   "required": [
     "schema",
-    "sabline_version",
+    "velaris_version",
     "date",
     "surface",
     "programs"
@@ -17,6 +17,11 @@
     },
     "sabline_version": {
       "description": "Informative: the version of the producer that wrote the document. A checker of another version warns and does not fail for that alone.",
+      "type": "string",
+      "minLength": 1
+    },
+    "velaris_version": {
+      "description": "The name this field had until 0.14.0, when the reference implementation was renamed from Velaris to Sabline. Within version 1 a field may be added and none may disappear, so the new name was added beside this one rather than replacing it: a producer writes both with the same value, a consumer may read either, and this one stays required so that every document written before 0.14.0 is still valid. It goes in a version that says so.",
       "type": "string",
       "minLength": 1
     },

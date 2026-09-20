@@ -18,7 +18,7 @@
     "auditedAt": "2026-09-11T14:20:49Z",
     "audit": {
       "schema": "sabline.audit/1",
-      "sabline_version": "4.2.0",
+      "velaris_version": "4.2.0",
       "ok": true,
       "problems": [],
       "effects": [

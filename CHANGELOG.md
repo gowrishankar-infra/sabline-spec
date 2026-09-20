@@ -39,6 +39,20 @@ them.
   `gowrishankar-infra/sabline-lang`, on PyPI and npm as `sabline-lang`.
 - **The conformance corpus is unchanged**: 456 cases, the same ids, the
   same expectations. A case names no implementation.
+- **`velaris_version` is kept, and `sabline_version` added beside it**, in
+  `sabline.audit/1` and `sabline.capabilities/1`. It is the one field whose
+  name carried the project's. Renaming it would have made a required field
+  disappear from a version-1 document, which section 8's own rule forbids -
+  within a version fields may be added, and none changes meaning or
+  disappears without the `schema` value changing. So a producer writes both
+  with the same value, a consumer may read either, and the schemas still
+  require the older name so that every document written before 0.14.0 stays
+  valid. The new name is required of nothing. `velaris_version` goes in a
+  version that says so.
+
+  The documents in `examples/` keep `velaris_version` alone: each records
+  what a particular release wrote - 3.1.1, 4.0.0, 4.2.0 - and those wrote
+  that name and no other.
 - **The corpus keeps the names a published implementation opens**, and is
   the one part of this repository that is not renamed: `tests/index.json`
   keeps the `format` `velaris.conformance-corpus/1`, and the three schemas
