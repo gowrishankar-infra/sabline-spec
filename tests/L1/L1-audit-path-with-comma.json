@@ -46,6 +46,6 @@
       "hosts": [],
       "any": false
     },
-    "safe_command": "sabline <file> --allow fs:read:data%2Ccache.txt,io"
+    "safe_command": "velaris <file> --allow fs:read:data%2Ccache.txt,io"
   }
 }

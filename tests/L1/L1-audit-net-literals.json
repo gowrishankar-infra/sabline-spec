@@ -48,6 +48,6 @@
       ],
       "any": false
     },
-    "safe_command": "sabline <file> --allow io,net:[::1]:8080,net:api.example.com,net:api.example.com:8443"
+    "safe_command": "velaris <file> --allow io,net:[::1]:8080,net:api.example.com,net:api.example.com:8443"
   }
 }

@@ -49,6 +49,6 @@
       ],
       "any": false
     },
-    "safe_command": "sabline <file> --allow net:status.example.org"
+    "safe_command": "velaris <file> --allow net:status.example.org"
   }
 }

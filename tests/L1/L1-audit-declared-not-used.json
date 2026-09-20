@@ -44,6 +44,6 @@
       "hosts": [],
       "any": false
     },
-    "safe_command": "sabline <file> --allow io,net"
+    "safe_command": "velaris <file> --allow io,net"
   }
 }

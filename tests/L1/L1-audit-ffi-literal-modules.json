@@ -48,6 +48,6 @@
       "hosts": [],
       "any": false
     },
-    "safe_command": "sabline <file> --allow ffi:json,math,os,io"
+    "safe_command": "velaris <file> --allow ffi:json,math,os,io"
   }
 }
