@@ -65,7 +65,7 @@
         "ffi_any": {"type": "boolean"},
         "fs_paths": {"type": "object"},
         "net_hosts": {"type": "object"},
-        "safe_command": {"type": "string", "pattern": "^sabline <file> --allow .+$"},
+        "safe_command": {"description": "SPEC.md 8.3 defines the grant list after `--allow `; what comes before it is the producer's own command name, which this document does not define and a case is not compared on (0.14.0). The corpus writes the command a runner from before 0.14.0 expects, since those compare the whole string.", "type": "string", "pattern": "^\\S+ <file> --allow .+$"},
         "secrets": {"description": "SPEC.md 8.6, added in 0.7. Present only in a case that checks the field; a case written before 0.7 omits it and says nothing about it.", "type": "object", "required": ["sources", "declassifies", "declassifications"], "additionalProperties": false, "properties": {"sources": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "declassifies": {"type": "boolean"}, "declassifications": {"type": "array", "items": {"type": "object", "required": ["reason", "function", "line"], "additionalProperties": false, "properties": {"reason": {"type": "string"}, "function": {"type": "string", "minLength": 1}, "line": {"type": "integer", "minimum": 1}}}}}}
       }}
     ]},
