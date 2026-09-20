@@ -61,9 +61,9 @@
       "maximum": 100
     },
     "safe_command": {
-      "description": "'sabline <file> --allow ' followed by the grant text of SPEC.md section 8.3, or by '' when that is empty. '<file>' is literal text for the reader to replace.",
+      "description": "The producer's own command, then ' <file> --allow ', then the grant text of SPEC.md section 8.3, or '' when that is empty. '<file>' is literal text for the reader to replace. What section 8.3 defines is the grant text; the command before it is the producer's, and this pattern does not pin it - it was 'sabline <file>' until 0.14.0, and the reference itself wrote 'velaris <file>' before that. A consumer that wants the grants takes what follows '--allow '.",
       "type": "string",
-      "pattern": "^sabline <file> --allow .+$"
+      "pattern": "^\\S+ <file> --allow .+$"
     },
     "warnings": {
       "description": "Sentences for a human reader. Their wording is not part of the format; do not parse them.",

@@ -61,8 +61,10 @@ them.
   same version - refusing it would have been the rename breaking every
   document ever written, through the one file whose job is to say what a
   valid document looks like.
-- **A conformance case compares `safe_command` by its grants** (section
-  8.3), not as a whole string. What that section defines is the grant
+- **Neither a case nor the audit schema pins `safe_command`'s command**
+  (section 8.3). A case compares by the grants, not as a whole string,
+  and `velaris.audit.1.schema.json`'s pattern is `^\S+ <file> --allow .+$`
+  where it named one command. What that section defines is the grant
   list; the text before `--allow ` is the producer's own command name,
   which this document does not define. Comparing the string had required
   every implementation to be called what the reference was called - and
