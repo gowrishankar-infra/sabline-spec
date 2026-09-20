@@ -1,5 +1,5 @@
 {
-  "format": "sabline.conformance-corpus/1",
+  "format": "velaris.conformance-corpus/1",
   "generated_by": "sabline-lang build_conformance.py, from check_sandbox.py, check_library.py and check_ratchet.py",
   "levels": {
     "1": {
