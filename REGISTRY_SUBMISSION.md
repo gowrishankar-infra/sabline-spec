@@ -5,9 +5,9 @@ open.** Three steps remain, and in-toto's rules make them the
 maintainer's own (below).
 
 - Fork: <https://github.com/gowrishankar-infra/attestation>, branch
-  `velaris-capability-predicate`, commit `0f40c43`, on top of
+  `sabline-capability-predicate`, commit `0f40c43`, on top of
   in-toto/attestation `main` at `2dcd055`.
-- It adds `spec/predicates/velaris-capability.md`, the predicate written
+- It adds `spec/predicates/sabline-capability.md`, the predicate written
   to `spec/predicates/template/template.md`, and one entry, with its link,
   in the list in `spec/predicates/README.md`. That file on the branch is
   the text to review; this file does not keep a second copy.
@@ -55,7 +55,7 @@ maintainer's own (below).
 
 ## The three steps
 
-1. Read `spec/predicates/velaris-capability.md` and the list entry on
+1. Read `spec/predicates/sabline-capability.md` and the list entry on
    the branch; the policy asks that the submitter understand and can
    explain every line.
 2. Sign off, which certifies the DCO, and push:
@@ -69,12 +69,12 @@ maintainer's own (below).
    on this machine still says "Palakurthi Gowri shankar".)
 3. Write the description yourself and open the pull request:
 
-        gh pr create --repo in-toto/attestation --base main --head gowrishankar-infra:velaris-capability-predicate --title "Add Velaris Capability predicate type" --body-file DESCRIPTION.md
+        gh pr create --repo in-toto/attestation --base main --head gowrishankar-infra:sabline-capability-predicate --title "Add Sabline Capability predicate type" --body-file DESCRIPTION.md
 
 ## What the description has to state
 
-- What the predicate describes: a `velaris.audit/1` document - the
-  effects a Velaris program declares, the paths, hosts and modules it
+- What the predicate describes: a `sabline.audit/1` document - the
+  effects a Sabline program declares, the paths, hosts and modules it
   names, bounds on its file and network operations, and the narrowest
   budget to run it under - bound by digest to the source files it
   describes.
@@ -83,15 +83,15 @@ maintainer's own (below).
 - The policy questions it answers: does the program declare `net` or
   `ffi`; does it name only allowed hosts; is the budget it needs within
   what an environment grants; did the audit compile (`ok`).
-- The producer: velaris-lang 4.2.0 and later write Statements of this
-  type with `velaris attest`, unsigned.
-- Signing: velaris-lang's release workflow signs the Statement for
+- The producer: sabline-lang 4.2.0 and later write Statements of this
+  type with `sabline attest`, unsigned.
+- Signing: sabline-lang's release workflow signs the Statement for
   `examples/effects.vel` with cosign and with sigstore-python, verifies
   both, and attaches the Statement and both bundles to the release.
 - The command a reviewer runs (next section).
-- The licence: the predicate's definition (velaris-spec SPEC.md 8.5)
+- The licence: the predicate's definition (sabline-spec SPEC.md 8.5)
   and its JSON Schema are CC0 1.0; the copy at the type URI is the same
-  schema, checked by velaris-spec's `tools/check_sync.py`.
+  schema, checked by sabline-spec's `tools/check_sync.py`.
 - The AI disclosure the policy requires: the tool (Claude Code, model
   claude-opus-5), how it was used (drafting the predicate text and this
   checklist, checking in-toto's rules, running the lint and the
@@ -102,31 +102,31 @@ maintainer's own (below).
 
 With curl and cosign, from an empty directory:
 
-    curl -sSLO https://github.com/gowrishankar-infra/velaris-lang/releases/download/v4.2.0/velaris-attestation-4.2.0.intoto.json
-    curl -sSLO https://github.com/gowrishankar-infra/velaris-lang/releases/download/v4.2.0/velaris-attestation-4.2.0.cosign.sigstore.json
-    curl -sSLO https://raw.githubusercontent.com/gowrishankar-infra/velaris-lang/v4.2.0/examples/effects.vel
-    cosign verify-blob-attestation --bundle velaris-attestation-4.2.0.cosign.sigstore.json --type https://gowrishankar-infra.github.io/velaris-lang/capability/v1 --certificate-identity https://github.com/gowrishankar-infra/velaris-lang/.github/workflows/release.yml@refs/tags/v4.2.0 --certificate-oidc-issuer https://token.actions.githubusercontent.com effects.vel
+    curl -sSLO https://github.com/gowrishankar-infra/sabline-lang/releases/download/v4.2.0/sabline-attestation-4.2.0.intoto.json
+    curl -sSLO https://github.com/gowrishankar-infra/sabline-lang/releases/download/v4.2.0/sabline-attestation-4.2.0.cosign.sigstore.json
+    curl -sSLO https://raw.githubusercontent.com/gowrishankar-infra/sabline-lang/v4.2.0/examples/effects.vel
+    cosign verify-blob-attestation --bundle sabline-attestation-4.2.0.cosign.sigstore.json --type https://gowrishankar-infra.github.io/velaris-lang/capability/v1 --certificate-identity https://github.com/gowrishankar-infra/sabline-lang/.github/workflows/release.yml@refs/tags/v4.2.0 --certificate-oidc-issuer https://token.actions.githubusercontent.com effects.vel
 
 Run on 2026-09-11 with cosign v3.0.6, it prints `Verified OK`; the
 same with `4.2.1` in place of `4.2.0` does too. The first file is the
-unsigned Statement, identical to velaris-spec's
+unsigned Statement, identical to sabline-spec's
 [examples/capability-statement.json](examples/capability-statement.json)
 and to the example in the predicate's text.
 
 Verify against the raw file, not a checkout: the Statement's digest is
 of the file's bytes as committed, with LF line endings, and a git
 checkout that converts line endings (`core.autocrlf=true`, the default
-on Windows, with velaris-lang's `.gitattributes` saying `* text=auto`)
+on Windows, with sabline-lang's `.gitattributes` saying `* text=auto`)
 gives other bytes, and cosign then reports "provided artifact digest
 does not match any digest in statement".
 
 ## The type URI
 
-It is `https://velaris-lang.dev/capability/v1` (from velaris-spec 0.11.0; Statements written by velaris-lang 4.2.0 to 8.2.1, the one verified above among them, name it `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`),
-on velaris-lang's documentation site, where it resolves to the
+It is `https://velaris-lang.dev/capability/v1` (from sabline-spec 0.11.0; Statements written by sabline-lang 4.2.0 to 8.2.1, the one verified above among them, name it `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`),
+on sabline-lang's documentation site, where it resolves to the
 description and the schema. On 2026-09-11, again at the time of this
 version, `velaris.dev` answered every path with a Vercel
 `DEPLOYMENT_NOT_FOUND`, and nothing in either repository says who
 controls that domain, so it is not used. A type URI is an identifier:
-once Statements carry it, changing it is a new type. velaris-lang 4.2.0
+once Statements carry it, changing it is a new type. sabline-lang 4.2.0
 and later write this one.

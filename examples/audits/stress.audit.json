@@ -1,6 +1,6 @@
 {
-  "schema": "velaris.audit/1",
-  "velaris_version": "3.1.1",
+  "schema": "sabline.audit/1",
+  "sabline_version": "3.1.1",
   "ok": true,
   "problems": [],
   "effects": [
@@ -193,7 +193,7 @@
     }
   ],
   "proven_share": 100.0,
-  "safe_command": "velaris <file> --allow clock,env,ffi:datetime,math,sqlite3,io,net:raw.githubusercontent.com",
+  "safe_command": "sabline <file> --allow clock,env,ffi:datetime,math,sqlite3,io,net:raw.githubusercontent.com",
   "warnings": [
     "these functions transform data and promise nothing: scan_list",
     "this program calls Python modules datetime, math, sqlite3; grant exactly those with ffi:datetime,math,sqlite3 rather than plain ffi"

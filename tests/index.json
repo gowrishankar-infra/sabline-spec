@@ -1,6 +1,6 @@
 {
-  "format": "velaris.conformance-corpus/1",
-  "generated_by": "velaris-lang build_conformance.py, from check_sandbox.py, check_library.py and check_ratchet.py",
+  "format": "sabline.conformance-corpus/1",
+  "generated_by": "sabline-lang build_conformance.py, from check_sandbox.py, check_library.py and check_ratchet.py",
   "levels": {
     "1": {
       "name": "Declaration",
@@ -3675,12 +3675,12 @@
     {
       "from": "check_library.py BUDGETS deny-narrows-the-default",
       "description": "a denial with no grants narrows the default budget, which is io from 5.0",
-      "reason": "a denial with no grants narrows the runtime's default budget, which velaris-spec 4.6 leaves to the runtime"
+      "reason": "a denial with no grants narrows the runtime's default budget, which sabline-spec 4.6 leaves to the runtime"
     },
     {
       "from": "check_sandbox.py ESCAPES default-refuses-fs",
       "description": "a program that writes a file, with no --allow at all",
-      "reason": "a run given no budget is outside the format (velaris-spec 4.6); what it grants is the reference's choice, which from 5.0 is io"
+      "reason": "a run given no budget is outside the format (sabline-spec 4.6); what it grants is the reference's choice, which from 5.0 is io"
     },
     {
       "from": "check_sandbox.py ESCAPES default-refusal-names-the-effect-and-the-flag",
@@ -3690,42 +3690,42 @@
     {
       "from": "check_sandbox.py ESCAPES default-refuses-net",
       "description": "a program that reaches the network, with no --allow at all",
-      "reason": "a run given no budget is outside the format (velaris-spec 4.6); what it grants is the reference's choice, which from 5.0 is io"
+      "reason": "a run given no budget is outside the format (sabline-spec 4.6); what it grants is the reference's choice, which from 5.0 is io"
     },
     {
       "from": "check_sandbox.py ESCAPES deny-narrows-the-default",
       "description": "--deny narrows what the default granted; it does not widen it back to every effect",
-      "reason": "a denial with no grants narrows the runtime's default budget (velaris-spec 4.4, 4.6), which the format leaves to the runtime"
+      "reason": "a denial with no grants narrows the runtime's default budget (sabline-spec 4.4, 4.6), which the format leaves to the runtime"
     },
     {
       "from": "check_sandbox.py ESCAPES ffi-reach-codecs-through-json",
       "description": "reaching codecs through a granted json",
-      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); sabline-spec 5.3 binds every implementation, but this case is written against Python"
     },
     {
       "from": "check_sandbox.py ESCAPES ffi-reach-os-system-through-os",
       "description": "reaching os.system through a granted os, subprocess-free",
-      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); sabline-spec 5.3 binds every implementation, but this case is written against Python"
     },
     {
       "from": "check_sandbox.py ESCAPES ffi-reach-importlib",
       "description": "using a granted importlib to reach another module",
-      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); sabline-spec 5.3 binds every implementation, but this case is written against Python"
     },
     {
       "from": "check_sandbox.py ESCAPES ffi-reach-builtins-type",
       "description": "reaching a builtins type through a granted module's value",
-      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); sabline-spec 5.3 binds every implementation, but this case is written against Python"
     },
     {
       "from": "check_sandbox.py ESCAPES ffi-reach-globals",
       "description": "laundering through __globals__ to reach builtins",
-      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); sabline-spec 5.3 binds every implementation, but this case is written against Python"
     },
     {
       "from": "check_sandbox.py ESCAPES ffi-reach-handle-foreign-object",
       "description": "a handle exposing an object from another module",
-      "reason": "depends on Python's object model (which module a Python attribute belongs to); velaris-spec 5.3 binds every implementation, but this case is written against Python"
+      "reason": "depends on Python's object model (which module a Python attribute belongs to); sabline-spec 5.3 binds every implementation, but this case is written against Python"
     },
     {
       "from": "check_sandbox.py HONEST ffi-granted-module",
@@ -3735,7 +3735,7 @@
     {
       "from": "check_sandbox.py HONEST default-budget-is-io",
       "description": "a run with no --allow may print",
-      "reason": "a run given no budget is outside the format (velaris-spec 4.6); what it grants is the reference's choice, which from 5.0 is io"
+      "reason": "a run given no budget is outside the format (sabline-spec 4.6); what it grants is the reference's choice, which from 5.0 is io"
     },
     {
       "from": "check_sandbox.py HONEST allow-all-still-grants-everything",
@@ -3755,7 +3755,7 @@
     {
       "from": "check_sandbox.py HONEST ffi-additive",
       "description": "additive ffi: a plain ffi widens a named-module grant",
-      "reason": "needs a Python host to run the granted call; the corpus runs no host code; velaris-spec tests/L1 holds the parse of io,ffi,ffi:math"
+      "reason": "needs a Python host to run the granted call; the corpus runs no host code; sabline-spec tests/L1 holds the parse of io,ffi,ffi:math"
     },
     {
       "from": "check_sandbox.py HONEST args-not-budget",

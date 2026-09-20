@@ -1,54 +1,59 @@
-# The Velaris capability format
+# The Sabline capability format
 
-Version 0.13.0, 2026-09-20. Dedicated to the public domain under CC0 1.0;
+Version 0.14.0, 2026-09-20. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
-Reference implementation: velaris-lang,
-<https://github.com/gowrishankar-infra/velaris-lang>. This text was
-first extracted from velaris-lang 3.1.1 (commit `25d2c05`); version 0.2
-tracked velaris-lang 3.3.0, which fixed the five defects the extraction
-found; version 0.3 tracked velaris-lang 4.0.0, which reads and writes
-the baseline of section 9; version 0.4 tracked velaris-lang 4.1.0,
+Reference implementation: sabline-lang,
+<https://github.com/gowrishankar-infra/sabline-lang>. This text was
+first extracted from sabline-lang 3.1.1 (commit `25d2c05`); version 0.2
+tracked sabline-lang 3.3.0, which fixed the five defects the extraction
+found; version 0.3 tracked sabline-lang 4.0.0, which reads and writes
+the baseline of section 9; version 0.4 tracked sabline-lang 4.1.0,
 and added a conformance corpus any implementation can run, in
 [tests/](tests), with the levels of conformance in
-[CONFORMANCE.md](CONFORMANCE.md); version 0.5 tracked velaris-lang
+[CONFORMANCE.md](CONFORMANCE.md); version 0.5 tracked sabline-lang
 4.2.0, which writes the in-toto Statements of section 8.5; versions
-0.5.1 and 0.5.2 tracked velaris-lang 4.2.1, and version 0.5.3 tracked
-velaris-lang 4.3.2; none of the three changed a rule. Version 0.6.0
-tracked velaris-lang 5.0.0, which made `io` the budget a run gets when
+0.5.1 and 0.5.2 tracked sabline-lang 4.2.1, and version 0.5.3 tracked
+sabline-lang 4.3.2; none of the three changed a rule. Version 0.6.0
+tracked sabline-lang 5.0.0, which made `io` the budget a run gets when
 nobody writes one: sections 4.4 and 4.6 are restated, and one
 conformance case that assumed the old default is replaced by one that
-writes its grants down (section 10). Version 0.7.0 tracked velaris-lang
+writes its grants down (section 10). Version 0.7.0 tracked sabline-lang
 6.0.0, which added `Secret of T`: section 3.1 gains an eighth effect,
 `declassify`, and section 8.6 is new - the `secrets` object of
-`velaris.audit/1`, which says whether a program ever lets a secret out.
-Version 0.8.0 tracks velaris-lang 7.0.0, which closed a hole in that
+`sabline.audit/1`, which says whether a program ever lets a secret out.
+Version 0.8.0 tracks sabline-lang 7.0.0, which closed a hole in that
 type the same day 6.0.0 shipped; no rule of this format changes, and
 8.6 says more plainly what `declassifies: false` does and does not
-claim. Version 0.9.0 tracked velaris-lang 8.0.0: `velaris.audit/1` gains
+claim. Version 0.9.0 tracked sabline-lang 8.0.0: `sabline.audit/1` gains
 `ffi_native` (section 8.2), an added field within version 1 that says,
 per named Python module, whether native code ships with it - found from
 files on disk without importing the module. No rule of this format
 changed; 8.0.0's breaking changes are in the reference's runtime and
 error codes (Appendix B lists E204, E317 and E318), not in this format.
-Version 0.10.0 tracks velaris-lang 8.1.0: section 8.7 is new -
-`velaris.receipt/1`, a record of one run, and the in-toto predicate type
+Version 0.10.0 tracks sabline-lang 8.1.0: section 8.7 is new -
+`sabline.receipt/1`, a record of one run, and the in-toto predicate type
 that carries it, bound to the same subjects as the Statement of section
 8.5, so an audit and a receipt of one program are the before and the
 after of the same bytes. No rule of sections 3 to 7 or 9 changes.
-Version 0.11.0 tracks velaris-lang 8.3.0: both predicate types are named at
-velaris-lang.dev, a domain the reference's project holds, and each earlier
+Version 0.11.0 tracks sabline-lang 8.3.0: both predicate types are named at
+sabline.dev, a domain the reference's project holds, and each earlier
 name is accepted for verification (sections 8.5 and 8.7); a receipt gains
 `stop` and `run_parameters.profile` within version 1; and sections 8.8,
 comparing receipts, and 8.9, a run under an evaluation profile, are new. No
 rule of sections 3 to 7 or 9 changes.
-Version 0.12.0 tracks velaris-lang 8.4.0, which asks the operating system to
+Version 0.12.0 tracks sabline-lang 8.4.0, which asks the operating system to
 hold a run's budget as well: a receipt's `run_parameters.confinement` is a
 level - `full`, `partial` or `none` - with `confinement_reason`,
-`confinement_layers` and `os_policy_sha256` beside it, and `velaris.audit/1`
+`confinement_layers` and `os_policy_sha256` beside it, and `sabline.audit/1`
 gains `confinement`, both within version 1 (sections 8.2, 8.7 and 8.9). No
 rule of sections 3 to 7 or 9 changes.
-Version 0.13.0 tracks velaris-lang 8.5.0, which adds a ninth effect, `tool`
+Version 0.14.0 tracks sabline-lang 8.6.0, which renames the reference
+implementation from Velaris to Sabline and changes nothing else. The
+document formats are `sabline.*` where they were `velaris.*`, and the two
+predicate types are named at sabline.dev; every earlier name of each is
+still read as the same thing (sections 8, 8.5 and 8.7). 0.13.0 tracked
+sabline-lang 8.5.0, which added a ninth effect, `tool`
 (sections 3.1, 4.1 and 5.6, and a manifest of tools in 8.10, which is
 provisional); names the host of a URL that only begins fixed (sections 8.2
 and 9.3); and, within version 1 of each document, adds `tools` to the audit
@@ -62,25 +67,25 @@ Conformance is defined by that corpus (section 10), not by this text.
 
 This document specifies:
 
-- the eight effects a Velaris program can declare, and the rule that
+- the eight effects a Sabline program can declare, and the rule that
   makes a function's declaration cover everything a call to it can
   reach (section 3);
 - the grammar an operator uses to grant effects, narrowed to paths,
   hosts, ports, Python modules and operation counts (sections 4 and 5);
 - what a runtime enforcing a grant must refuse, and when (section 6),
   and what a grant does not bound (section 7);
-- `velaris.audit/1`, the JSON report of what a program declares and
+- `sabline.audit/1`, the JSON report of what a program declares and
   names (section 8);
-- `velaris.capabilities/1`, the JSON baseline in which a repository
+- `sabline.capabilities/1`, the JSON baseline in which a repository
   declares the capability surface its programs may have, and the
   comparison that fails a change which widens it (section 9);
-- an in-toto predicate type that carries `velaris.audit/1` with the
+- an in-toto predicate type that carries `sabline.audit/1` with the
   digests of the files audited (section 8.5);
-- `velaris.receipt/1`, a record of one run of a program that holds none
+- `sabline.receipt/1`, a record of one run of a program that holds none
   of the values it handled, and an in-toto predicate type that carries it
   with the digests of the files that ran (section 8.7).
 
-It does not specify the rest of the Velaris language - types,
+It does not specify the rest of the Sabline language - types,
 contracts, proofs, failure - or the time and memory limits a runtime
 may also impose, or any command line or library interface beyond what
 is needed to state the above. The reference implementation's own
@@ -88,13 +93,13 @@ SPEC.md, EMBEDDING.md and THREAT_MODEL.md cover those.
 
 **Conventions.** MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
 read as described in RFC 2119 and RFC 8174 when, and only when, they
-appear in capitals. "The reference" means velaris-lang 5.0.0. A
+appear in capitals. "The reference" means sabline-lang 5.0.0. A
 paragraph marked *Reference behaviour* records what the reference does
 at a point this document does not yet settle; each such point is also
 an open question in section 11. A paragraph marked *Resolved in 0.2*,
 *0.3*, *0.4*, *0.5* or *0.6* records a point that an earlier version
 left open, or stated wrongly, and that version settles, naming the
-velaris-lang release that made the reference match.
+sabline-lang release that made the reference match.
 
 Where this document and the reference disagree, that is a bug in one of
 them. Until it is resolved, the conformance corpus decides (section
@@ -117,24 +122,24 @@ them. Until it is resolved, the conformance corpus decides (section
 
 ## 2. The reference text
 
-The three sections below are copied without change from velaris-lang
+The three sections below are copied without change from sabline-lang
 SPEC.md sections 6, 7 and 7.1 - the reference's own language
 specification. They are the normative core of this document. Sections
 3 to 7 state the same rules precisely enough to implement without
 reading the reference's source, and say where the reference does
 something this text does not.
 
-`tools/check_sync.py` compares each block with velaris-lang SPEC.md and
+`tools/check_sync.py` compares each block with sabline-lang SPEC.md and
 fails if a word differs; this repository's CI runs it on every push and
-every week. A change to those sections in velaris-lang is a change this
+every week. A change to those sections in sabline-lang is a change this
 document must follow.
 
 Section numbers inside the quoted text (such as "§8" and "§12") refer to
-velaris-lang SPEC.md, not to this document.
+sabline-lang SPEC.md, not to this document.
 
-### 2.1 Evaluation (velaris-lang SPEC.md section 6)
+### 2.1 Evaluation (sabline-lang SPEC.md section 6)
 
-<!-- verbatim: velaris-lang SPEC.md "## 6. Evaluation" -->
+<!-- verbatim: sabline-lang SPEC.md "## 6. Evaluation" -->
 Evaluation is strict, left to right, depth first. Arguments are fully
 evaluated before a call. `and` and `or` short-circuit: the right side
 is not evaluated when the left decides the result. `if`/`while`
@@ -146,9 +151,9 @@ value, raises a language error with a code, or fails in the sense of
 
 <!-- end verbatim -->
 
-### 2.2 Effects (velaris-lang SPEC.md section 7)
+### 2.2 Effects (sabline-lang SPEC.md section 7)
 
-<!-- verbatim: velaris-lang SPEC.md "## 7. Effects" -->
+<!-- verbatim: sabline-lang SPEC.md "## 7. Effects" -->
 A function declares what it may do:
 
     fn save(path: Text, body: Text) uses fs { ... }
@@ -177,9 +182,9 @@ outside world.
 
 <!-- end verbatim -->
 
-### 2.3 The budget (velaris-lang SPEC.md section 7.1)
+### 2.3 The budget (sabline-lang SPEC.md section 7.1)
 
-<!-- verbatim: velaris-lang SPEC.md "### 7.1 The budget" -->
+<!-- verbatim: sabline-lang SPEC.md "### 7.1 The budget" -->
 Declaring an effect is the program's claim; the **budget** is the
 operator's decision, given as `--allow` / `--deny` on the command line
 or `allow=` in the library, and enforced by the runtime at the moment
@@ -187,8 +192,8 @@ an effect is attempted, whatever the source declares. A refusal stops
 the program and cannot be caught.
 
 An operator who writes no budget gets `io` - the console, and nothing
-else. That is the default in 5.0 for `velaris file.vel`,
-`velaris.run(source)` with no `allow`, `velaris.Pool(...)` with no
+else. That is the default in 5.0 for `sabline file.vel`,
+`sabline.run(source)` with no `allow`, `sabline.Pool(...)` with no
 `allow`, and the ceilings of both doors. Before 5.0 the first three
 granted all seven effects. `--deny` narrows whatever `--allow` gave,
 so a denial alone narrows `io`; `--allow all` is a command-line
@@ -266,7 +271,7 @@ complete list for the reference.
 `declassify` differs from the other seven in what it covers: it reaches
 nothing outside the program. It is an effect because the reference's
 type system marks certain values as ones a program may not emit
-(velaris-lang SPEC.md section 3.1, `Secret of T`), and `declassify` is
+(sabline-lang SPEC.md section 3.1, `Secret of T`), and `declassify` is
 the only operation that removes the mark. Declaring it, propagating it
 through the call graph and refusing it from a budget all work exactly
 as they do for the other seven, and nothing in sections 4 to 7 treats
@@ -332,15 +337,15 @@ A `uses` clause names effects, and the eight of section 3.1 are the
 only ones. A conforming checker MUST reject a `uses` clause naming
 anything else, before running the program, naming the effects it knows.
 
-*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
+*Resolved in 0.2 (sabline-lang 3.3.0).* Version 0.1 recorded that the
 reference accepted any identifier in a `uses` clause: `uses io, teleport`
-compiled, `velaris.audit/1` listed `teleport` among the effects, and the
+compiled, `sabline.audit/1` listed `teleport` among the effects, and the
 audit's `safe_command` became a budget that does not parse. From 3.3.0
 the reference rejects an unknown name with E300, naming the seven. This
 closes open question Q1.
 
-*Resolved in 0.4 (velaris-lang 4.1.0).* Versions 0.2 and 0.3 concluded
-from that rejection that `velaris.audit/1`'s `effects` is always a
+*Resolved in 0.4 (sabline-lang 4.1.0).* Versions 0.2 and 0.3 concluded
+from that rejection that `sabline.audit/1`'s `effects` is always a
 subset of the seven. That was true of a document whose `ok` is true,
 and not of the document that reports the E300: from 3.3.0 to 4.0.1 the
 reference still listed `teleport` in that document's `effects`,
@@ -415,7 +420,7 @@ parse, and MUST NOT drop an item it did not understand.
    is the count; sections 5.1 and 5.2 read the item without it. If what
    follows the last `@` is anything else: error.
 
-*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
+*Resolved in 0.2 (sabline-lang 3.3.0).* Version 0.1 recorded that the
 reference tested the count with Python's `str.isdigit`, which also
 accepts other Unicode digits, so `fs@٣` was a count of 3 and `fs@²`
 stopped the parser with an uncaught error instead of a budget error.
@@ -441,7 +446,7 @@ unscoped whatever else is written, in either order: `ffi,ffi:math` and
 exactly as it does for `fs` and `net`. Two `ffi:M` items grant both
 modules.
 
-*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded the reverse:
+*Resolved in 0.2 (sabline-lang 3.3.0).* Version 0.1 recorded the reverse:
 the reference restricted `ffi` to the named modules once any `ffi:M`
 appeared, so `ffi,ffi:math` granted `math` alone, against the reference
 text's "Grants are additive". Open question Q2 asked which of the two the
@@ -460,7 +465,7 @@ the effect with its scope and count. A denial cannot be scoped:
 
 When no grants are given, a denial narrows the runtime's default budget
 (4.6), which this format does not fix. For the reference that is `io`
-from velaris-lang 5.0, so `--deny net` alone leaves `io`; until 5.0 the
+from sabline-lang 5.0, so `--deny net` alone leaves `io`; until 5.0 the
 starting budget was all seven effects unscoped, so the same command
 left five. A case in the conformance corpus therefore always writes the
 grants a denial applies to.
@@ -481,10 +486,10 @@ runtime does when the operator gives no budget at all. A tool built on
 this format SHOULD require an explicit budget, or default to one that
 grants no more than `io`.
 
-From velaris-lang 5.0 the reference does the second everywhere: the
-command line (`velaris file.vel`), the library (`velaris.run(source)`
-with no `allow`), the worker pool (`velaris.Pool(...)` with no
-`allow`), the MCP tool `velaris_run` and the HTTP `POST /run` all grant
+From sabline-lang 5.0 the reference does the second everywhere: the
+command line (`sabline file.vel`), the library (`sabline.run(source)`
+with no `allow`), the worker pool (`sabline.Pool(...)` with no
+`allow`), the MCP tool `sabline_run` and the HTTP `POST /run` all grant
 `io` alone, and so do the two doors' ceilings. Until 5.0 the command
 line, the library and the pool granted all seven effects, unscoped,
 and this section recorded that; the two doors were narrowed earlier
@@ -498,8 +503,8 @@ format.
 
 The reference's two doors also have a ceiling, the most a request may
 ask for, compared under section 5.5. For the MCP server it is `io`
-unless its operator names a wider one (from velaris-lang 3.4); for the
-HTTP door it is `io` from velaris-lang 4.0, where before a door started
+unless its operator names a wider one (from sabline-lang 3.4); for the
+HTTP door it is `io` from sabline-lang 4.0, where before a door started
 without one granted all seven effects. A tool that takes budgets from
 callers SHOULD have a ceiling, and SHOULD make it no wider than `io`
 unless its operator says otherwise.
@@ -598,7 +603,7 @@ structural read above is done on the encoded text - so `@` and `/` are
 still errors as raw characters - and the host is decoded afterward. An
 IPv6 zone identifier's `%` is therefore written `%25`: `net:[fe80::1%25eth0]`.
 
-*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
+*Resolved in 0.2 (sabline-lang 3.3.0).* Version 0.1 recorded that the
 reference read `net:::1` as the host `:` at port 1 and `net:h:x` as the
 host `h:x`. From 3.3.0 an unbracketed IPv6 address is a budget error
 naming the bracket form to use, and a host with a residual `:` is an
@@ -681,7 +686,7 @@ under `ffi:os,nt` (or `ffi:os,posix`), not under `ffi:os` alone.
 
 `ffi` takes no count, and `ffi:` needs a module name.
 
-*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
+*Resolved in 0.2 (sabline-lang 3.3.0).* Version 0.1 recorded that the
 check covered only the module name X: the attribute chain was not
 checked, so anything reachable by attribute access from a granted module
 - including other modules it imported - was reachable, and
@@ -717,7 +722,7 @@ rate, or what they carry.
 
 ### 5.6 tool: names, argument patterns and counts
 
-*New in 0.13.0 (velaris-lang 8.5.0).*
+*New in 0.13.0 (sabline-lang 8.5.0).*
 
 A tool's name T and an argument's name A are ASCII letters, digits, `_`,
 `.` and `-`, beginning with a letter or `_`. A is a top-level key of the
@@ -848,7 +853,7 @@ format can say more exactly what it does not cover.
   network access, processes and environment reached through a granted
   module are not `fs`, `net` or `env` operations and are not checked
   against those grants. A grant of `ffi:os` is the whole operating
-  system as the current user. From velaris-lang 3.3.0 an `ffi:M` grant
+  system as the current user. From sabline-lang 3.3.0 an `ffi:M` grant
   is bounded to the module a call actually reaches along its attribute
   chain, so a granted module is not a door into the other modules it
   imported; but within a granted module, that module's full behaviour is
@@ -868,7 +873,7 @@ format can say more exactly what it does not cover.
   a `write` grant alone, so a write-only grant lets a program learn
   whether paths under it exist.
 - **Time, memory and processor use.** The reference offers a time limit
-  and a memory cap as settings of a run, and from velaris-lang 4.0 its
+  and a memory cap as settings of a run, and from sabline-lang 4.0 its
   doors hold both to ceilings the operator sets. They are not part of
   this format, and they have platform limits of their own (see the
   reference's THREAT_MODEL.md).
@@ -882,31 +887,31 @@ format can say more exactly what it does not cover.
   guarantee of the implementation that makes it.
 - **A run given no budget** (section 4.6).
 
-## 8. velaris.audit/1
+## 8. sabline.audit/1
 
-`velaris.audit/1` is a JSON object that describes a program before it
+`sabline.audit/1` is a JSON object that describes a program before it
 runs: what it declares, what it names, what it promises, and whether
 each promise is proven. In the reference it is what
-`velaris.audit(source).as_dict()` returns, and what the reference's MCP
-tool `velaris_audit`, the `POST /audit` endpoint of its HTTP door, its
+`sabline.audit(source).as_dict()` returns, and what the reference's MCP
+tool `sabline_audit`, the `POST /audit` endpoint of its HTTP door, its
 npm `audit()`, its CrewAI audit tool, its GitHub Action's pull request
-comment, and - from velaris-lang 3.3.0 - its command line's
+comment, and - from sabline-lang 3.3.0 - its command line's
 `audit --json` are built on; from 4.2.0 it is also the predicate of the
-in-toto Statements `velaris attest` writes (section 8.5). Its JSON
+in-toto Statements `sabline attest` writes (section 8.5). Its JSON
 Schema is
-[schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json);
+[schemas/sabline.audit.1.schema.json](schemas/sabline.audit.1.schema.json);
 [examples/audits/](examples/audits) holds four documents the reference
 produced.
 
-*Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that the
-command line was the exception: in velaris-lang 3.1.1 `velaris audit
+*Resolved in 0.2 (sabline-lang 3.3.0).* Version 0.1 recorded that the
+command line was the exception: in sabline-lang 3.1.1 `sabline audit
 FILE --json` printed an older, unversioned summary with different fields
 - `file`, `compiles`, `errors`, `effects`, `functions` as a count,
 `proven`, `checked_at_runtime`, `reaching_outside`, `can_fail`,
 `loops_unshown` as an object, `contract_coverage`, and a `safe_command`
 built from the coarse effects alone - which the schema rejected because
 it has no `schema` field. From 3.3.0 the command line prints
-`velaris.audit(source).as_dict()`, the same document as every other
+`sabline.audit(source).as_dict()`, the same document as every other
 door, and its `safe_command` is derived as section 8.3 says (so
 `examples/json_ffi.vel` gives `ffi:math,io`, not `ffi,io`). This closes
 open question Q3.
@@ -916,7 +921,7 @@ open question Q3.
 Within version 1, fields may be added. No field changes meaning or
 disappears without the `schema` value changing. A consumer MUST ignore
 fields it does not know. Fields added after version 1 was first
-released (in velaris-lang 2.52) are optional in the schema, because
+released (in sabline-lang 2.52) are optional in the schema, because
 documents from earlier producers lack them; the table says when each
 was added.
 
@@ -924,21 +929,21 @@ was added.
 
 | Field | Type | Meaning | Added |
 |---|---|---|---|
-| `schema` | string | `"velaris.audit/1"` | |
-| `velaris_version` | string | the version of the producer | |
+| `schema` | string | `"sabline.audit/1"` | |
+| `sabline_version` | string | the version of the producer | |
 | `ok` | boolean | true when the program compiled: it parsed, and the checks the reference makes before running - of `main`, effects, types and proofs - reported no problem. A file with no `main` is audited as a library and is not a problem. A proof that a promise is false (E700) makes `ok` false. | |
 | `problems` | array | one object per problem: `code` (`E` and three digits), `message`, `line` (integer), `file`, `fixes` (array of strings). Empty when `ok` is true. | |
 | `effects` | array of strings | the union of the declarations of every function defined in the audited file, sorted, without repeats. Through the transitive rule it includes everything those functions can reach in imported files. When `ok` is true, it is an upper bound on the effects a run can attempt. When `ok` is false it is whatever could be read - not a bound - and may be empty. Either way it holds only names of the seven effects: a name in a `uses` clause that is not an effect is left out (section 3.2, resolved in 0.4). | |
 | `functions` | array | one object per function defined in the audited file, in source order (inline function values are not listed): `name`; `effects`, its own declaration, sorted; `can_fail`, true when declared `or fail`; `requires` and `ensures`, each contract expression as text; `status`; `loops_unshown` (integer, added 2.62). | |
 | `functions[].status` | string | `"proven"`: every promise was proven before running, which happens only when a prover ran. `"checked at runtime"`: it has promises, not all proven. `"no promises"`: no `requires` or `ensures`. `"error"`: a problem was reported on the function's line. | |
 | `proven_share` | number or null | 100 × (functions with a promise whose status is `"proven"`) ÷ (functions with at least one `requires` or `ensures`), rounded to one decimal place; null when no function has one | |
-| `safe_command` | string | `velaris <file> --allow G`, where `<file>` is literal text for the reader to replace, and G is the grant text of section 8.3, or `''` when that is empty | |
+| `safe_command` | string | `sabline <file> --allow G`, where `<file>` is literal text for the reader to replace, and G is the grant text of section 8.3, or `''` when that is empty | |
 | `warnings` | array of strings | sentences for a human reader. Their wording is not part of the format and a consumer MUST NOT parse it. | |
 | `ffi_modules` | array of strings | sorted names, each the text up to its first `.`, of every module given as literal text in the module argument of `py`, `py_int`, `py_float`, `py_json` or `py_new`, anywhere in the program as loaded - the audited file and every file it imports | 2.60 |
-| `loops_unshown` | integer | loops in the audited file whose termination the reference's rule (velaris-lang SPEC.md section 9.5) does not show, including loops inside inline function values | 2.62 |
+| `loops_unshown` | integer | loops in the audited file whose termination the reference's rule (sabline-lang SPEC.md section 9.5) does not show, including loops inside inline function values | 2.62 |
 | `contract_coverage` | array of strings | functions in the audited file that take or return a `List`, a `Map` or a record and have no `requires` or `ensures` | 2.62 |
 | `fs_paths` | object | `read` and `write`: sorted arrays of path text, exactly as written, not resolved. `read` holds the literal first argument of every `read_file` and `file_exists` call anywhere in the program as loaded; `write`, of every `write_file` call. `read_any` and `write_any`: true when some such call's argument is not a literal. | 3.0 |
-| `net_hosts` | object | `hosts`: a sorted array. For each literal URL given as the first argument of `fetch`, `post` or `fetch_status`, or the second of `request`, anywhere in the program as loaded: `https://` is put in front if it begins with neither `http://` nor `https://`; the host is lower-cased and trailing dots removed; the entry is the host, or `host:port` when the URL writes a port. From velaris-lang 3.3.0 an IPv6 host is written in brackets (`[::1]`, `[::1]:443`), so `host:port` is never ambiguous, and any of `, @ [ ] %` in a host is percent-encoded (a `net:` grant, section 5.2). `any`: true when some such argument is not a literal, or has no host. | 3.0 (IPv6 bracketed, 3.3) |
+| `net_hosts` | object | `hosts`: a sorted array. For each literal URL given as the first argument of `fetch`, `post` or `fetch_status`, or the second of `request`, anywhere in the program as loaded: `https://` is put in front if it begins with neither `http://` nor `https://`; the host is lower-cased and trailing dots removed; the entry is the host, or `host:port` when the URL writes a port. From sabline-lang 3.3.0 an IPv6 host is written in brackets (`[::1]`, `[::1]:443`), so `host:port` is never ambiguous, and any of `, @ [ ] %` in a host is percent-encoded (a `net:` grant, section 5.2). `any`: true when some such argument is not a literal, or has no host. | 3.0 (IPv6 bracketed, 3.3) |
 | `ffi_any` | boolean | true when the module argument of some `py`, `py_int`, `py_float`, `py_json` or `py_new` call, anywhere in the program as loaded, is not a literal - a module named by a value built while running, which `ffi_modules` cannot list | 4.0 |
 | `counts` | object or null | `fs` and `net`: for each, the largest bound of section 9.4 on the operations of that effect one call to a function defined in the audited file can perform (`0` when none of them declares the effect), or `null` when the text fixes no bound or the bound exceeds 2^53. For a file whose `main` calls every other function, a bound on one run. The whole field is `null` when no bound was determined, as when `ok` is false. | 4.2 |
 | `prover` | boolean | true when a prover decided the `status` of the promises: one was present and the program compiled. False otherwise - no prover, or `ok` false - and then no `status` is `"proven"` and a `proven_share` of 0 says nothing about what a prover would prove. | 4.2 |
@@ -994,14 +999,14 @@ grants it was built from.
 
 - **It reads literals only.** A path, URL or module named by a value
   built at runtime is reported through `read_any`, `write_any`, `any`
-  and - from velaris-lang 4.0 - `ffi_any`, not listed. A program whose
+  and - from sabline-lang 4.0 - `ffi_any`, not listed. A program whose
   `ffi_modules` is `["math"]` and whose `ffi_any` is true also calls a
   module whose name it builds while running; under the `safe_command`'s
   `ffi:math` that call is refused (E311), so `safe_command` still errs
   toward refusal, and section 9 takes such a program to need unscoped
   `ffi`.
-- *Resolved in 0.3 (velaris-lang 4.0.0).* Version 0.2 recorded that
-  nothing in `velaris.audit/1` said a module was named by a computed
+- *Resolved in 0.3 (sabline-lang 4.0.0).* Version 0.2 recorded that
+  nothing in `sabline.audit/1` said a module was named by a computed
   value, so a reader of the audit was not told such a call existed.
   `ffi_any` is added within version 1, as an optional field, closing
   open question Q4. A document from a producer before 4.0 lacks it, and
@@ -1010,8 +1015,8 @@ grants it was built from.
   budget known to be enough, and not one known to be safe.** It grants
   every declared effect, `ffi` included, and a relative path in it
   resolves against the working directory of whoever runs the command.
-- *Resolved in 0.2 (velaris-lang 3.3.0).* Version 0.1 recorded that in
-  velaris-lang 3.1.1 `safe_command` was wrong in three cases: an IPv6
+- *Resolved in 0.2 (sabline-lang 3.3.0).* Version 0.1 recorded that in
+  sabline-lang 3.1.1 `safe_command` was wrong in three cases: an IPv6
   literal host written without brackets (`net:::1`) parsed as a
   different host; a path literal containing `,` or `@` produced text
   that did not parse, or parsed as something else; and an unknown name
@@ -1021,7 +1026,7 @@ grants it was built from.
   name in a `uses` clause no longer compiles (section 3.2). This closes
   open question Q5. It left one case, found in 0.4: the audit that
   reports that E300 still copied the name into `safe_command` until
-  velaris-lang 4.1.0 (section 3.2).
+  sabline-lang 4.1.0 (section 3.2).
 - **A count is a bound the text fixes, not a measurement.** When `ok`
   is true, `counts` is at least the operations any one call to a
   function defined in the file can perform (section 9.4), and may be far
@@ -1032,7 +1037,7 @@ grants it was built from.
 
 ### 8.5 The audit as an in-toto predicate
 
-*New in 0.4.* A `velaris.audit/1` document names no artifact and
+*New in 0.4.* A `sabline.audit/1` document names no artifact and
 carries no signature, so on its own it cannot say which source file it
 describes or who says so. This section defines an in-toto attestation
 predicate type that binds an audit to the digests of the files audited,
@@ -1040,20 +1045,30 @@ so that a signed in-toto Statement can say it. It closes open question
 Q11.
 
 **Predicate type:**
-<https://velaris-lang.dev/capability/v1>. That URL is where the type's
+<https://sabline.dev/capability/v1>. That URL is where the type's
 description and schema are published, on the reference's documentation
 site, and it resolves to them.
 
-**Also accepted for verification:**
-`https://gowrishankar-infra.github.io/velaris-lang/capability/v1`, this
-type's name until 0.11.0, which velaris-lang 4.2.0 to 8.2.1 wrote and whose
-address now redirects to the one above. A consumer SHOULD read a Statement
-naming it as a Statement of this type, and MUST NOT read a Statement of any
-other type as one of this type. A producer MUST write the name above.
-*Changed in 0.11.0*: the reference's project holds velaris-lang.dev, where
-the earlier name was an address under its maintainer's account name.
-`velaris.dev` has never been this type's domain, and names no type this
-document defines.
+**Also accepted for verification:** two earlier names of this same type,
+in the order they were used:
+
+- `https://velaris-lang.dev/capability/v1`, its name from 0.11.0 until
+  0.14.0, which sabline-lang 8.3.0 to 8.5.0 wrote;
+- `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`, its
+  name until 0.11.0, which sabline-lang 4.2.0 to 8.2.1 wrote.
+
+Both addresses now redirect to the one above. A consumer SHOULD read a
+Statement naming either as a Statement of this type, and MUST NOT read a
+Statement of any other type as one of this type. A producer MUST write the
+name above. Nothing is ever removed from this list: a name that was
+published and signed goes on being accepted, and a new name joins it.
+*Changed in 0.14.0*: the reference implementation was renamed from Velaris
+to Sabline, because the name Velaris belongs to an unrelated company
+(velaris.io), and its project holds sabline.dev. *Changed in 0.11.0*: the
+project took a domain of its own, where the name before that was an
+address under its maintainer's account name. Neither `velaris.dev` nor
+`velaris.io` has ever been this type's domain, and neither names any type
+this document defines.
 
 A Statement of this type is an in-toto Statement v1
 (<https://github.com/in-toto/attestation>):
@@ -1064,13 +1079,13 @@ A Statement of this type is an in-toto Statement v1
   "subject": [
     {"name": "examples/effects.vel", "digest": {"sha256": "..."}}
   ],
-  "predicateType": "https://velaris-lang.dev/capability/v1",
+  "predicateType": "https://sabline.dev/capability/v1",
   "predicate": {
-    "producer": {"name": "velaris-lang",
-                 "uri": "https://github.com/gowrishankar-infra/velaris-lang"},
-    "specification": "velaris-spec 0.5",
+    "producer": {"name": "sabline-lang",
+                 "uri": "https://github.com/gowrishankar-infra/sabline-lang"},
+    "specification": "sabline-spec 0.5",
     "auditedAt": "2026-09-11T00:00:00Z",
-    "audit": {"schema": "velaris.audit/1", "...": "..."}
+    "audit": {"schema": "sabline.audit/1", "...": "..."}
   }
 }
 ```
@@ -1081,15 +1096,15 @@ A Statement of this type is an in-toto Statement v1
   SHOULD follow, one subject each, since `ffi_modules`, `ffi_any`,
   `fs_paths` and `net_hosts` read them too (section 8.2). A producer
   MUST produce the audit from exactly the bytes the digests name.
-- **`predicate.audit`** (required): a `velaris.audit/1` document, as
+- **`predicate.audit`** (required): a `sabline.audit/1` document, as
   section 8 defines it and
-  [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json)
+  [schemas/sabline.audit.1.schema.json](schemas/sabline.audit.1.schema.json)
   checks.
 - **`predicate.producer`** (required): `name`, the implementation that
   wrote the audit, and optionally `uri`. Its version is the audit's
-  `velaris_version`.
+  `sabline_version`.
 - **`predicate.specification`** (optional): the version of this
-  document the producer followed, as `velaris-spec 0.5`.
+  document the producer followed, as `sabline-spec 0.5`.
 - **`predicate.auditedAt`** (optional): when the audit was made, RFC
   3339 in UTC, as the producer's clock says.
 - **`predicate.conformance`** (optional): `levels`, the levels of
@@ -1115,20 +1130,20 @@ program is safe to run, or that any runtime will enforce the budget in
 `safe_command`; and when `audit.ok` is false it says nothing about what
 the program may do (section 8.4).
 
-*Resolved in 0.5 (velaris-lang 4.2.0).* Version 0.4 recorded that the
+*Resolved in 0.5 (sabline-lang 4.2.0).* Version 0.4 recorded that the
 reference published the predicate type and its schema and wrote no
 Statements of it, and its example Statement was assembled by hand from
-`velaris audit FILE --json` and the file's digest. From 4.2.0 the
+`sabline audit FILE --json` and the file's digest. From 4.2.0 the
 reference writes them:
 
-- `velaris attest FILE` writes one Statement. Its subjects are FILE,
+- `sabline attest FILE` writes one Statement. Its subjects are FILE,
   then each file it imports, by the sha256 of the bytes the audit read;
   a file that changes while it is being attested is refused. Its
-  `predicate.audit` is `velaris.audit(source).as_dict()` itself, not a
+  `predicate.audit` is `sabline.audit(source).as_dict()` itself, not a
   copy, so it holds what the audit holds and nothing more. It sets
   `producer`, `specification` and `auditedAt` - from
   `SOURCE_DATE_EPOCH` when that is set - and not `conformance`.
-- `velaris attest DIR` writes one Statement for each `.vel` file under
+- `sabline attest DIR` writes one Statement for each `.vel` file under
   DIR that section 9.3 takes as a program, one to a line (JSON Lines,
   the layout of an in-toto Bundle, whose lines are envelopes once
   signed): a Statement of this type carries one audit, so a directory
@@ -1142,25 +1157,25 @@ reference writes them:
   sigstore-python, and verifies both before publishing them.
 
 [examples/capability-statement.json](examples/capability-statement.json)
-is the Statement `velaris attest examples/effects.vel` writes in
-velaris-lang at tag `v4.2.0`, with `SOURCE_DATE_EPOCH` set to that
+is the Statement `sabline attest examples/effects.vel` writes in
+sabline-lang at tag `v4.2.0`, with `SOURCE_DATE_EPOCH` set to that
 commit's time, as the release workflow runs it. It names the type by its
 earlier name, as every Statement of that release does.
 
 ### 8.6 secrets
 
-*New in 0.7 (velaris-lang 6.0.0).* `secrets` is an object added to
-`velaris.audit/1` within version 1, so a consumer that does not know
+*New in 0.7 (sabline-lang 6.0.0).* `secrets` is an object added to
+`sabline.audit/1` within version 1, so a consumer that does not know
 it ignores it (section 8.1) and a producer that does not implement the
 reference's `Secret of T` writes it with empty values.
 
 | Field | Type | Meaning |
 |---|---|---|
-| `sources` | array of strings | sorted, without repeats: the name of every builtin the program as loaded reaches that returns a value the type system will not let the program emit. In the reference: `env`, `read_file_secret` and, from 0.13.0, `tool_secret` (velaris-lang SPEC.md section 3.1). |
+| `sources` | array of strings | sorted, without repeats: the name of every builtin the program as loaded reaches that returns a value the type system will not let the program emit. In the reference: `env`, `read_file_secret` and, from 0.13.0, `tool_secret` (sabline-lang SPEC.md section 3.1). |
 | `declassifies` | boolean | true when the program as loaded contains at least one call to `declassify` |
 | `declassifications` | array | one object per such call, each with `reason` (the text written in the call), `function` (the name of the function the call is in) and `line` (integer). Sorted by `function`, then `line`, then `reason`. Empty when `declassifies` is false. |
 
-**A MAC under a secret key** *(0.13.0, velaris-lang 8.5.0)*. The reference
+**A MAC under a secret key** *(0.13.0, sabline-lang 8.5.0)*. The reference
 has two operations that take such a value as a key and give back an
 ordinary one: `hmac_sha256(key, message)`, the HMAC-SHA256 of the message
 under the key as lowercase hexadecimal, and `hmac_sha256_chain(key,
@@ -1187,7 +1202,7 @@ which is what a reader wants at that moment.
 **What it is for.** A consumer asks one question - *does this program
 ever let a secret out* - and `declassifies` answers it without running
 the program. `false` means the values those builtins returned reach
-nothing that emits them, by the static rule velaris-lang SPEC.md
+nothing that emits them, by the static rule sabline-lang SPEC.md
 section 3.1 states: no operation that emits and no operation that can
 fail takes one, every operation over one gives one, and no branch is
 taken on one. `true` means a secret may leave, and
@@ -1200,7 +1215,7 @@ taken on one. `true` means a secret may leave, and
 - It is not a non-interference result. It says nothing about what a
   program controls that is not a value - how long it runs, how much it
   allocates, whether it stops at all - nor about what an operator can
-  learn by running the same program many times. In velaris-lang 6.0.0
+  learn by running the same program many times. In sabline-lang 6.0.0
   this bullet said more: a comparison over such a value gave an
   ordinary boolean, so a program with `declassifies: false` could read
   a secret out a character at a time and print it. 7.0.0 closed that,
@@ -1215,9 +1230,9 @@ taken on one. `true` means a secret may leave, and
   each `declassify` a refusal at the moment it is reached, not a
   compile error: the program stops there.
 
-### 8.7 velaris.receipt/1, a record of one run
+### 8.7 sabline.receipt/1, a record of one run
 
-*New in 0.10.0 (velaris-lang 8.1.0).* An audit (section 8) and the
+*New in 0.10.0 (sabline-lang 8.1.0).* An audit (section 8) and the
 Statement of section 8.5 say what a program may do, before it runs.
 A receipt says what one run of it did: the budget it was given, each
 refusal, each declassification with the reason written for it, the
@@ -1226,12 +1241,14 @@ the files that ran by the same digests section 8.5 uses, so an audit of a
 program and a receipt of one of its runs can be matched by those digests.
 
 **Predicate type:**
-<https://velaris-lang.dev/receipt/v1>. That URL is where the type's
+<https://sabline.dev/receipt/v1>. That URL is where the type's
 description and schema are published, on the reference's documentation
 site. **Also accepted for verification:**
+`https://velaris-lang.dev/receipt/v1`, its name from 0.11.0 until 0.14.0,
+which sabline-lang 8.3.0 to 8.5.0 wrote, and
 `https://gowrishankar-infra.github.io/velaris-lang/receipt/v1`, its name
-until 0.11.0, which velaris-lang 8.1.0 to 8.2.1 wrote, read as section 8.5
-reads the earlier name of its type;
+until 0.11.0, which sabline-lang 8.1.0 to 8.2.1 wrote - each read as
+section 8.5 reads the earlier names of its type;
 [schemas/receipt-predicate.v1.schema.json](schemas/receipt-predicate.v1.schema.json)
 is the schema, and `tools/check_sync.py` fails if the published copy
 differs.
@@ -1246,8 +1263,8 @@ A receipt is an in-toto Statement v1 of that type:
   ],
   "predicateType": "https://velaris-lang.dev/receipt/v1",
   "predicate": {
-    "schema": "velaris.receipt/1",
-    "producer": {"name": "velaris-lang", "version": "8.1.0"},
+    "schema": "sabline.receipt/1",
+    "producer": {"name": "sabline-lang", "version": "8.1.0"},
     "wall_time_ms": 41.7,
     "budget": "clock,fs:read:/work/report.txt,fs:write:/work/report.txt,io,rand",
     "run_parameters": {"seed": null, "freeze_time": null, "timeout": null,
@@ -1271,13 +1288,13 @@ A receipt is an in-toto Statement v1 of that type:
   imported SHOULD follow, one subject each, by the sha256 of their bytes
   and named as section 8.5 names them. For the same bytes a producer
   SHOULD write the subjects a Statement of section 8.5 writes.
-- **`predicate`** is a `velaris.receipt/1` document:
+- **`predicate`** is a `sabline.receipt/1` document:
 
 | Field | Type | Meaning |
 |---|---|---|
-| `schema` | string | `"velaris.receipt/1"` |
+| `schema` | string | `"sabline.receipt/1"` |
 | `producer` | object | `name` of the implementation that ran the program, and optionally `uri` and `version` |
-| `specification` | string | optional: the version of this document the producer followed, as `velaris-spec 0.10.0` |
+| `specification` | string | optional: the version of this document the producer followed, as `sabline-spec 0.10.0` |
 | `startedAt` | string | optional: when the run started, RFC 3339 in UTC, by the producer's clock |
 | `wall_time_ms` | number | how long the run took, in milliseconds, by the producer's clock |
 | `budget` | string | the budget the run was given, in the grammar of section 4 |
@@ -1285,7 +1302,7 @@ A receipt is an in-toto Statement v1 of that type:
 | `effects_used` | object or null | each effect and how many operations of it the budget let through; `null` when the producer could not tell, as when the run was stopped from outside |
 | `grants_used` | array | optional, from 0.13.0: one object per grant of the budget that let at least one operation through - `grant`, the grant as canonical text (section 4.7), without a count; `times`, how many operations it let through. Sorted by `grant`. It is the operator's text and MUST NOT hold the path, host, module or argument the program gave: `net:api.example.com:443`, never the URL. An operation is counted under the first grant, in the budget's order, that permits it |
 | `refusals` | array | one object per distinct refusal: `code`; `effect`, one of the nine names of section 3.1, or null; `line`; `stopped`, whether the refusal ended the run (a redirect refused under section 6 G4 does not); `times` |
-| `declassifications` | array | one object per distinct declassification: `reason`, the text written in the program; `line`; `times`. From 0.13.0 a MAC under a secret key (section 8.6) is one, with `reason` the text `hmac signature` and `key_fingerprint`: twelve lowercase hexadecimal digits by which a reader tells one key from another and the same key from run to run - in the reference, the first twelve of the sha256 of the bytes `velaris key fingerprint`, a zero byte, and the key - or the text `many`, which a producer writes for a call site once it has named sixteen keys there. It is a function of the key and MUST NOT be reversible to it for a key of a credential's entropy; a producer MUST NOT write the key or the MAC |
+| `declassifications` | array | one object per distinct declassification: `reason`, the text written in the program; `line`; `times`. From 0.13.0 a MAC under a secret key (section 8.6) is one, with `reason` the text `hmac signature` and `key_fingerprint`: twelve lowercase hexadecimal digits by which a reader tells one key from another and the same key from run to run - in the reference, the first twelve of the sha256 of the bytes `sabline key fingerprint`, a zero byte, and the key - or the text `many`, which a producer writes for a call site once it has named sixteen keys there. It is a function of the key and MUST NOT be reversible to it for a key of a credential's entropy; a producer MUST NOT write the key or the MAC |
 | `tool_calls` | array | from 0.13.0, present only for a run that was given a manifest of tools (section 8.10): one object per place a tool was called - `tool`, its name; `line`; `times`; `secret`, whether the manifest marks its result secret; `held_to`, the budget's and the manifest's items, as canonical text, whose patterns held its arguments. It MUST NOT hold the arguments or the result |
 | `tool_ceiling` | object | from 0.13.0, present with `tool_calls`: `calls` and `cost`, the manifest's ceiling on each (a number or null); `unit`, the manifest's name for its cost unit; `calls_used` and `cost_used`, what the run spent; `manifest_sha256`, the lowercase hex sha256 of the manifest's bytes |
 | `exit` | object | `status`, the exit status the producer reported (integer or null); `outcome`, one of `ok`, `refused`, `failed`, `did_not_compile`, `timeout`, `out_of_memory`; `code`, the code of the error that ended the run, or null |
@@ -1319,9 +1336,9 @@ run of the same program.
 principle included; fields may be added within v1, and a consumer MUST
 ignore a field it does not know; a change of meaning is `.../receipt/v2`.
 
-*Reference behaviour (velaris-lang 8.1.0).* The reference writes a
-receipt for every run through `velaris.run` and `velaris.Pool.run`, as
-the result's `receipt`; for `velaris program.vel --receipt FILE`; and for
+*Reference behaviour (sabline-lang 8.1.0).* The reference writes a
+receipt for every run through `sabline.run` and `sabline.Pool.run`, as
+the result's `receipt`; for `sabline program.vel --receipt FILE`; and for
 a run through its HTTP door or MCP server when the request asks
 (`"receipt": true`). A run killed by its time or memory limit still has a
 receipt, marked incomplete, holding what its worker reported before it was
@@ -1333,11 +1350,11 @@ reference wrote for that run, and
 [examples/refused-receipt.json](examples/refused-receipt.json) one it
 wrote for the same program given no `fs`, which stopped at its first
 refusal. Both name the type by its earlier name, as every receipt
-velaris-lang 8.1.0 to 8.2.1 wrote does.
+sabline-lang 8.1.0 to 8.2.1 wrote does.
 
 ### 8.8 Comparing receipts
 
-*New in 0.11.0 (velaris-lang 8.3.0). The document this section describes
+*New in 0.11.0 (sabline-lang 8.3.0). The document this section describes
 is provisional.* A receipt names no path a run read and no host it reached:
 what it names is what the run was granted (`budget`), what it used
 (`effects_used`), what was refused and what was declassified. Two
@@ -1373,11 +1390,11 @@ has; a count in `effects_used` above the largest any earlier receipt holds
 for that effect; a declassification when no earlier receipt has one; and a
 declassification reason no earlier receipt holds.
 
-The reference writes the result as `velaris.receipts-diff/1`:
+The reference writes the result as `sabline.receipts-diff/1`:
 
 ```json
 {
-  "schema": "velaris.receipts-diff/1",
+  "schema": "sabline.receipts-diff/1",
   "receipt": "run.json",
   "subjects": [{"name": "task.vel", "digest": {"sha256": "..."}}],
   "against_audit": {
@@ -1413,7 +1430,7 @@ matched by their subjects, say what their signers saw.
 
 ### 8.9 A run under an evaluation profile
 
-*New in 0.11.0 (velaris-lang 8.3.0).* A receipt whose
+*New in 0.11.0 (sabline-lang 8.3.0).* A receipt whose
 `run_parameters.profile` is `"eval"` records a run held to a profile beyond
 its budget. A producer that writes that name MUST have held the run to all
 of:
@@ -1427,7 +1444,7 @@ of:
   recorded in `stop`.
 
 `run_parameters.confinement` says what operating-system confinement was
-applied, not what was asked for. *Changed in 0.12.0 (velaris-lang 8.4.0).*
+applied, not what was asked for. *Changed in 0.12.0 (sabline-lang 8.4.0).*
 It is a level - `full`, `partial` or `none` (section 8.7) - and a producer
 that writes the profile's name from 0.12.0 on MUST NOT have run the program
 at `none`: the reference refuses to start such a run. The mechanisms are
@@ -1448,9 +1465,9 @@ when it was asked, from the run's start; and `grace_seconds`. A run stopped
 at a call or loop turn has `exit.code` `E615` and `complete` true; a run
 whose worker was killed has `exit.code` `E615` and `complete` false.
 
-### 8.10 velaris.tools/1, a manifest of tools (provisional)
+### 8.10 sabline.tools/1, a manifest of tools (provisional)
 
-*New in 0.13.0 (velaris-lang 8.5.0). Provisional: its fields, and what
+*New in 0.13.0 (sabline-lang 8.5.0). Provisional: its fields, and what
 travels between a run and its host, may change in a minor version of this
 document until one says otherwise. The `tool` effect, its grants (sections
 3.1, 4.1 and 5.6) and what a receipt records (section 8.7) are not
@@ -1460,7 +1477,7 @@ A process that hosts a run gives it a manifest: which tools there are, and
 what the host will accept and spend.
 
 ```json
-{"schema": "velaris.tools/1",
+{"schema": "sabline.tools/1",
  "tools": {
    "search": {"description": "Look a phrase up.",
               "arguments": {"type": "object",
@@ -1496,16 +1513,16 @@ direct what a program does inside its budget, and cannot take it outside.
 A later version will define that mark.
 
 The reference exchanges calls and answers as JSON objects, one to a line,
-on the run's standard input and output (velaris-lang EMBEDDING.md,
-`velaris.tools-door/1`). That exchange is the reference's and is not part
+on the run's standard input and output (sabline-lang EMBEDDING.md,
+`sabline.tools-door/1`). That exchange is the reference's and is not part
 of this format.
 
-## 9. velaris.capabilities/1
+## 9. sabline.capabilities/1
 
-*Resolved in 0.3 (velaris-lang 4.0.0).* Versions 0.1 and 0.2 defined a
-provisional `velaris.capabilities/0` that no implementation read or
+*Resolved in 0.3 (sabline-lang 4.0.0).* Versions 0.1 and 0.2 defined a
+provisional `sabline.capabilities/0` that no implementation read or
 wrote. From 4.0.0 the reference writes and reads the document this
-section defines, `velaris.capabilities/1`, and the section is no longer
+section defines, `sabline.capabilities/1`, and the section is no longer
 provisional. `/1` keeps `/0`'s grant grammar, covering rule and
 per-program entries, and adds what `/0` could not express: the
 repository's whole surface, a bound on operations, the effects of each
@@ -1543,8 +1560,8 @@ A JSON object:
 
 | Field | Meaning |
 |---|---|
-| `schema` | `"velaris.capabilities/1"` |
-| `velaris_version` | the version of the producer that wrote it. Informative: a checker of another version SHOULD warn, and MUST NOT fail for that reason alone |
+| `schema` | `"sabline.capabilities/1"` |
+| `sabline_version` | the version of the producer that wrote it. Informative: a checker of another version SHOULD warn, and MUST NOT fail for that reason alone |
 | `date` | the day it was written, `YYYY-MM-DD`, UTC. Informative |
 | `surface` | the repository's surface: `grants`, an array of grants, and `counts`, an object (below) |
 | `programs` | an array of program entries, sorted by `file`, no two with the same `file` |
@@ -1582,7 +1599,7 @@ grant means the same on every machine:
 
 Within version 1, fields may be added. A consumer MUST ignore a field
 it does not know. The schema,
-[schemas/velaris.capabilities.1.schema.json](schemas/velaris.capabilities.1.schema.json),
+[schemas/sabline.capabilities.1.schema.json](schemas/sabline.capabilities.1.schema.json),
 checks the shape; it cannot check sorting, reduction or the port
 range, which `tools/validate.py` checks for the first two.
 
@@ -1610,7 +1627,7 @@ a git work tree, files git ignores. For each:
    `check`, or a parameter; or `+` of two fixed texts. Any other
    argument is *built while running*.
 5. **What its calls name**, read over every function loaded - its own
-   and every imported file's, as `velaris.audit/1` reads them (section
+   and every imported file's, as `sabline.audit/1` reads them (section
    8.2): the paths given to `read_file` and `file_exists` (read) and to
    `write_file` (write); the `net_hosts` entry (section 8.2) of the URL
    given to `fetch`, `post` or `fetch_status`, or as the second argument
@@ -1653,7 +1670,7 @@ The **surface** of a tree is the union of the grants of its programs
 that compile, reduced, and for `fs` and `net` the largest count any of
 them has, `null` exceeding every number.
 
-The reference's `velaris.audit/1` reads literals only (section 8.4);
+The reference's `sabline.audit/1` reads literals only (section 8.4);
 step 4 reads fixed text, so moving a literal into a variable bound once
 does not change what a program needs.
 
@@ -1681,13 +1698,13 @@ perform, a whole number or infinity:
   gives none. A conjunct `v < E`, `v <= E`, `v > E` or `v >= E` of C (v
   on either side) gives a bound when: v is assigned in S; every path
   through S that reaches its end moves v by exactly one step toward E
-  and assigns it nowhere else (the termination rule of velaris-lang
+  and assigns it nowhere else (the termination rule of sabline-lang
   SPEC.md section 9.5); and v's value s on entry to the loop, and E's
   value l, are known (below). The bound is then l − s for `<`,
   l − s + 1 for `<=`, s − l for `>` and s − l + 1 for `>=`, or 0 when
   that is negative. When every path through S leaves the loop by
   `return` or `fail`, the bound is 1. A `for` loop is the `while` loop
-  it stands for (velaris-lang SPEC.md section 9.5).
+  it stands for (sabline-lang SPEC.md section 9.5).
 - **Known values.** Walking a function's statements in order, a `let`
   or assignment whose value is built from whole-number literals, known
   variables, negation, `+`, `-` and `*`, or is `length` of a list
@@ -1790,17 +1807,17 @@ that would accept the widening. The reference's `--json` report names
 the rules in each finding's `rules`.
 
 A check MUST NOT pass when it cannot compare: when there is no B, B is
-not `velaris.capabilities/1`, or a grant in B is not one section 9.2
+not `sabline.capabilities/1`, or a grant in B is not one section 9.2
 allows. The reference exits 2 in these cases, 1 for a widening, and 0
 otherwise.
 
 A tool MUST NOT write a baseline that does not cover the existing one,
 unless a person asks for it in so many words - the reference's
-`velaris capabilities init` refuses to replace a baseline without
+`sabline capabilities init` refuses to replace a baseline without
 `--force` - so that every widening arrives as a change to the file, in
 review.
 
-*Informative.* The reference's `velaris review --against REF` derives
+*Informative.* The reference's `sabline review --against REF` derives
 the same for the files at a git ref, read with `git show` rather than
 checked out, and reports how the working tree differs from it,
 together with the proven share and the functions that became fallible.
@@ -1810,15 +1827,15 @@ commit after it no longer sees it, and a check against B still does.
 
 ### 9.7 Example
 
-[examples/velaris-lang.capabilities.json](examples/velaris-lang.capabilities.json)
-is what velaris-lang 4.0.0 writes for a tree holding four of its
-example programs. Each program's entry is the one velaris-lang's own
+[examples/sabline-lang.capabilities.json](examples/sabline-lang.capabilities.json)
+is what sabline-lang 4.0.0 writes for a tree holding four of its
+example programs. Each program's entry is the one sabline-lang's own
 baseline holds for it; the surface is the union of these four alone:
 
 ```json
 {
-  "schema": "velaris.capabilities/1",
-  "velaris_version": "4.0.0",
+  "schema": "sabline.capabilities/1",
+  "sabline_version": "4.0.0",
   "date": "2026-09-11",
   "surface": {
     "grants": ["clock", "env", "ffi:datetime", "ffi:math", "ffi:sqlite3",
@@ -1880,13 +1897,13 @@ reference: 444 cases, 298 at L1, 37 at L2 and 109 at L3, 5 of them
 recording the ratchet's known limits. No level requires a theorem
 prover.
 
-*Resolved in 0.4 (velaris-lang 4.1.0).* Versions 0.1 to 0.3 defined
+*Resolved in 0.4 (sabline-lang 4.1.0).* Versions 0.1 to 0.3 defined
 conformance as passing six of the reference's own suites without the
 prover - suites written against the reference's command line and
 Python library, which an implementation in another language could run
 only through an adapter (open question Q8). The corpus replaces that
 definition. It is written from three of those suites' tables by
-velaris-lang's `build_conformance.py`, and a drift test in both
+sabline-lang's `build_conformance.py`, and a drift test in both
 repositories fails when the committed corpus is not what the suites
 say. What it leaves out, and why, is in `tests/index.json` and
 CONFORMANCE.md: the cases that depend on Python's object model, and a
@@ -1898,10 +1915,10 @@ reference, beyond the corpus.
 | Suite | What it holds | Sections |
 |---|---|---|
 | `check_sandbox.py` | escape attempts against a budget given on the command line, each refused with the code it must carry (from 4.1): each effect refused; an effect hidden two helpers down; a refusal caught and carried on; the module list through `py`, `py_json`, `py_new` and a submodule path; the attribute-chain bound of section 5.3 - codecs through json, os.system through os, importlib to another module, a builtins type through a value, a `__globals__`/`__class__` traversal, a foreign object through a handle - with a deep attribute inside the granted module and a two-module grant still running; additive `fs`, `net` and `ffi`; a path outside a prefix, a write under a read grant, `..`, and a symbolic link (where the system will make one); a host outside the list, including a name when an address was granted; a port; a wildcard's parent domain; redirects to a granted and to an ungranted host; counts on `fs` and `net`; `env` under `io`; and from 4.1 `@0`, a count spent by an operation that then fails, a URL with no scheme taken as HTTPS, and an existence check under a write grant. The corpus's level 2 is written from it | 4, 5, 6 |
-| `check_library.py` | the same through the reference's library, its HTTP door's ceiling (section 5.5) and its MCP server; that the library and the server report the same audit; that `safe_command` round-trips for awkward paths and hosts (section 8.3); that every malformed budget raises a readable budget error and never a traceback (section 4.2); from 4.1, 55 budgets each held to the grants sections 4 and 5 give it, or to its refusal, and 18 programs each audited to the effect surface section 8 gives it; that the command line's `audit --json` is `velaris.audit/1` and validates against the schema (section 8); from 4.2, that a Statement `velaris attest` writes validates against in-toto's Statement v1 schema, the predicate's and the audit's, that its audit is `audit()`'s for the same program field for field, that a directory gives one Statement per file, that each digest is the sha256 of the file's bytes, and that a module named while running is carried as `ffi_any` (section 8.5). The corpus's level 1 is written from its tables | 3.2, 4, 5, 6, 8 |
+| `check_library.py` | the same through the reference's library, its HTTP door's ceiling (section 5.5) and its MCP server; that the library and the server report the same audit; that `safe_command` round-trips for awkward paths and hosts (section 8.3); that every malformed budget raises a readable budget error and never a traceback (section 4.2); from 4.1, 55 budgets each held to the grants sections 4 and 5 give it, or to its refusal, and 18 programs each audited to the effect surface section 8 gives it; that the command line's `audit --json` is `sabline.audit/1` and validates against the schema (section 8); from 4.2, that a Statement `sabline attest` writes validates against in-toto's Statement v1 schema, the predicate's and the audit's, that its audit is `audit()`'s for the same program field for field, that a directory gives one Statement per file, that each digest is the sha256 of the file's bytes, and that a module named while running is carried as `ffi_any` (section 8.5). The corpus's level 1 is written from its tables | 3.2, 4, 5, 6, 8 |
 | `check_refusals.py` | wrong programs refused with the right code, among them an undeclared effect (E300) | 3.2 |
 | `check_fallible.py` | every fallible builtin refused when its failure is ignored, and its failure catchable - the redirect failure of G4 among them | 6, 8 |
-| `check_termination.py` | the termination verdict for each of 44 adversarial loops, which `velaris.audit/1` reports as `loops_unshown` | 8 |
+| `check_termination.py` | the termination verdict for each of 44 adversarial loops, which `sabline.audit/1` reports as `loops_unshown` | 8 |
 | `check_ratchet.py` | the comparison of section 9.6, through the reference's command line, in scratch trees and real git histories: a six-commit history whose sixth commit reaches a new host three calls down, failing at that commit only, with the file, function, line and call chain named; a widening merged once and still failing against the baseline at every later commit, where a comparison with the previous commit reports nothing; widenings through an import, the standard library, a path prefix, a count, a wildcard host, a URL, path or module built while running, a new module, a new direction, and a program whose `main` is imported from outside the tree; an effect added to a function while its program's grants stay the same (W5); and changes that must pass - narrowing, reordering and reformatting, a file with no effects, a new program inside the surface, a literal moved into a variable, a function renamed or moved; the covering relation (9.5) and the operation bound (9.4) case by case; a baseline from another version (a warning), and baselines that cannot be read (exit 2); from 4.1, the baseline written for each of 14 trees, the writer refusing to replace a baseline unasked, and the five known limits of 9.8, each with the outcome the reference gives. The corpus's level 3 is written from its tables | 9 |
 
 Neither the suites nor the corpus test every rule stated here;
@@ -1913,36 +1930,36 @@ evidence about the cases it holds, and no more.
 Each question is a point where this document records the reference's
 behaviour, or where the reference's own text and behaviour disagree,
 without settling what is right. Q1, Q2, Q3, Q5 and Q6 were open in
-version 0.1 and are **resolved in 0.2** (velaris-lang 3.3.0); Q4 is
-**resolved in 0.3** (velaris-lang 4.0.0); Q8, Q9 and Q11 are
-**resolved in 0.4** (velaris-lang 4.1.0), and the part of Q11 that 0.4
-left to the reference is done in 0.5 (velaris-lang 4.2.0). They are
+version 0.1 and are **resolved in 0.2** (sabline-lang 3.3.0); Q4 is
+**resolved in 0.3** (sabline-lang 4.0.0); Q8, Q9 and Q11 are
+**resolved in 0.4** (sabline-lang 4.1.0), and the part of Q11 that 0.4
+left to the reference is done in 0.5 (sabline-lang 4.2.0). They are
 kept here, marked resolved, so the record of what changed stays with
 the question.
 
 - **Q1. Unknown names in declarations. Resolved in 0.2.** Version 0.1
   asked whether a checker should reject a `uses` name that is not one of
-  the seven. From velaris-lang 3.3.0 it does, with E300 naming the
+  the seven. From sabline-lang 3.3.0 it does, with E300 naming the
   seven; from 4.1.0 the audit reporting that E300 lists only the seven
-  too, so `velaris.audit/1`'s `effects` is always a subset of them
+  too, so `sabline.audit/1`'s `effects` is always a subset of them
   (section 3.2, resolved in 0.4).
 - **Q2. "Grants are additive" and `ffi`. Resolved in 0.2.** Version 0.1
   followed the parser, which restricted `ffi` to the named modules when
   both `ffi` and `ffi:M` appeared, against the reference text's "Grants
-  are additive". From velaris-lang 3.3.0 `ffi` is additive like `fs` and
+  are additive". From sabline-lang 3.3.0 `ffi` is additive like `fs` and
   `net` - the wider grant wins - so text and parser agree (section 4.3).
 - **Q3. The command line's audit. Resolved in 0.2.** Version 0.1
-  recorded that `velaris audit FILE --json` printed a shape that is not
-  `velaris.audit/1`. From velaris-lang 3.3.0 it prints
+  recorded that `sabline audit FILE --json` printed a shape that is not
+  `sabline.audit/1`. From sabline-lang 3.3.0 it prints
   `audit().as_dict()`, the same document as every other door (section 8).
 - **Q4. No flag for a computed module name. Resolved in 0.3.** Version
-  0.2 recorded that `velaris.audit/1` had `read_any`, `write_any` and
-  `any`, and nothing for `ffi`. From velaris-lang 4.0.0 it has `ffi_any`,
+  0.2 recorded that `sabline.audit/1` had `read_any`, `write_any` and
+  `any`, and nothing for `ffi`. From sabline-lang 4.0.0 it has `ffi_any`,
   added within version 1 (section 8.2), and section 9 takes a program
   whose `ffi_any` is true to need unscoped `ffi`.
 - **Q5. `safe_command` for IPv6 hosts and awkward paths. Resolved in
   0.2.** Version 0.1 recorded the unbracketed IPv6 form and the paths
-  that did not round-trip. From velaris-lang 3.3.0 IPv6 hosts are
+  that did not round-trip. From sabline-lang 3.3.0 IPv6 hosts are
   bracketed in the grammar, in `net_hosts` and in `safe_command`, and
   `, @ [ ] %` are percent-encoded in paths and hosts (sections 5.1, 5.2,
   8.3), so `safe_command` round-trips. Changing `net_hosts` to bracket
@@ -1950,7 +1967,7 @@ the question.
   format version, not within version 1 silently.
 - **Q6. Stray forms the parser accepts. Resolved in 0.2.** Version 0.1
   recorded a count with non-ASCII digits, `ffi:M@N`, and `ffi:` with no
-  module. From velaris-lang 3.3.0 each is a budget error (sections 4.2,
+  module. From sabline-lang 3.3.0 each is a budget error (sections 4.2,
   5.3), and no malformed budget produces a traceback.
 - **Q7. Windows paths in baselines.** Section 9.5 compares paths as
   text with `/` as the only separator, and case-sensitively. A program
@@ -1968,7 +1985,7 @@ the question.
   (`tests/README.md`), at three levels (CONFORMANCE.md), which an
   implementation in any language runs its own way (section 10).
 - **Q9. Rules stated here and not yet tested by the suite. Resolved in
-  0.4.** From velaris-lang 3.3.0 the suite covers a function argument
+  0.4.** From sabline-lang 3.3.0 the suite covers a function argument
   that is a dotted path through a granted module's attributes (section
   5.3), `ffi` together with `ffi:M` (section 4.3), and IPv6 grants
   bracketed and not (section 5.2). From 4.1.0 it covers the four 0.3
@@ -1981,19 +1998,19 @@ the question.
   count could follow any grant; the reference accepts counts only on
   `fs` and `net` (section 4.2).
 - **Q11. Attestation. Resolved in 0.4.** Version 0.3 recorded that
-  `velaris.audit/1` is unsigned and names no artifact digest. Section
+  `sabline.audit/1` is unsigned and names no artifact digest. Section
   8.5 defines an in-toto predicate type,
   `https://gowrishankar-infra.github.io/velaris-lang/capability/v1`,
   that carries an audit with the digests of the files audited, so a
   signed Statement can say which source it describes. From
-  velaris-lang 4.2.0 the reference writes Statements of it too
-  (`velaris attest`, section 8.5), and signs none. From 0.11.0 the type
+  sabline-lang 4.2.0 the reference writes Statements of it too
+  (`sabline attest`, section 8.5), and signs none. From 0.11.0 the type
   is named `https://velaris-lang.dev/capability/v1`, and the name above is
   accepted for verification (section 8.5).
 
 ## Appendix A. The reference binding
 
-Informative: which builtins of velaris-lang 4.2.1 perform which
+Informative: which builtins of sabline-lang 4.2.1 perform which
 operations. They are unchanged since 3.3.0.
 
 | Builtins | Effect | Operation | Checked beyond the effect |
@@ -2013,7 +2030,7 @@ operations. They are unchanged since 3.3.0.
 
 The reference's standard library modules (`http.vel`, `db.vel`,
 `time.vel`, `dates.vel`, `env_tools.vel`, `log.vel` and others) are
-written in Velaris, and carry the effects of the builtins they call
+written in Sabline, and carry the effects of the builtins they call
 through their declarations: a program using `http.vel` declares `net`,
 one using `db.vel` declares `ffi`.
 
@@ -2031,14 +2048,14 @@ one using `db.vel` declares `ffi`.
 Compile-time codes for the static rule: E300 (T1 and T2), E530 (T4),
 E310 (T5).
 
-The reference's `Secret of T` (velaris-lang SPEC.md section 3.1, and
+The reference's `Secret of T` (sabline-lang SPEC.md section 3.1, and
 section 8.6 here) adds four compile-time codes of its own. They are
 not part of the static rule this document specifies, and an
 implementation without such a type gives none of them: E560, a value
 that must not escape given to something that emits it or to something
 that can fail; E561, a `declassify` without a reason written in the
 call, or given something that is not one; E562, a Secret of a Secret;
-E563 (velaris-lang 7.0.0), an `if` or `while` branching on a value
+E563 (sabline-lang 7.0.0), an `if` or `while` branching on a value
 derived from one.
 
 The reference's version 8.0.0 adds three more codes of its own, none
@@ -2058,7 +2075,7 @@ is served from, or of a file there that is not a `.vel` file - its HTTP
 door and MCP server hold a program's imports to the directory they serve;
 and **E613** and **E614**, a check or an audit that ran past its time or
 its memory ceiling and was stopped, so that source written to stall the
-checker is answered rather than waited on. A `velaris.audit/1` document
+checker is answered rather than waited on. A `sabline.audit/1` document
 reporting E613 or E614 has `ok` false and determines nothing (section
 8.4).
 
@@ -2083,7 +2100,7 @@ its suites can show the kernel refusing; no program reaches it.
 
 ## Appendix C. Changes
 
-- **0.13.0**, 2026-09-20: tracks velaris-lang 8.5.0. A ninth effect,
+- **0.13.0**, 2026-09-20: tracks sabline-lang 8.5.0. A ninth effect,
   `tool` (sections 3.1, 4.1, 5.6), with a provisional manifest of tools
   (8.10); `hmac_sha256` and `hmac_sha256_chain` as operations of
   `declassify`, named in the audit's `secrets` with the reason `hmac
@@ -2093,34 +2110,34 @@ its suites can show the kernel refusing; no program reaches it.
   (8.7). Everything valid under 0.12.0 is valid and means the same; the
   corpus is unchanged, and cases for `tool` will join it when 8.10 stops
   being provisional. The quoted reference text (section 2) is 8.5.0's.
-- **0.12.0**, 2026-09-19: tracks velaris-lang 8.4.0, which asks the
+- **0.12.0**, 2026-09-19: tracks sabline-lang 8.4.0, which asks the
   operating system to hold a run's budget. **8.7**: `run_parameters.
   confinement` is a level - `full`, `partial`, `none` - and gains
   `confinement_reason`, `confinement_layers` and `os_policy_sha256`, all
-  optional, within version 1. **8.2**: `velaris.audit/1` gains `confinement`,
+  optional, within version 1. **8.2**: `sabline.audit/1` gains `confinement`,
   the level on each of three systems for a run under `safe_command` and the
   Python modules that widen it, within version 1. **8.9**: a producer that
   writes the evaluation profile's name must not have run at `none`, and the
   mechanism names move to `confinement_layers`. **Appendix B** lists the
   reference's E319. No rule of sections 3 to 7 or 9 changes, no conformance
-  case changes, and section 2 still quotes velaris-lang SPEC.md sections 6,
+  case changes, and section 2 still quotes sabline-lang SPEC.md sections 6,
   7 and 7.1 word for word.
-- **0.11.0**, 2026-09-15: tracks velaris-lang 8.3.0. **8.5 and 8.7**: the
-  predicate types are named at velaris-lang.dev, a domain the reference's
+- **0.11.0**, 2026-09-15: tracks sabline-lang 8.3.0. **8.5 and 8.7**: the
+  predicate types are named at sabline.dev, a domain the reference's
   project holds; their earlier names, on the reference's GitHub Pages
   address, are accepted for verification, and a producer writes the new
   ones. `velaris.dev` names no type of this document. **8.7**: a receipt
   gains `stop` and `run_parameters.profile` within version 1, and both
   schemas name the new types. **8.8 is new**: what a receipt compared with
   an audit, and with earlier receipts of the same subjects, can name as a
-  difference, and the reference's provisional `velaris.receipts-diff/1`.
+  difference, and the reference's provisional `sabline.receipts-diff/1`.
   **8.9 is new**: what a receipt of a run under an evaluation profile
   asserts, the confinement words the reference writes, and `stop`.
   **Appendix B** lists the reference's E615 and E616. No rule of sections 3
   to 7 or 9 changes, no conformance case changes, and section 2 still quotes
-  velaris-lang SPEC.md sections 6, 7 and 7.1 word for word.
-- **0.10.0**, 2026-09-14: tracks velaris-lang 8.1.0. **8.7 is new**:
-  `velaris.receipt/1`, a record of one run - the budget, each refusal and
+  sabline-lang SPEC.md sections 6, 7 and 7.1 word for word.
+- **0.10.0**, 2026-09-14: tracks sabline-lang 8.1.0. **8.7 is new**:
+  `sabline.receipt/1`, a record of one run - the budget, each refusal and
   declassification, the parameters, how the run ended and how long it
   took - and the in-toto predicate type `.../receipt/v1` that carries it,
   bound by digest to the subjects a Statement of 8.5 names. A receipt MUST
@@ -2130,9 +2147,9 @@ its suites can show the kernel refusing; no program reaches it.
   holds it to the copy the reference publishes. **Appendix B** lists the
   reference's E515, E613 and E614. No rule of sections 3 to 7 or 9
   changes, no conformance case changes, and section 2 still quotes
-  velaris-lang SPEC.md sections 6, 7 and 7.1 word for word.
-- **0.9.0**, 2026-09-14: tracks velaris-lang 8.0.0. No rule of this
-  format changes. `velaris.audit/1` gains one field within version 1
+  sabline-lang SPEC.md sections 6, 7 and 7.1 word for word.
+- **0.9.0**, 2026-09-14: tracks sabline-lang 8.0.0. No rule of this
+  format changes. `sabline.audit/1` gains one field within version 1
   (section 8.2, 8.1's compatibility rule): `ffi_native`, per named
   Python module whether native code ships with it, decided from files on
   disk without importing the module - `"native"` or `"unknown"`, never
@@ -2143,16 +2160,16 @@ its suites can show the kernel refusing; no program reaches it.
   it does not know (section 8.1). 8.0.0's breaking changes are in the
   reference's runtime and error codes (Appendix B adds E204, E317, E318),
   not in this format, so no conformance case changes and the corpus is
-  unchanged. Section 2 still quotes velaris-lang SPEC.md sections 6, 7
+  unchanged. Section 2 still quotes sabline-lang SPEC.md sections 6, 7
   and 7.1 word for word - those sections did not change in 8.0 - so
   `tools/check_sync.py` still passes.
-- **0.8.0**, 2026-09-12: tracks velaris-lang 7.0.0. No rule of this
+- **0.8.0**, 2026-09-12: tracks sabline-lang 7.0.0. No rule of this
   format changes: `declassify` is still the eighth effect and `secrets`
   still holds the same three fields. What changed is in the reference's
   type system, and two places here describe it. **8.6** said the rule
   behind `secrets` bounds explicit flow only, and that a program with
   `declassifies: false` could still tell a reader about a secret
-  through its own control flow. That was true of velaris-lang 6.0.0,
+  through its own control flow. That was true of sabline-lang 6.0.0,
   where a comparison over such a value gave an ordinary boolean, and it
   was a hole: with a length and a character read, a comparison in a
   loop reads the whole value out. 7.0.0 makes a comparison give another
@@ -2161,7 +2178,7 @@ its suites can show the kernel refusing; no program reaches it.
   result, and says nothing about how long a program runs or whether it
   stops. **Appendix B** lists E563 with the other three. A producer
   with no such type system is unaffected by either.
-- **0.7.0**, 2026-09-12: tracks velaris-lang 6.0.0, which added
+- **0.7.0**, 2026-09-12: tracks sabline-lang 6.0.0, which added
   `Secret of T` - a value the type system will not let a program emit.
   Two things follow for this format. **3.1** gains an eighth effect,
   `declassify`, the one operation that removes the mark: it reaches
@@ -2169,7 +2186,7 @@ its suites can show the kernel refusing; no program reaches it.
   refused exactly as the other seven are, so nothing in sections 4 to 7
   treats it specially and a budget naming it parses everywhere. An
   implementation with no such type system has no operation covered by
-  it. **8.6** is new: `velaris.audit/1` gains a `secrets` object -
+  it. **8.6** is new: `sabline.audit/1` gains a `secrets` object -
   which builtins handed the program such a value, whether it ever
   declassifies one, and with what stated reasons - so that a consumer
   can ask whether a program lets a secret out without running it. It is
@@ -2180,7 +2197,7 @@ its suites can show the kernel refusing; no program reaches it.
   cases to 455: eight L1 cases for the new field and the refusals
   around it, three L2 cases for the grant, and one L2 case reworded
   because the program it held no longer compiles.
-- **0.6.0**, 2026-09-12: tracks velaris-lang 5.0.0, which made `io` the
+- **0.6.0**, 2026-09-12: tracks sabline-lang 5.0.0, which made `io` the
   budget a run gets when nobody writes one. Two sections are restated.
   **4.6** said the reference's command line and library grant all seven
   effects, unscoped, when given no budget; from 5.0 they grant `io`,
@@ -2200,27 +2217,27 @@ its suites can show the kernel refusing; no program reaches it.
   the reference's shorthand for the seven effects, is an operator's
   command-line word and not part of the grammar of sections 4 and 5: a
   budget a caller sends over a door still cannot contain it.
-- **0.5.3**, 2026-09-12: tracks velaris-lang 4.3.2. No rule, field,
-  schema or case changes; the corpus is still 444 cases. velaris-lang
+- **0.5.3**, 2026-09-12: tracks sabline-lang 4.3.2. No rule, field,
+  schema or case changes; the corpus is still 444 cases. sabline-lang
   4.3.0 added `Money of CUR` and 4.3.1 made a proof that runs out of
   time say so; neither touches the capability format, so this version
   moves only the reference's version number and the documents that
   name it.
-- **0.5.2**, 2026-09-11: tracks velaris-lang 4.2.1. No rule, field,
+- **0.5.2**, 2026-09-11: tracks sabline-lang 4.2.1. No rule, field,
   schema or case changes. Two drafts, not sent, sit beside the
   specification: MCP_PROPOSAL.md, a capability declaration for Model
   Context Protocol tools in the grammar of sections 4 and 5, and
   NIST_SUBMISSION.md, input to NIST's AI Agent Standards Initiative.
   REGISTRY_SUBMISSION.md records that the in-toto pull request's branch
   is pushed and what is left before it is opened.
-- **0.5.1**, 2026-09-11: tracks velaris-lang 4.2.1. No rule, field,
+- **0.5.1**, 2026-09-11: tracks sabline-lang 4.2.1. No rule, field,
   schema or case changes. The author's name is written with a capital
   S - Palakurthi Gowri Shankar, given name Gowri Shankar - in
   CITATION.cff, NOTICE, README.md, PROVENANCE.md and
   REGISTRY_SUBMISSION.md. The schemas' `$id` values still point at the
   `v0.5` tag, whose schemas are these.
-- **0.5**, 2026-09-11: tracks velaris-lang 4.2.0, which writes the
-  Statements of section 8.5 (`velaris attest`). `velaris.audit/1` gains
+- **0.5**, 2026-09-11: tracks sabline-lang 4.2.0, which writes the
+  Statements of section 8.5 (`sabline attest`). `sabline.audit/1` gains
   two optional fields within version 1 (section 8.2): `counts`, the
   bound of section 9.4 on `fs` and `net` operations, `null` where none
   is determined; and `prover`, whether a prover decided the promises'
@@ -2228,26 +2245,26 @@ its suites can show the kernel refusing; no program reaches it.
   producer, and `examples/capability-statement.json` is now what it
   writes rather than a Statement assembled by hand. The predicate type,
   its URI and its schema are unchanged. The corpus is unchanged: 444
-  cases. Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and
+  cases. Section 2 still quotes sabline-lang SPEC.md sections 6, 7 and
   7.1 word for word - those sections did not change in 4.2 - so
   `tools/check_sync.py` still passes.
-- **0.4**, 2026-09-11: tracks velaris-lang 4.1.0. Conformance is a
+- **0.4**, 2026-09-11: tracks sabline-lang 4.1.0. Conformance is a
   corpus any implementation can run: `tests/`, 444 JSON cases written
   from three of the reference's suites and held to them by a drift test,
   with a runner contract (`tests/README.md`) and three levels, L1
   Declaration, L2 Enforcement and L3 Ratchet (CONFORMANCE.md); section
   10 is rewritten around it, and Q8 and Q9 are resolved. Section 8.5
-  defines an in-toto predicate type for `velaris.audit/1`, resolving
+  defines an in-toto predicate type for `sabline.audit/1`, resolving
   Q11. Sections 3.2, 8.2 and 8.3 are corrected: they said an audit's
   `effects` is always a subset of the seven and its `safe_command`
-  always parses, which was false, until velaris-lang 4.1.0, for the
+  always parses, which was false, until sabline-lang 4.1.0, for the
   audit of a program refused for naming an unknown effect. Section 2
-  still quotes velaris-lang SPEC.md sections 6, 7 and 7.1 word for word -
+  still quotes sabline-lang SPEC.md sections 6, 7 and 7.1 word for word -
   those sections did not change in 4.1 - so `tools/check_sync.py` still
   passes.
-- **0.3**, 2026-09-11: tracks velaris-lang 4.0.0, which reads and writes
-  baselines. Section 9 is no longer provisional: `velaris.capabilities/0`
-  is replaced by `velaris.capabilities/1`, which records the
+- **0.3**, 2026-09-11: tracks sabline-lang 4.0.0, which reads and writes
+  baselines. Section 9 is no longer provisional: `sabline.capabilities/0`
+  is replaced by `sabline.capabilities/1`, which records the
   repository's surface as well as each program's grants, a bound on
   `fs` and `net` operations (9.4), each function's effects, and the
   producer's version and date; the derivation (9.3) reads fixed text,
@@ -2256,24 +2273,24 @@ its suites can show the kernel refusing; no program reaches it.
   comparison (9.6) is stated as five rules, W1 to W5, with a table of
   what widens for each kind of scope, and the rule that a check
   compares with the baseline and nothing else. Resolves Q4:
-  `velaris.audit/1` gains `ffi_any` (section 8.2). Section 4.6 records
+  `sabline.audit/1` gains `ffi_any` (section 8.2). Section 4.6 records
   that the reference's HTTP door has had an `io` ceiling by default
   since 4.0; section 10 adds `check_ratchet.py` to the conformance
-  suite. Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and
+  suite. Section 2 still quotes sabline-lang SPEC.md sections 6, 7 and
   7.1 word for word - those sections did not change in 4.0 - so
   `tools/check_sync.py` still passes.
-- **0.2**, 2026-09-11: tracks velaris-lang 3.3.0, which fixed the five
+- **0.2**, 2026-09-11: tracks sabline-lang 3.3.0, which fixed the five
   defects the 0.1 extraction found. Resolves Q1 (an unknown name in a
   `uses` clause is rejected, section 3.2), Q2 (`ffi` grants are additive;
   the wider grant wins, section 4.3), Q3 (the command line's
-  `audit --json` emits `velaris.audit/1`, section 8), Q5 (`safe_command`
+  `audit --json` emits `sabline.audit/1`, section 8), Q5 (`safe_command`
   and `net_hosts` bracket IPv6, and the escaping rule holds `,`, `@` and
   the rest in paths and hosts, sections 5.1, 5.2, 8.3, 8.4), and Q6
   (a non-ASCII count digit, `ffi:M@N` and `ffi:` with no module are
   budget errors, sections 4.2, 5.3). Adds the percent-encoding escaping
   rule to sections 5.1 and 5.2. Notes in Q9 the rules the suite now
-  covers. Section 2 still quotes velaris-lang SPEC.md sections 6, 7 and
+  covers. Section 2 still quotes sabline-lang SPEC.md sections 6, 7 and
   7.1 word for word - those sections did not change - so
   `tools/check_sync.py` still passes.
-- **0.1**, 2026-09-11: first version, extracted from velaris-lang
+- **0.1**, 2026-09-11: first version, extracted from sabline-lang
   3.1.1.

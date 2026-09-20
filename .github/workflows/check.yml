@@ -1,10 +1,10 @@
 name: check
 
 # Validate the schemas, the examples and the conformance corpus, and the
-# baseline velaris-lang commits for itself; fail if the sections
-# SPEC.md quotes from velaris-lang, or the predicate schema it
-# publishes, have drifted from velaris-lang's; fail if the corpus is
-# not what velaris-lang's suites say it is; and run the reference
+# baseline sabline-lang commits for itself; fail if the sections
+# SPEC.md quotes from sabline-lang, or the predicate schema it
+# publishes, have drifted from sabline-lang's; fail if the corpus is
+# not what sabline-lang's suites say it is; and run the reference
 # implementation against the corpus. Weekly as well as on push, because
 # the drift would start in the other repository.
 
@@ -25,15 +25,15 @@ jobs:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5
         with:
-          repository: gowrishankar-infra/velaris-lang
-          path: velaris-lang
+          repository: gowrishankar-infra/sabline-lang
+          path: sabline-lang
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
         with:
           python-version: "3.12"
       - run: pip install jsonschema==4.26.0
-      - run: python tools/validate.py --capabilities velaris-lang/velaris.capabilities
-      - run: python tools/check_sync.py velaris-lang/SPEC.md
-      - name: The corpus is what velaris-lang's suites say (drift test)
-        run: python velaris-lang/build_conformance.py --check tests
+      - run: python tools/validate.py --capabilities sabline-lang/sabline.capabilities
+      - run: python tools/check_sync.py sabline-lang/SPEC.md
+      - name: The corpus is what sabline-lang's suites say (drift test)
+        run: python sabline-lang/build_conformance.py --check tests
       - name: The reference implementation passes the corpus at L1, L2 and L3
-        run: python velaris-lang/velaris.py conformance --corpus tests
+        run: python sabline-lang/sabline.py conformance --corpus tests

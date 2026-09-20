@@ -1,17 +1,17 @@
 # The conformance corpus
 
-Cases an implementation of the Velaris capability format runs to show
+Cases an implementation of the Sabline capability format runs to show
 it conforms: one JSON file per case, each with what goes in and what
-must come out. No case needs velaris-lang or Python. An implementation
+must come out. No case needs sabline-lang or Python. An implementation
 reads the files, runs each case its own way, and reports pass or fail
 for each. [CONFORMANCE.md](../CONFORMANCE.md) says which cases make up
 which level and what a claim of conformance says; this file is the
 runner contract - how each kind of case is run and compared.
 
-The corpus is generated. velaris-lang's `build_conformance.py` writes
+The corpus is generated. sabline-lang's `build_conformance.py` writes
 it from the tables of three of that repository's suites -
 `check_sandbox.py`, `check_library.py` and `check_ratchet.py` - where
-each entry is also asserted against velaris-lang. Each case's `from`
+each entry is also asserted against sabline-lang. Each case's `from`
 names its entry. Do not edit a case by hand: change the suite, and
 regenerate. A drift test in both repositories' CI regenerates the
 corpus and fails when the result differs from what is committed here.
@@ -70,8 +70,8 @@ present and empty is the empty budget.
 A case that gives `deny` always gives `allow` too. What a denial alone
 narrows is the runtime's default budget, which SPEC.md 4.6 leaves to
 the runtime, so no case makes an implementation's default part of the
-test. (Until velaris-spec 0.6.0 one case did, applying a denial to all
-seven effects; the reference's default changed in velaris-lang 5.0 and
+test. (Until sabline-spec 0.6.0 one case did, applying a denial to all
+seven effects; the reference's default changed in sabline-lang 5.0 and
 the case was rewritten to write its grants down.)
 
 - `valid: false`: the implementation must refuse the budget as a whole.
@@ -87,12 +87,12 @@ the case was rewritten to write its grants down.)
 
 ### `audit` (level 1)
 
-`input`: `files`, a map of file names to Velaris source, and `entry`,
+`input`: `files`, a map of file names to Sabline source, and `entry`,
 the file to audit. Write the files into an empty directory and produce
-the file's `velaris.audit/1` document (SPEC.md 8). Every document, in
+the file's `sabline.audit/1` document (SPEC.md 8). Every document, in
 every audit case, must:
 
-1. validate against `../schemas/velaris.audit.1.schema.json`;
+1. validate against `../schemas/sabline.audit.1.schema.json`;
 2. have an `effects` that is sorted, has no repeats, and holds only the
    seven effect names;
 3. have a `safe_command` whose grant text - everything after
@@ -150,12 +150,12 @@ shows that the program did run up to the refused operation.
 
 ### `derive` (level 3)
 
-`input`: `tree`, a map of file names to Velaris source, and `root`, the
+`input`: `tree`, a map of file names to Sabline source, and `root`, the
 directory of the tree to record (`.` for the whole tree). Write the
 tree, and write the baseline for `root` with the implementation's own
 writer (SPEC.md 9.2 to 9.4). The document must validate against
-`../schemas/velaris.capabilities.1.schema.json`, and its `surface` and
-`programs` must equal `expect` exactly; `velaris_version` and `date`
+`../schemas/sabline.capabilities.1.schema.json`, and its `surface` and
+`programs` must equal `expect` exactly; `sabline_version` and `date`
 are the writer's own and are not compared.
 
 ### `check` (level 3)
@@ -163,7 +163,7 @@ are the writer's own and are not compared.
 `input`: `tree`, `root`, `baseline` and `change`. `expect`: a verdict.
 
 1. Write the tree.
-2. Put the baseline at `<root>/velaris.capabilities`:
+2. Put the baseline at `<root>/sabline.capabilities`:
    - `{"from_tree": true, "edit": E}`: write it with the
      implementation's own writer from the tree as it is, then apply `E`
      when it is not null (below);
@@ -174,7 +174,7 @@ are the writer's own and are not compared.
 4. Check `root` against its baseline (SPEC.md 9.6) and compare the
    verdict.
 
-An edit is what a person does to the file: `velaris_version`, when
+An edit is what a person does to the file: `sabline_version`, when
 given, replaces the document's; each key given under `surface` replaces
 that key of the surface; for each program named under `programs`, each
 key given replaces that key of the program's entry.
@@ -243,14 +243,14 @@ or null for no bound.
 - `symlink`: the case needs a symbolic link in its fixture.
 - `stdlib`: the case's program imports the reference's standard
   library by name (`import "std.vel"`, `import "http.vel" as http`).
-  The library is Velaris source, in velaris-lang's `stdlib/`; an
+  The library is Sabline source, in sabline-lang's `stdlib/`; an
   implementation that provides it runs the case, and one that does not
   skips it.
 
 ## Known limits
 
 Five `check` cases carry a `known_limit`: the ratchet's limits, listed
-in velaris-lang's CHANGELOG (4.0, "What the ratchet cannot do") and in
+in sabline-lang's CHANGELOG (4.0, "What the ratchet cannot do") and in
 SPEC.md 9.8. Each records what the reference does today - two changes
 that widen and pass, three that do not widen and fail - and the case
 expects that outcome, so that another implementation matches it rather
@@ -260,13 +260,13 @@ in review. A known-limit case is required like any other.
 ## The report
 
 A runner reports one result per case. The reference writes its report
-with `velaris conformance --json`; another runner may write the same
+with `sabline conformance --json`; another runner may write the same
 shape:
 
 ```json
 {
-  "schema": "velaris.conformance/1",
-  "implementation": {"name": "velaris-lang", "version": "4.2.1"},
+  "schema": "sabline.conformance/1",
+  "implementation": {"name": "sabline-lang", "version": "4.2.1"},
   "corpus": "where the corpus was read from",
   "levels_run": [1, 2, 3],
   "levels": {"1": {"name": "Declaration", "cases": 298, "passed": 298,
@@ -301,14 +301,14 @@ tables that is not a case, with the reason. Thirteen, all from
 
 Not scenarios, and so not listed there: what `check_ratchet.py` asserts
 about the reference's own interfaces beyond the verdict - the call
-chain and line a finding names, `velaris review` and its risk word, the
-SARIF log, the text of warnings and notes, `velaris fmt` - and what
+chain and line a finding names, `sabline review` and its risk word, the
+SARIF log, the text of warnings and notes, `sabline fmt` - and what
 `check_library.py` asserts about the reference's library, doors and MCP
 server.
 
 ## The language the cases use
 
-The programs are Velaris (velaris-lang SPEC.md); a runner needs enough
+The programs are Sabline (sabline-lang SPEC.md); a runner needs enough
 of the language to check and run them. Level 2's programs use
 functions with `uses` clauses and `or fail`, `requires` and `ensures`
 (in one case), `let` with and without a type, assignment, `if`,

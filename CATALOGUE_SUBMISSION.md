@@ -1,4 +1,4 @@
-# Submitting Velaris to agentlanguages.dev
+# Submitting Sabline to agentlanguages.dev
 
 A draft for the author. **Nothing has been sent.** No fork, no branch,
 no pull request, no email. What follows is what the catalogue asks for,
@@ -9,7 +9,7 @@ The catalogue: *Agent Languages*, edited by Alasdair Allan,
 <https://agentlanguages.dev>, mirrored at
 <https://research.tedneward.com/places/agentlanguages.html>. Source:
 <https://github.com/aallan/agentlanguages>. It tracked 41 projects at
-reading. Velaris is not among them.
+reading. Sabline is not among them.
 
 ## 1. What it asks for
 
@@ -18,7 +18,7 @@ It is a pull request, not a form and not an email. From CONTRIBUTING.md:
 1. Fork <https://github.com/aallan/agentlanguages>.
 2. Add **one** Markdown file at `src/content/languages/<slug>.md`. The
    filename is the URL slug: lowercase, hyphen-separated, no spaces.
-   For Velaris that is `src/content/languages/velaris.md`.
+   For Sabline that is `src/content/languages/sabline.md`.
 3. Write a body. "A non-empty body renders a detail page at
    `/languages/<slug>/`, and in practice every entry in the catalogue
    has one" - treat it as expected, not optional. 200 or more words
@@ -26,12 +26,12 @@ It is a pull request, not a form and not an email. From CONTRIBUTING.md:
 4. Open the pull request using the new-language template.
 
 **Inclusion criteria.** A project qualifies if it is "designed for
-LLMs/agents to author code". The signals it lists that Velaris meets:
+LLMs/agents to author code". The signals it lists that Sabline meets:
 mechanically checkable contracts (requires/ensures, SMT verification);
 agent-coordination primitives (it names "capability-gated effects" and
 "hash-chained evidence bundles" explicitly); and agent-facing tooling
 shipped with the compiler (structured-JSON diagnostics, MCP servers).
-A tool that merely *uses* an LLM at run time is out of scope; Velaris
+A tool that merely *uses* an LLM at run time is out of scope; Sabline
 is a language, so this is not a problem.
 
 **Camp.** Self-classify, and justify in the PR thread. The maintainer
@@ -56,7 +56,7 @@ submitter's, and every edit is explained in the thread.
 
 **Licence.** Entries are CC BY 4.0; code is MIT. Opening a pull request
 agrees to publication under those terms, and the author keeps copyright.
-Note that velaris-spec is CC0 and velaris-lang is MIT, so there is no
+Note that sabline-spec is CC0 and sabline-lang is MIT, so there is no
 conflict in submitting a description of them under CC BY 4.0.
 
 ## 2. Frontmatter, filled in
@@ -70,12 +70,12 @@ the four nearest projects found in the prior-art read (PRIOR_ART.md,
 
 ```yaml
 ---
-name: Velaris
+name: Sabline
 camp: verification
 spans_camps: [orchestration]
 one_liner: "Effects declared in signatures, a budget the operator writes and the runtime refuses against, and a committed baseline for a repository's capability surface."
-url: https://github.com/gowrishankar-infra/velaris-lang
-repo: gowrishankar-infra/velaris-lang
+url: https://github.com/gowrishankar-infra/sabline-lang
+repo: gowrishankar-infra/sabline-lang
 paper: null
 author: Palakurthi Gowri Shankar
 implementation_language: Python
@@ -98,27 +98,27 @@ crossrefs:
   - slug: boruna
     name: Boruna
     camp: orchestration
-    relation: "Same diagnosis, and the closest neighbour here. Both declare effects on the function and gate them at run time against an operator's policy. Boruna records the run - hash-chained evidence bundles that replay to identical outputs - where Velaris records the source text, as a separately published format with an in-toto predicate and SARIF output. Boruna parses ensures without enforcing it and has no prover; Velaris discharges contracts with Z3. Boruna grants nothing by default, where Velaris without a budget grants io - the console alone - since velaris-lang 5.0, and granted all seven effects before it."
+    relation: "Same diagnosis, and the closest neighbour here. Both declare effects on the function and gate them at run time against an operator's policy. Boruna records the run - hash-chained evidence bundles that replay to identical outputs - where Sabline records the source text, as a separately published format with an in-toto predicate and SARIF output. Boruna parses ensures without enforcing it and has no prover; Sabline discharges contracts with Z3. Boruna grants nothing by default, where Sabline without a budget grants io - the console alone - since sabline-lang 5.0, and granted all seven effects before it."
   - slug: thermite
     name: Thermite
     camp: verification
-    relation: "Nearest on verification, and ahead of it: req/ens/fx on every function, obligations settled separately on a five-rung ladder across Verus, Z3 and Lean, against Velaris's single Z3 tier. The divide is who writes the policy. Thermite derives a seccomp filter from the program's own fx clauses; a Velaris budget is written by the operator, may be narrower than what the program declares, and is refused against at each operation."
+    relation: "Nearest on verification, and ahead of it: req/ens/fx on every function, obligations settled separately on a five-rung ladder across Verus, Z3 and Lean, against Sabline's single Z3 tier. The divide is who writes the policy. Thermite derives a seccomp filter from the program's own fx clauses; a Sabline budget is written by the operator, may be narrower than what the program declares, and is refused against at each operation."
   - slug: vera
     name: Vera
     camp: verification
-    relation: "The same verification shape reached independently: mandatory requires/ensures/effects, Z3 where it decides and a compiled runtime guard where it does not, a conformance corpus and a written specification. Vera declares and checks effects but bounds no paths or hosts at run time and keeps no audit record; Velaris adds the operator's budget and a published document of the declared surface. Vera's literal-provenance rule for SQL has no counterpart in Velaris."
+    relation: "The same verification shape reached independently: mandatory requires/ensures/effects, Z3 where it decides and a compiled runtime guard where it does not, a conformance corpus and a written specification. Vera declares and checks effects but bounds no paths or hosts at run time and keeps no audit record; Sabline adds the operator's budget and a published document of the declared surface. Vera's literal-provenance rule for SQL has no counterpart in Sabline."
   - slug: ailang
     name: AILANG
     camp: verification
-    relation: "Same arrangement, different granularity. Both put effects in the signature and have the operator grant them outside the program - AILANG at the command line with --caps, not wideable from within. AILANG grants whole categories; a Velaris grant is scoped to paths, hosts, modules and operation counts. AILANG has no contracts, no prover and no audit record."
+    relation: "Same arrangement, different granularity. Both put effects in the signature and have the operator grant them outside the program - AILANG at the command line with --caps, not wideable from within. AILANG grants whole categories; a Sabline grant is scoped to paths, hosts, modules and operation counts. AILANG has no contracts, no prover and no audit record."
 history:
   - when: "August 2026"
     what: "First release, with effects, types, contracts and Z3 proofs."
   - when: "September 2026"
     what: "The capability format published separately under CC0 with a conformance corpus of 444 cases, and an in-toto predicate type for the audit."
 benchmark:
-  label: "Velaris, Deno and Python on 63 programs"
-  url: https://github.com/gowrishankar-infra/velaris-lang/tree/main/benchmark
+  label: "Sabline, Deno and Python on 63 programs"
+  url: https://github.com/gowrishankar-infra/sabline-lang/tree/main/benchmark
 ---
 ```
 
@@ -127,16 +127,16 @@ Two judgement calls to defend in the thread if asked. **Camp:** primary
 are the larger half, but the budget and the audit are coordination
 machinery, and the catalogue files Boruna the other way round on the
 same pairing - the maintainer may prefer `orchestration` primary.
-**`compilation_target`:** Velaris interprets and JITs part of what it
+**`compilation_target`:** Sabline interprets and JITs part of what it
 runs, which is not one of the tidy values other entries use; state it
 plainly rather than claim a target it does not have.
 
 ## 3. The description, in the catalogue's house style
 
 One paragraph, for the body of the entry or for the PR. Every figure in
-it is checkable; none is rounded in Velaris's favour.
+it is checkable; none is rounded in Sabline's favour.
 
-> Velaris is a small language for running code that nobody read. A
+> Sabline is a small language for running code that nobody read. A
 > function's signature declares which of seven effects it may perform -
 > `io`, `env`, `fs`, `net`, `clock`, `rand`, `ffi` - and the compiler
 > checks the declaration across the whole call graph, so an undeclared
@@ -156,7 +156,7 @@ it is checkable; none is rounded in Velaris's favour.
 > conformance corpus of 444 cases that an implementation in any
 > language can run, an in-toto predicate type for the audit it defines,
 > and SARIF output for code scanning. On a benchmark of 63 programs -
-> 56 with one defect, 7 correct - each written three times, Velaris
+> 56 with one defect, 7 correct - each written three times, Sabline
 > caught 54 of the 56 defects, 42 of them before running, against 32
 > for Deno and 28 for Python, with no false positive from any of the
 > three; the numbers are the project's own.
@@ -172,7 +172,7 @@ limitation as much as a feature.
 ## 4. Before sending
 
 - Re-read the entry against the current release. It is written against
-  velaris-lang 5.0.0 and velaris-spec 0.6.0; if either moves first,
+  sabline-lang 5.0.0 and sabline-spec 0.6.0; if either moves first,
   check the corpus count, the effect list and the benchmark figures.
 - Check the four `crossrefs` slugs still resolve to files in
   `src/content/languages/` - `boruna.md`, `thermite.md`, `vera.md`,
@@ -185,6 +185,6 @@ limitation as much as a feature.
   inside a `<pre>` followed by an indented line.
 - One conflict of interest worth naming in the thread, since the
   catalogue's accuracy review cuts both ways: Vera is the maintainer's
-  own language, and the crossref above says Velaris does something it
+  own language, and the crossref above says Sabline does something it
   does not. It is written to be checkable rather than flattering, and
   the thread is the place to say so plainly.

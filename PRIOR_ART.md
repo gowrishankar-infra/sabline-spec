@@ -3,7 +3,7 @@
 Published work this format sits beside. For each: what it does, and
 how this format differs.
 
-Nothing here claims the format is new. velaris-lang's changelog does
+Nothing here claims the format is new. sabline-lang's changelog does
 not name any of this work as the source of a design decision, and this
 file does not claim one either; where a resemblance is close, it says
 so and says that the record is silent about influence. The word
@@ -23,7 +23,7 @@ Hopkins University, 2006.
   only through what a program has been handed (Dennis and Van Horn
   introduced the term; Miller's object-capability model builds least
   authority out of it).
-- **How this differs:** a Velaris effect is a name in a signature and a
+- **How this differs:** a Sabline effect is a name in a signature and a
   budget is ambient to the whole run - any function that declares `fs`
   may reach any path the budget allows without holding a reference to
   it - so nothing here is unforgeable and nothing is handed over.
@@ -48,7 +48,7 @@ Implementation: <https://github.com/lampepfl/tacit>.
   and there is no grant for running commands.
 
   On information-flow control this file said, until 0.7, that the
-  format had no counterpart at all. That was true until velaris-lang
+  format had no counterpart at all. That was true until sabline-lang
   6.0 (2026-09-12), which added `Secret of T`: `env()` and
   `read_file_secret()` return one, no builtin that declares an effect
   accepts an argument carrying one, a list, map or record holding one
@@ -56,24 +56,24 @@ Implementation: <https://github.com/lampepfl/tacit>.
   itself an effect, so it appears in a signature, in this format's
   `effects`, in the budget an operator writes, and in the audit's
   `secrets` section with the reason written in the call. SPEC.md
-  section 3.1 of velaris-lang states it; section 8.6 here states what
+  section 3.1 of sabline-lang states it; section 8.6 here states what
   the audit reports.
 
   What TACIT still has that this does not: its capture checking tracks
   *every* value's captured capabilities as part of the type, where
-  Velaris marks the results of two builtins and nothing else - a
+  Sabline marks the results of two builtins and nothing else - a
   secret that reaches a program through standard input, its arguments,
   the network or the host language is an ordinary `Text`, and a
-  program cannot mark one itself. Velaris also has no generic code
+  program cannot mark one itself. Sabline also has no generic code
   over secrets unless a signature says `Secret of T` explicitly, where
   TACIT's checking follows capabilities through polymorphism. Neither
-  is a non-interference result: velaris-lang 7.0.0 bounds what a
+  is a non-interference result: sabline-lang 7.0.0 bounds what a
   program can do with a secret's value and says nothing about how long
   it runs or whether it stops. TACIT's is the stronger of the two, and
   it is checked over Scala 3's whole type system rather than over one
   wrapper type.
 
-  velaris-lang 6.0.0, published for one day, let a comparison over a
+  sabline-lang 6.0.0, published for one day, let a comparison over a
   secret give an ordinary boolean, which made the whole type a
   decoration - a loop of comparisons reads the value out. 7.0.0 closed
   that. This paragraph records it because the entry would otherwise
@@ -97,11 +97,11 @@ Prompt Injections by Design." arXiv:2503.18813, 2025.
   modules a run may reach, not which values may flow to them, and its
   grants apply per run to operations where CaMeL's policies apply per
   tool call to data. Until 0.7 this file said the format tracked
-  nothing about data at all; from velaris-lang 6.0 it tracks one thing,
+  nothing about data at all; from sabline-lang 6.0 it tracks one thing,
   `Secret of T` (section 3.1 there, section 8.6 here). The difference
   that remains is the one that matters: CaMeL tags *every* value with
   its provenance and its permitted readers, computed as the program
-  runs, and checks a policy at each tool call; Velaris marks the
+  runs, and checks a policy at each tool call; Sabline marks the
   results of two builtins at compile time and has no notion of
   provenance or of a reader. CaMeL's design is aimed at untrusted *data* changing
   what a program does; nothing here addresses that.
@@ -119,7 +119,7 @@ WebAssembly System Interface, WebAssembly Community Group,
   handles passed to the program; they are enforced by an interpreter in
   the same process, not at a virtual machine's boundary; and the
   reference implementation gives a run with no budget `io` - the
-  console and nothing else (SPEC.md section 4.6). Until velaris-lang
+  console and nothing else (SPEC.md section 4.6). Until sabline-lang
   5.0 (2026-09-12) it gave all seven effects, and this paragraph said
   that deny-by-default held only once an operator wrote a budget. That
   was true until 5.0; what remains is that a program given nothing can
@@ -137,7 +137,7 @@ Software Artifacts, <https://slsa.dev>, and its provenance predicate.
   in-toto attestation binds a typed predicate to subjects identified by
   digest, and SLSA defines levels of build integrity and a provenance
   predicate that records how an artifact was built.
-- **How this differs:** `velaris.audit/1` and `velaris.capabilities/1`
+- **How this differs:** `sabline.audit/1` and `sabline.capabilities/1`
   describe what a source text declares rather than how or by whom an
   artifact was built, and on their own they are unsigned and name no
   artifact digest. From 0.4, SPEC.md section 8.5 defines an in-toto
@@ -145,8 +145,8 @@ Software Artifacts, <https://slsa.dev>, and its provenance predicate.
   audited; in-toto supplies the Statement, the envelope and the
   signing, and this format only the predicate. SLSA has no counterpart
   here: nothing in this format says how an artifact was built. From
-  velaris-lang 4.2.0 the reference implementation writes Statements of
-  the type (`velaris attest`) and leaves signing to Sigstore's tools,
+  sabline-lang 4.2.0 the reference implementation writes Statements of
+  the type (`sabline attest`) and leaves signing to Sigstore's tools,
   cosign and sigstore-python; until 0.5 this file said it wrote none,
   which was true of 4.1.0.
 
@@ -158,11 +158,11 @@ OASIS. *Static Analysis Results Interchange Format (SARIF) Version
 - **What it does:** a JSON format for the results of static analysis
   tools - runs, rules, and results with locations - so that one viewer
   or code-scanning service can read the output of many analysers.
-- **How this differs:** `velaris.audit/1` describes a program - what
+- **How this differs:** `sabline.audit/1` describes a program - what
   it declares, names and promises - rather than listing findings; its
   `problems` resemble SARIF results but are not SARIF. SARIF is not
   part of this format. The reference implementation also writes its
-  findings as SARIF 2.1.0, from velaris-lang 3.4; until 0.4 this file
+  findings as SARIF 2.1.0, from sabline-lang 3.4; until 0.4 this file
   said it emitted none, which was true of 3.1.1, the version it was
   first written against.
 
@@ -181,15 +181,15 @@ Persistent-State AI Control." arXiv:2607.02514, 2026.
   buildup across pull requests detects them better.
 - **How this differs:** the capability ratchet of section 9 is not a
   monitor of intent. It is a deterministic comparison of what a
-  repository's Velaris programs need - effects, paths, hosts, modules,
+  repository's Sabline programs need - effects, paths, hosts, modules,
   operation counts, each function's effects - with a baseline the
   repository declared, at every change and never against the change
   before. It sees the part of a gradual attack that needs capability
   the baseline did not declare, and nothing else: a side task that
-  stays inside the declared surface, or is not written in Velaris, is
+  stays inside the declared surface, or is not written in Sabline, is
   outside it. It has not been measured on that paper's benchmark. The
   record does not say the paper influenced the ratchet, which shipped
-  in velaris-lang 4.0.0 after it was posted.
+  in sabline-lang 4.0.0 after it was posted.
 
 ## The AI-first language field
 
@@ -206,20 +206,20 @@ exists, and it sorts them into three camps that disagree about what the
 problem is: **Syntactic**, which strips ambiguity at the token level;
 **Verification**, which makes contracts mechanically checkable; and
 **Orchestration**, which treats the matter as agent coordination rather
-than as a language problem. Velaris belongs in Verification and
+than as a language problem. Sabline belongs in Verification and
 Orchestration - contracts a prover discharges, and effects and budgets
-gating what a run may do. Velaris is not in the catalogue; this section
+gating what a run may do. Sabline is not in the catalogue; this section
 was written before submitting it, and the entries below were read at
 their own repositories and not only in the catalogue.
 
-Nothing in this field is cited by velaris-lang, and the record does not
+Nothing in this field is cited by sabline-lang, and the record does not
 say that any of it influenced the design. The honest summary is that
 the field has converged, independently and in public, on most of what
-Velaris does. Effects declared in signatures; a prover with a runtime
+Sabline does. Effects declared in signatures; a prover with a runtime
 fallback where it cannot settle an obligation; a machine-readable
 record of what was checked; a policy an operator writes and a runtime
 enforces - each of these appears in projects listed below, several of
-them older than the Velaris release that first shipped it. What the
+them older than the Sabline release that first shipped it. What the
 catalogue does not show is one project combining all four.
 
 **Boruna.** <https://github.com/escapeboy/boruna>, MIT, Rust, working;
@@ -242,27 +242,27 @@ and 34 commits. Orchestration and Verification.
   offline with `boruna evidence verify`; a recorded workflow replays to
   identical outputs. Four versioned specifications, an MCP server, and
   a stability policy with dated support windows.
-- **How this differs:** this is the closest work to Velaris in the
+- **How this differs:** this is the closest work to Sabline in the
   catalogue, and on the runtime and provenance side it is not
   meaningfully behind. Three differences are real. Boruna parses
   `ensures` but does not enforce it and integrates no prover, where
-  Velaris discharges contracts with Z3 and checks at run time only what
+  Sabline discharges contracts with Z3 and checks at run time only what
   the prover could not settle. Boruna's evidence describes a run - what
-  executed, and what the model returned - where `velaris.audit/1`
+  executed, and what the model returned - where `sabline.audit/1`
   describes a source text's declared surface without running it, and
-  velaris-spec binds that to existing supply-chain infrastructure
+  sabline-spec binds that to existing supply-chain infrastructure
   through an in-toto predicate type and writes findings as SARIF, which
   Boruna does neither of; Boruna's bundles are checksummed but not yet
-  signed, which its own documentation records as an open gap. Velaris
+  signed, which its own documentation records as an open gap. Sabline
   has nothing answering to Boruna's deterministic replay, approval
   gates or envelope encryption. On deny-by-default Boruna is still the
   stricter of the two, but by much less than this entry first said.
-  Its default policy grants nothing. Until velaris-lang 5.0
-  (2026-09-12) a Velaris run with no budget got all seven effects, and
+  Its default policy grants nothing. Until sabline-lang 5.0
+  (2026-09-12) a Sabline run with no budget got all seven effects, and
   this paragraph said so; from 5.0 it gets `io` - print, read a line,
   and the command-line arguments - and every other effect is refused
   (SPEC.md section 4.6). So the gap is now one effect, not seven: a
-  Velaris program given no budget can write to the console, and a
+  Sabline program given no budget can write to the console, and a
   Boruna one cannot.
 
 **Thermite.** <https://github.com/dollspace-gay/Thermite>, MIT, Rust
@@ -283,19 +283,19 @@ Orchestration.
   derived from its `fx` clauses. Mutation testing checks contracts for
   vacuity; there is a conformance directory with certificate oracles.
 - **How this differs:** of everything here this is nearest to the whole
-  of what Velaris does - contracts, a prover, effects, a runtime check
+  of what Sabline does - contracts, a prover, effects, a runtime check
   where the proof does not reach, and a machine-readable record of what
   was checked - and on verification it is well ahead: three engines, a
   graded ladder, proof reconstruction and vacuity testing, against
-  Velaris's single Z3 tier. The difference worth stating is who writes
+  Sabline's single Z3 tier. The difference worth stating is who writes
   the policy. Thermite's confinement is derived from the program's own
   `fx` clauses, so an operator cannot narrow it without editing the
-  program; a Velaris budget is written by the operator, may be narrower
+  program; a Sabline budget is written by the operator, may be narrower
   than what the program declares, and is refused against at each
   operation. Thermite's manifest is a verification report about
-  obligations; `velaris.audit/1` is a description of a program's
+  obligations; `sabline.audit/1` is a description of a program's
   declared capability surface, published as a separate format with a
-  conformance corpus and an in-toto predicate type. Velaris has no
+  conformance corpus and an in-toto predicate type. Sabline has no
   counterpart to proof reconstruction or to the assurance ladder.
 
 **Vera.** <https://github.com/aallan/vera>, MIT, Python, working,
@@ -314,14 +314,14 @@ by the catalogue's own editor.
   (`@Int.0`) rather than by name. 244 conformance programs and a
   fourteen-chapter draft specification.
 - **How this differs:** the verification design is close enough to
-  Velaris's to be worth stating plainly - mandatory contracts, a
+  Sabline's to be worth stating plainly - mandatory contracts, a
   prover, a runtime guard where the prover does not reach, a
   conformance corpus, a written specification - and Vera reached it
-  independently. Velaris's separable part is the operator's budget:
+  independently. Sabline's separable part is the operator's budget:
   Vera's effects are declared and checked, but its README describes no
   budget an operator writes to bound which paths, hosts or modules a
   run may reach, no refusal at the operation, and no audit, provenance
-  or attestation record. Velaris has no counterpart to Vera's
+  or attestation record. Sabline has no counterpart to Vera's
   information-flow rule for SQL.
 
 **AILANG.** <https://github.com/sunholo-data/ailang>, Apache-2.0, Go,
@@ -333,8 +333,8 @@ working, v0.20.1. Verification.
   command line with `--caps` and not wideable from inside the program,
   with per-effect traces and deterministic replay.
 - **How this differs:** effects in the signature plus a grant the
-  operator passes at the command line is Velaris's arrangement, arrived
-  at separately. AILANG's grants are whole categories, where a Velaris
+  operator passes at the command line is Sabline's arrangement, arrived
+  at separately. AILANG's grants are whole categories, where a Sabline
   grant is scoped to paths, hosts, modules and operation counts; and
   AILANG has no contracts, no prover, and no audit or attestation
   record.
@@ -368,7 +368,7 @@ v0.16.0. Verification.
   ratchet of section 9, and is recorded here as such, though it tracks
   a locus graph rather than a capability surface, and the record does
   not describe a baseline that a change must not exceed. Hale's
-  guarantees are static and lower to no runtime code, where Velaris
+  guarantees are static and lower to no runtime code, where Sabline
   refuses at the operation. Hale signs artifacts but does not use
   in-toto.
 
@@ -390,18 +390,18 @@ effects, async, the FFI and the VM lie outside the proved fragment.
 **Prove** (code.botwork.se, source under a licence forbidding use as
 training data) pairs refinement types and hard postconditions with
 refutation challenges that require the author to say why a plausible
-mutation is wrong. Velaris differs from all four in the same way: they
+mutation is wrong. Sabline differs from all four in the same way: they
 verify a program, and none of them bounds what a run may reach, records
 what it declared, or refuses an operation.
 
-**Further from Velaris.** **Pact**
+**Further from Sabline.** **Pact**
 (<https://github.com/KikotVit/pact-lang>, MIT) puts intent, effects
 (`needs db, time, rng`) and errors in the signature and swaps effect
 implementations for deterministic tests, with no prover. **Lumen**
 (<https://github.com/alliecatowo/lumen>, MIT) has algebraic effects
 with handlers and writes policy into the source as grants (`grant Chat
 max_tokens 1024`) rather than into configuration - the opposite of
-Velaris's division, in which the grant is the operator's and sits
+Sabline's division, in which the grant is the operator's and sits
 outside the program - with no audit record. **Zero** (Vercel Labs,
 <https://github.com/vercel-labs/zerolang>, Apache-2.0, early) passes
 capability objects explicitly into `main` and puts its effort into
@@ -437,15 +437,15 @@ arXiv:2605.14932, 14 May 2026 (under submission).
   to hide arbitrary behavior", and finds that of the agents it tested one
   resisted seven attacks where a baseline resisted none. It observes that
   fine-grained permission control "remains uncommon in practice".
-- **How this differs:** the analogy fits Velaris more than most - the
+- **How this differs:** the analogy fits Sabline more than most - the
   interpreter is the kernel, the effect-declaring builtins are classes of
   system call, and the budget is the permission set enforced at each call.
   Two things do not map. The paper's untrusted principal issues calls one
   turn at a time, and its table has no step for reading a whole program
-  *before* it runs, which is what `velaris.audit/1` is; and the paper wants
-  permissions per skill or tool, where a Velaris budget covers the whole
+  *before* it runs, which is what `sabline.audit/1` is; and the paper wants
+  permissions per skill or tool, where a Sabline budget covers the whole
   run. The paper has no counterpart to a baseline a change must not exceed
-  (the ratchet), and Velaris none to its process isolation between skills
+  (the ratchet), and Sabline none to its process isolation between skills
   or to separating instructions from data in the context. The record does
   not say the paper influenced the design, which predates it.
 
@@ -464,13 +464,13 @@ report).
   policy over workspace; and it hash-chains every decision. It reports 0%
   attack success across fifteen models with the gateway in place, at under
   0.03 ms a decision.
-- **How this differs:** aiAuthZ's argument rules resemble a Velaris
+- **How this differs:** aiAuthZ's argument rules resemble a Sabline
   budget's paths, hosts and counts, but it binds each decision to a
   verified human identity and runs *outside* the agent's host, deciding at
-  the call. Velaris knows no identity, enforces in the same process as the
+  the call. Sabline knows no identity, enforces in the same process as the
   program, and describes a program before it runs rather than logging
   decisions after. The two are complementary: a gateway of this shape could
-  sit in front of a host that runs Velaris.
+  sit in front of a host that runs Sabline.
 
 **The agents.txt draft.** Dutta, S. "AGENTS.TXT: Strict Policy File for
 Automated Clients." `draft-srijal-agents-policy-00`, an individual IETF
@@ -483,7 +483,7 @@ Internet-Draft, 7 October 2025 (expired 10 April 2026).
   treating the entire site as restricted".
 - **How this differs:** the direction is opposite. agents.txt is a site
   declaring, to clients it does not control, what they may do to it; a
-  Velaris budget is written by whoever runs a program, about what that run
+  Sabline budget is written by whoever runs a program, about what that run
   may reach, and the interpreter enforces it against the program regardless
   of what the program says. One is a request a well-behaved client honours;
   the other is a guard the runtime imposes.
@@ -516,10 +516,10 @@ comparison is often drawn, and the difference is the same in each case.
 
 **How this differs:** in all of them the grant is *the set of functions the
 host provides*, and the script declares nothing about what it will use.
-Velaris inverts both halves: each function declares its effects in its
+Sabline inverts both halves: each function declares its effects in its
 signature, checked statically up the call graph; the operator's budget
 scopes those effects to paths, hosts, modules and counts and is refused
-against at each operation; and `velaris.audit/1` reports both from the
+against at each operation; and `sabline.audit/1` reports both from the
 source before anything runs. None of these embeds a prover or a written
 capability record.
 
@@ -556,7 +556,7 @@ about the code *before* it runs.
 **How this differs:** each of these knows, at most, which tools the code
 was *offered* before it runs, and nothing about what the code will do with
 them; none describes checking the code, and Anthropic's own docs say its
-caller restriction is not a boundary. Velaris reads the program first and
+caller restriction is not a boundary. Sabline reads the program first and
 reports which effects, paths, hosts and modules each function needs, and
 the runtime refuses anything outside the budget. Its "code" is a small
 language with a prover, not a general-purpose host language in a sandbox,
@@ -564,7 +564,7 @@ which is the trade: less expressive, more that can be said before it runs.
 
 ## Also close
 
-These two are not cited by velaris-lang, and are listed because the
+These two are not cited by sabline-lang, and are listed because the
 resemblance is close enough that leaving them out would read as a claim.
 
 **Deno's permissions.** <https://docs.deno.com/runtime/fundamentals/security/>
@@ -575,7 +575,7 @@ resemblance is close enough that leaving them out would read as a claim.
   `--allow-read=<paths>`, `--allow-net=<host:port>`,
   `--allow-env=<names>`.
 - **How this differs:** the grant grammar here has much the same shape,
-  and velaris-lang's benchmark compares the two directly, but the record
+  and sabline-lang's benchmark compares the two directly, but the record
   does not say whether Deno's flags influenced it; a Deno permission
   denial is an exception a script can catch, while a refusal here ends
   the run (SPEC.md G3), and this format scopes neither environment

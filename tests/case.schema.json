@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.4/tests/case.schema.json",
-  "title": "A velaris-spec conformance case",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/sabline-spec/v0.4/tests/case.schema.json",
+  "title": "A sabline-spec conformance case",
   "description": "One case of the conformance corpus in tests/: what it is, the input, and the outcome an implementation must produce. tests/README.md is the runner contract that says how each kind of case is run and compared; CONFORMANCE.md says which levels the cases make up. This schema checks shape only.",
   "type": "object",
   "required": ["id", "level", "kind", "description", "spec", "from", "requires", "known_limit", "input", "expect"],
@@ -12,7 +12,7 @@
     "kind": {"enum": ["budget", "audit", "run", "derive", "check", "sequence", "write-guard", "covers", "reduce", "bound"]},
     "description": {"type": "string", "minLength": 1},
     "spec": {"description": "Sections of SPEC.md the case holds an implementation to.", "type": "array", "items": {"type": "string"}},
-    "from": {"description": "The table entry in velaris-lang's suites the case was written from.", "type": "string", "minLength": 1},
+    "from": {"description": "The table entry in sabline-lang's suites the case was written from.", "type": "string", "minLength": 1},
     "requires": {"description": "What the runner's platform must provide for the case to run: symlink, a symbolic link can be made; stdlib, the reference's standard library files can be imported by name.", "type": "array", "uniqueItems": true, "items": {"enum": ["stdlib", "symlink"]}},
     "known_limit": {"description": "Null, or the known limit this case records: its expected outcome is what the reference does today, not what a perfect implementation would do.", "type": ["string", "null"]},
     "input": {"type": "object"},
@@ -65,7 +65,7 @@
         "ffi_any": {"type": "boolean"},
         "fs_paths": {"type": "object"},
         "net_hosts": {"type": "object"},
-        "safe_command": {"type": "string", "pattern": "^velaris <file> --allow .+$"},
+        "safe_command": {"type": "string", "pattern": "^sabline <file> --allow .+$"},
         "secrets": {"description": "SPEC.md 8.6, added in 0.7. Present only in a case that checks the field; a case written before 0.7 omits it and says nothing about it.", "type": "object", "required": ["sources", "declassifies", "declassifications"], "additionalProperties": false, "properties": {"sources": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "declassifies": {"type": "boolean"}, "declassifications": {"type": "array", "items": {"type": "object", "required": ["reason", "function", "line"], "additionalProperties": false, "properties": {"reason": {"type": "string"}, "function": {"type": "string", "minLength": 1}, "line": {"type": "integer", "minimum": 1}}}}}}
       }}
     ]},
@@ -79,12 +79,12 @@
       {"type": "object", "required": ["file", "compiles"], "additionalProperties": false, "properties": {"file": {"type": "string"}, "compiles": {"const": false}}},
       {"type": "object", "required": ["file", "grants", "counts", "functions"], "additionalProperties": false, "properties": {"file": {"type": "string"}, "grants": {"type": "array", "items": {"type": "string"}}, "counts": {"type": "object", "additionalProperties": false, "properties": {"fs": {"$ref": "#/$defs/count"}, "net": {"$ref": "#/$defs/count"}}}, "functions": {"type": "object", "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/effect"}}}}}
     ]},
-    "baseline_body": {"description": "What a writer records for a tree: velaris.capabilities/1 without schema, velaris_version and date.", "type": "object", "required": ["surface", "programs"], "additionalProperties": false, "properties": {
+    "baseline_body": {"description": "What a writer records for a tree: sabline.capabilities/1 without schema, sabline_version and date.", "type": "object", "required": ["surface", "programs"], "additionalProperties": false, "properties": {
       "surface": {"type": "object", "required": ["grants", "counts"], "additionalProperties": false, "properties": {"grants": {"type": "array", "items": {"type": "string"}}, "counts": {"type": "object", "additionalProperties": false, "properties": {"fs": {"$ref": "#/$defs/count"}, "net": {"$ref": "#/$defs/count"}}}}},
       "programs": {"type": "array", "items": {"$ref": "#/$defs/entry"}}
     }},
-    "edit": {"description": "A person's edit of the baseline written from the tree: velaris_version replaced; each key under surface replaced; each key of a named program's entry replaced.", "type": ["object", "null"], "additionalProperties": false, "properties": {
-      "velaris_version": {"type": "string"},
+    "edit": {"description": "A person's edit of the baseline written from the tree: sabline_version replaced; each key under surface replaced; each key of a named program's entry replaced.", "type": ["object", "null"], "additionalProperties": false, "properties": {
+      "sabline_version": {"type": "string"},
       "surface": {"type": "object", "additionalProperties": false, "properties": {"grants": {"type": "array", "items": {"type": "string"}}, "counts": {"type": "object"}}},
       "programs": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "properties": {"grants": {"type": "array", "items": {"type": "string"}}, "counts": {"type": "object"}, "functions": {"type": "object"}}}}
     }},

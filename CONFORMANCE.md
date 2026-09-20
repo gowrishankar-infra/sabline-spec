@@ -1,7 +1,7 @@
 # Conformance
 
 Version 0.6.0, 2026-09-12. What an implementation must do to claim that
-it conforms to the Velaris capability format - `velaris.capabilities`
+it conforms to the Sabline capability format - `sabline.capabilities`
 conformance - at each of three levels, and how it shows that it does.
 Dedicated to the public domain under CC0 1.0, like the rest of this
 repository.
@@ -31,14 +31,14 @@ No level requires a theorem prover, or any proof of anything. An
 implementation with no prover can conform fully, at all three levels.
 Nothing in SPEC.md sections 3 to 9 depends on one, and no case's
 expectation does: the corpus never compares the fields of
-`velaris.audit/1` that record proofs (`functions[].status`,
+`sabline.audit/1` that record proofs (`functions[].status`,
 `proven_share`), and the derivation of a baseline runs no prover
 (SPEC.md 9.3).
 
-The reference implementation, velaris-lang, goes beyond conformance.
+The reference implementation, sabline-lang, goes beyond conformance.
 It proves contracts with the Z3 prover before running, compiles proven
 code to native, and has an HTTP door and an MCP server with ceilings, a
-worker pool, SARIF output, `velaris review`, an invocation log and a
+worker pool, SARIF output, `sabline review`, an invocation log and a
 signed manifest of its tools. None of that is part of the format, and
 none of it is needed to conform.
 
@@ -78,8 +78,8 @@ An implementation conforming at L1 does all of the following.
   file it loads, and whether one is built while running (`read_any`,
   `write_any`, `any`, `ffi_any`). Cases: the 17 `L1-audit-*` cases
   that compile.
-- **D5. Emits `velaris.audit/1`** (8) that validates against
-  [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json),
+- **D5. Emits `sabline.audit/1`** (8) that validates against
+  [schemas/sabline.audit.1.schema.json](schemas/sabline.audit.1.schema.json),
   whose `effects` holds only names of 3.1 even when `ok` is false,
   and whose `safe_command` is derived as 8.3 says and always parses.
   Cases: all 26 `L1-audit-*` cases.
@@ -139,19 +139,19 @@ following for every operation of SPEC.md 3.1.
   case depends on the host language's object model, so the six in the
   reference's suite, written against Python, are left out and listed in
   `tests/index.json`. An implementation whose host language is Python
-  can run them from velaris-lang's `check_sandbox.py`.
+  can run them from sabline-lang's `check_sandbox.py`.
 
 ## L3 Ratchet
 
 An implementation conforming at L3 conforms at L1, and does all of the
 following.
 
-- **R1. Writes `velaris.capabilities/1`** for a tree (9.2, 9.3, 9.4):
+- **R1. Writes `sabline.capabilities/1`** for a tree (9.2, 9.3, 9.4):
   every `.vel` file a program; its functions, effects, grants read from
   fixed text and reduced, and its `fs` and `net` counts; the surface as
   the union of the programs that compile; a file that does not compile
   recorded as such; a document that validates against
-  [schemas/velaris.capabilities.1.schema.json](schemas/velaris.capabilities.1.schema.json).
+  [schemas/sabline.capabilities.1.schema.json](schemas/sabline.capabilities.1.schema.json).
   Cases: the 14 `L3-derive-*` cases, the 6 `L3-bound-*` cases and the
   3 `L3-reduce-*` cases.
 - **R2. Does not replace a baseline unasked** (9.6): a writer asked to
@@ -210,8 +210,8 @@ following.
 Run every case of the levels claimed, as [tests/README.md](tests/README.md)
 says, and report each result. A claim is made in these words:
 
-> *Implementation* *version* conforms to velaris-spec 0.6.0 at L1[, L2]
-> [and L3], against the conformance corpus at velaris-spec commit
+> *Implementation* *version* conforms to sabline-spec 0.6.0 at L1[, L2]
+> [and L3], against the conformance corpus at sabline-spec commit
 > *sha* (*n* cases), on *platform*. Not run: *case ids, and why*.
 
 A claim holds only if no case of a claimed level failed. A case may be
@@ -220,9 +220,9 @@ left out of a claim only because the platform cannot meet its
 and the claim names it. A case skipped for a missing tool, such as a
 JSON Schema validator, leaves its level unshown.
 
-velaris-lang's `velaris conformance [--level 1|2|3] [--json]` is the
+sabline-lang's `sabline conformance [--level 1|2|3] [--json]` is the
 reference's runner. It prints a line per level and a verdict, and
-`--json` writes the report of tests/README.md. velaris-lang's CI runs
+`--json` writes the report of tests/README.md. sabline-lang's CI runs
 it on every leg, against this repository's corpus.
 
 ## What the corpus does not test
@@ -246,12 +246,12 @@ cannot be one.
 
 ## Where the corpus comes from
 
-velaris-lang's `build_conformance.py` writes every case from a table in
+sabline-lang's `build_conformance.py` writes every case from a table in
 one of that repository's suites - `check_sandbox.py`,
 `check_library.py`, `check_ratchet.py` - where the same entry is
-asserted against velaris-lang; it computes nothing itself. A drift test
-in this repository's CI and in velaris-lang's regenerates the corpus
+asserted against sabline-lang; it computes nothing itself. A drift test
+in this repository's CI and in sabline-lang's regenerates the corpus
 and fails when the result differs from what is committed, so the
 corpus and the suites cannot say different things. A change to a case
-is a change to a suite, made in velaris-lang, and a new version of this
+is a change to a suite, made in sabline-lang, and a new version of this
 repository.

@@ -1,6 +1,6 @@
 {
-  "schema": "velaris.audit/1",
-  "velaris_version": "3.1.1",
+  "schema": "sabline.audit/1",
+  "sabline_version": "3.1.1",
   "ok": true,
   "problems": [],
   "effects": [
@@ -31,7 +31,7 @@
     }
   ],
   "proven_share": 0.0,
-  "safe_command": "velaris <file> --allow io",
+  "safe_command": "sabline <file> --allow io",
   "warnings": [],
   "ffi_modules": [],
   "loops_unshown": 0,

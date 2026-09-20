@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
-"""Fail if what this repository shares with velaris-lang has drifted.
+"""Fail if what this repository shares with sabline-lang has drifted.
 
-usage: python tools/check_sync.py path/to/velaris-lang/SPEC.md
+usage: python tools/check_sync.py path/to/sabline-lang/SPEC.md
 
 SPEC.md in this repository quotes sections of the reference
 implementation's language specification without change, each between
 two markers:
 
-    <!-- verbatim: velaris-lang SPEC.md "## 7. Effects" -->
+    <!-- verbatim: sabline-lang SPEC.md "## 7. Effects" -->
     ...
     <!-- end verbatim -->
 
 For each pair this script takes the named heading's body from the
-velaris-lang file - every line after the heading, up to the next
+sabline-lang file - every line after the heading, up to the next
 heading of any level - and compares it with the text between the
 markers. Line endings, and blank lines at the start and end of a
 block, are ignored. Nothing else is: a changed word is drift.
 
-It also compares each predicate type's schema with the copy velaris-lang
+It also compares each predicate type's schema with the copy sabline-lang
 publishes at the type's URL, line endings aside:
 schemas/capability-predicate.v1.schema.json with its
 docs/capability/v1/schema.json (SPEC.md 8.5), and
@@ -33,7 +33,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-MARK = re.compile(r'^<!-- verbatim: velaris-lang SPEC\.md "(?P<heading>[^"]+)" -->$')
+MARK = re.compile(r'^<!-- verbatim: sabline-lang SPEC\.md "(?P<heading>[^"]+)" -->$')
 END = "<!-- end verbatim -->"
 HEADING = re.compile(r"^#{1,6} ")
 
@@ -82,7 +82,7 @@ def quoted(spec: list) -> list:
 
 def main(argv: list) -> int:
     if len(argv) != 2:
-        print("usage: python tools/check_sync.py path/to/velaris-lang/SPEC.md",
+        print("usage: python tools/check_sync.py path/to/sabline-lang/SPEC.md",
               file=sys.stderr)
         return 2
     source = lines_of(Path(argv[1]))
@@ -99,7 +99,7 @@ def main(argv: list) -> int:
         elif want != text:
             bad += 1
             print(f"DRIFT  {heading!r} (SPEC.md line {at}) differs from {argv[1]}:")
-            for d in difflib.unified_diff(text, want, "velaris-spec", "velaris-lang",
+            for d in difflib.unified_diff(text, want, "sabline-spec", "sabline-lang",
                                           lineterm="", n=1):
                 print("    " + d)
         else:
@@ -117,7 +117,7 @@ def main(argv: list) -> int:
             print(f"DRIFT  {published} differs from "
                   f"{ours.relative_to(ROOT)}")
         else:
-            print(f"same   the {kind}/v1 predicate schema, as velaris-lang "
+            print(f"same   the {kind}/v1 predicate schema, as sabline-lang "
                   f"publishes it")
     return 1 if bad else 0
 

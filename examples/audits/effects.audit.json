@@ -1,6 +1,6 @@
 {
-  "schema": "velaris.audit/1",
-  "velaris_version": "3.1.1",
+  "schema": "sabline.audit/1",
+  "sabline_version": "3.1.1",
   "ok": true,
   "problems": [],
   "effects": [
@@ -59,7 +59,7 @@
     }
   ],
   "proven_share": null,
-  "safe_command": "velaris <file> --allow clock,fs:read:report.txt,fs:write:report.txt,io,rand",
+  "safe_command": "sabline <file> --allow clock,fs:read:report.txt,fs:write:report.txt,io,rand",
   "warnings": [],
   "ffi_modules": [],
   "loops_unshown": 0,

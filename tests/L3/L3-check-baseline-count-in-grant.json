@@ -16,7 +16,7 @@
     },
     "root": ".",
     "baseline": {
-      "text": "{\"schema\": \"velaris.capabilities/1\", \"velaris_version\": \"4.1.0\", \"date\": \"2026-09-11\", \"surface\": {\"grants\": [\"net:h.example@3\"], \"counts\": {}}, \"programs\": []}\n"
+      "text": "{\"schema\": \"sabline.capabilities/1\", \"sabline_version\": \"4.1.0\", \"date\": \"2026-09-11\", \"surface\": {\"grants\": [\"net:h.example@3\"], \"counts\": {}}, \"programs\": []}\n"
     },
     "change": {}
   },

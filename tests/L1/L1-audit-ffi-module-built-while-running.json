@@ -46,6 +46,6 @@
       "hosts": [],
       "any": false
     },
-    "safe_command": "velaris <file> --allow ffi:math,io"
+    "safe_command": "sabline <file> --allow ffi:math,io"
   }
 }

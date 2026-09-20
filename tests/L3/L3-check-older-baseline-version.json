@@ -18,7 +18,7 @@
     "baseline": {
       "from_tree": true,
       "edit": {
-        "velaris_version": "1.0.0"
+        "sabline_version": "1.0.0"
       }
     },
     "change": {}

@@ -48,6 +48,6 @@
       "hosts": [],
       "any": false
     },
-    "safe_command": "velaris <file> --allow fs:read:data/flag,fs:write:out/report.txt,io"
+    "safe_command": "sabline <file> --allow fs:read:data/flag,fs:write:out/report.txt,io"
   }
 }

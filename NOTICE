@@ -1,5 +1,5 @@
-velaris-spec
-https://github.com/gowrishankar-infra/velaris-spec
+sabline-spec
+https://github.com/gowrishankar-infra/sabline-spec
 Author: Palakurthi Gowri Shankar
 
 The specification text (SPEC.md, CONFORMANCE.md), the JSON Schemas
@@ -14,9 +14,9 @@ under any license, commercially or not, and may copy the schemas into
 their own projects, with no obligation to credit, notify or ask anyone.
 
 The reference implementation is a separate work under a separate
-license. velaris-lang (https://github.com/gowrishankar-infra/velaris-lang)
+license. sabline-lang (https://github.com/gowrishankar-infra/sabline-lang)
 is under the MIT License. Implementing this format does not require
-using, copying or linking velaris-lang; copying velaris-lang's code
+using, copying or linking sabline-lang; copying sabline-lang's code
 is governed by its MIT License, not by this repository's CC0.
 
 Two things CC0 does not do, as its own section 4(a) says: it does not
@@ -25,9 +25,9 @@ domain is not a statement that an implementation conforms; conformance
 is defined by the corpus in tests/, at the levels of CONFORMANCE.md
 (SPEC.md section 10).
 
-Three sections of SPEC.md (section 2) are copied from velaris-lang's
+Three sections of SPEC.md (section 2) are copied from sabline-lang's
 SPEC.md, the cases in tests/ are transcribed from tables in
-velaris-lang's test suites, and schemas/capability-predicate.v1.schema.json
-is also published by velaris-lang; velaris-lang is MIT-licensed. The
+sabline-lang's test suites, and schemas/capability-predicate.v1.schema.json
+is also published by sabline-lang; sabline-lang is MIT-licensed. The
 author of both works, Palakurthi Gowri Shankar, dedicates these copies
 to the public domain under CC0 along with the rest of this repository.

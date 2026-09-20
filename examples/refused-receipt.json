@@ -10,13 +10,13 @@
   ],
   "predicateType": "https://gowrishankar-infra.github.io/velaris-lang/receipt/v1",
   "predicate": {
-    "schema": "velaris.receipt/1",
+    "schema": "sabline.receipt/1",
     "producer": {
-      "name": "velaris-lang",
-      "uri": "https://github.com/gowrishankar-infra/velaris-lang",
+      "name": "sabline-lang",
+      "uri": "https://github.com/gowrishankar-infra/sabline-lang",
       "version": "8.1.0"
     },
-    "specification": "velaris-spec 0.10.0",
+    "specification": "sabline-spec 0.10.0",
     "startedAt": "2026-09-13T23:50:48.396Z",
     "wall_time_ms": 3.4,
     "budget": "clock,io,rand",

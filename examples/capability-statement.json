@@ -11,14 +11,14 @@
   "predicateType": "https://gowrishankar-infra.github.io/velaris-lang/capability/v1",
   "predicate": {
     "producer": {
-      "name": "velaris-lang",
-      "uri": "https://github.com/gowrishankar-infra/velaris-lang"
+      "name": "sabline-lang",
+      "uri": "https://github.com/gowrishankar-infra/sabline-lang"
     },
-    "specification": "velaris-spec 0.5",
+    "specification": "sabline-spec 0.5",
     "auditedAt": "2026-09-11T14:20:49Z",
     "audit": {
-      "schema": "velaris.audit/1",
-      "velaris_version": "4.2.0",
+      "schema": "sabline.audit/1",
+      "sabline_version": "4.2.0",
       "ok": true,
       "problems": [],
       "effects": [
@@ -77,7 +77,7 @@
         }
       ],
       "proven_share": null,
-      "safe_command": "velaris <file> --allow clock,fs:read:report.txt,fs:write:report.txt,io,rand",
+      "safe_command": "sabline <file> --allow clock,fs:read:report.txt,fs:write:report.txt,io,rand",
       "warnings": [],
       "ffi_modules": [],
       "loops_unshown": 0,

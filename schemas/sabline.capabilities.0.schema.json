@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.5/schemas/velaris.capabilities.0.schema.json",
-  "title": "velaris.capabilities/0 (superseded)",
-  "description": "SUPERSEDED in velaris-spec 0.3 by velaris.capabilities/1 (schemas/velaris.capabilities.1.schema.json, SPEC.md section 9). This was the provisional form versions 0.1 and 0.2 defined: for each program in a repository, the grants its velaris.audit/1 document says it needs. No version of the reference implementation wrote or read it, and the reference refuses to compare against one. It is kept so that documents written against 0.2 can still be recognised.",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/sabline-spec/v0.5/schemas/sabline.capabilities.0.schema.json",
+  "title": "sabline.capabilities/0 (superseded)",
+  "description": "SUPERSEDED in sabline-spec 0.3 by sabline.capabilities/1 (schemas/sabline.capabilities.1.schema.json, SPEC.md section 9). This was the provisional form versions 0.1 and 0.2 defined: for each program in a repository, the grants its sabline.audit/1 document says it needs. No version of the reference implementation wrote or read it, and the reference refuses to compare against one. It is kept so that documents written against 0.2 can still be recognised.",
   "type": "object",
   "required": [
     "schema",
@@ -11,7 +11,7 @@
   "additionalProperties": false,
   "properties": {
     "schema": {
-      "const": "velaris.capabilities/0"
+      "const": "sabline.capabilities/0"
     },
     "generated_by": {
       "description": "Informative: what wrote this document.",

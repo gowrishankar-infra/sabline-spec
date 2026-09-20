@@ -52,11 +52,11 @@ under way rather than as a rival to it:
   back with a proposal backed by actual usage".
 
 What this draft can add to that work is not the idea but three pieces
-that exist: a published grammar for scoped grants (velaris-spec
+that exist: a published grammar for scoped grants (sabline-spec
 sections 4 and 5, CC0); a precise rule for when one declaration covers
 another, and so for when a changed declaration is wider (section 9.5);
 and a conformance corpus whose budget-grammar and covering cases
-(velaris-spec `tests/`, 280 and 32 of its 444 cases) let two
+(sabline-spec `tests/`, 280 and 32 of its 444 cases) let two
 implementations of the rule be checked against each other.
 
 ## The proposal
@@ -67,7 +67,7 @@ Following the maintainers' advice, a namespaced key in the tool's
 ```json
 "_meta": {
   "io.github.gowrishankar-infra/capabilities": {
-    "format": "velaris-spec 0.5",
+    "format": "sabline-spec 0.5",
     "grants": ["fs:read:./data", "net:api.example.com"],
     "counts": {"net": 100}
   }
@@ -75,10 +75,10 @@ Following the maintainers' advice, a namespaced key in the tool's
 ```
 
 The prefix is the reverse-DNS form of `gowrishankar-infra.github.io`,
-where velaris-spec's predicate type already lives; it follows the
+where sabline-spec's predicate type already lives; it follows the
 `_meta` key rules and is not a reserved prefix.
 
-- `grants`, required: grants in velaris-spec's grammar, with the
+- `grants`, required: grants in sabline-spec's grammar, with the
   restrictions its section 9.2 puts on a baseline - no counts inside a
   grant, one module per `ffi` grant, sorted and reduced. The effects
   are `io`, `env`, `fs`, `net`, `clock`, `rand` and `ffi`; `fs` may be
@@ -94,41 +94,41 @@ exchange itself and outside the server's own installation (its code and
 the files it ships). A call's arguments and result are the exchange, so
 they are not an effect. Relative paths are relative to the server
 process's working directory. A path or host that the request chooses is
-declared unscoped (`fs:read`, `net`), as velaris-spec 9.3 does for a
+declared unscoped (`fs:read`, `net`), as sabline-spec 9.3 does for a
 path built while running: the declaration must cover every request, not
 the typical one.
 
 A tool with no declaration has declared nothing, which is not the same
 as declaring that it touches nothing.
 
-## Two examples: velaris-lang's MCP server
+## Two examples: sabline-lang's MCP server
 
-velaris-lang's `velaris_mcp.py` offers four tools. Two of them, as
+sabline-lang's `sabline_mcp.py` offers four tools. Two of them, as
 their `tools/list` entries would read with the key added (the
-descriptions are the server's own text; `velaris_run`'s description and
+descriptions are the server's own text; `sabline_run`'s description and
 input schema are shortened here):
 
 ```json
 {
-  "name": "velaris_card",
-  "description": "The Velaris language in about 2,300 words: syntax, the rules models get wrong, every builtin with its effects and whether it can fail, full standard-library signatures, and the error table. Read this before writing Velaris.",
+  "name": "sabline_card",
+  "description": "The Sabline language in about 2,300 words: syntax, the rules models get wrong, every builtin with its effects and whether it can fail, full standard-library signatures, and the error table. Read this before writing Sabline.",
   "inputSchema": {"type": "object", "properties": {}},
   "_meta": {
     "io.github.gowrishankar-infra/capabilities": {
-      "format": "velaris-spec 0.5",
+      "format": "sabline-spec 0.5",
       "grants": []
     }
   }
 }
 ```
 
-`velaris_card` returns `LLM.md`, a file the server ships, and touches
+`sabline_card` returns `LLM.md`, a file the server ships, and touches
 nothing else.
 
 ```json
 {
-  "name": "velaris_run",
-  "description": "Run a Velaris program under an effect budget. ...",
+  "name": "sabline_run",
+  "description": "Run a Sabline program under an effect budget. ...",
   "inputSchema": {
     "type": "object",
     "properties": {
@@ -139,7 +139,7 @@ nothing else.
   },
   "_meta": {
     "io.github.gowrishankar-infra/capabilities": {
-      "format": "velaris-spec 0.5",
+      "format": "sabline-spec 0.5",
       "grants": ["fs:read", "net:api.example.com"],
       "counts": {"net": 100}
     }
@@ -147,7 +147,7 @@ nothing else.
 }
 ```
 
-That is `velaris_run` on a server its operator started with
+That is `sabline_run` on a server its operator started with
 `--max-allow io,net:api.example.com@100`. The program's output goes
 into the call's result, so its `io` is part of the exchange. The `net`
 grant and its count are the operator's ceiling. `fs:read` is there
@@ -156,7 +156,7 @@ submitted source chooses. On a server started without the flag, the
 ceiling is `io` and the declaration is `["fs:read"]` alone.
 
 The two parts of the second declaration differ in the way that matters
-most. The `net` grant is enforced: the Velaris runtime refuses every
+most. The `net` grant is enforced: the Sabline runtime refuses every
 operation outside the ceiling before it happens. The `fs:read` is not:
 loading happens before the budget applies, and nothing but the
 server's own code limits it. Both are true today; only one of them is
@@ -171,10 +171,10 @@ held by anything.
   approved for each server and tool. When a new `tools/list` arrives -
   after its `ttlMs`, or on a `list_changed` notification - compare the
   new declaration with the approved one, not with the previous list,
-  using velaris-spec 9.5's covering rule: a grant the approved list
+  using sabline-spec 9.5's covering rule: a grant the approved list
   does not cover, or a larger count, is a widening, and the client does
   not call the tool until the user approves again. Narrowing needs no
-  prompt. This is the ratchet of velaris-spec 9.6 applied to tools, and
+  prompt. This is the ratchet of sabline-spec 9.6 applied to tools, and
   it is aimed at the rug pull: a tool approved narrow cannot quietly
   become wide.
 - **Apply a policy.** An organisation can refuse any tool that declares
@@ -183,7 +183,7 @@ held by anything.
 ## A claim unless something enforces it
 
 A declaration is a claim by the server. Signing it, as SEP-3140
-proposes and as velaris-lang already does for its tool manifest (`velaris
+proposes and as sabline-lang already does for its tool manifest (`sabline
 mcp-verify`), proves who made the claim and that it has not changed; it
 does not make the claim true. What can make it true:
 
@@ -193,9 +193,9 @@ does not make the claim true. What can make it true:
   rules (Landlock, seccomp or bubblewrap on Linux, an AppContainer on
   Windows, a container with a network policy). Then a false declaration
   fails closed. This is the only enforcement a client controls.
-- **The server's own runtime.** `velaris_run`'s ceiling is enforced by
-  the Velaris runtime. The client has to trust the server for that, and
-  velaris-lang says of itself that its budget is not a security
+- **The server's own runtime.** `sabline_run`'s ceiling is enforced by
+  the Sabline runtime. The client has to trust the server for that, and
+  sabline-lang says of itself that its budget is not a security
   boundary: it is a Python interpreter in the same process.
 - **For a remote server, nothing the client can check.** An attestation
   can bind a declaration to the code deployed, and says who vouches for
@@ -210,12 +210,12 @@ does not make the claim true. What can make it true:
 - **What happens inside a grant.** A granted host receives whatever is
   sent to it; `fs:read` of a home directory includes its secrets. This
   is access, not data flow.
-- **Starting processes.** velaris-spec's grammar has no effect for it.
+- **Starting processes.** sabline-spec's grammar has no effect for it.
   SEP-3140 has `subprocess`; until the grammar has one, a tool that
   starts processes can only declare unscoped `ffi`, which says
   "anything".
 - **Wide declarations.** A tool whose reach depends on its arguments
-  must declare the unscoped grant, as `velaris_run` does for imports.
+  must declare the unscoped grant, as `sabline_run` does for imports.
   A narrow declaration needs a server that confines itself.
 - **What a server does between calls,** such as writing its own log.
 
@@ -225,7 +225,7 @@ does not make the claim true. What can make it true:
   grammar and covering rule, or the Security Interest Group's "hints or
   contracts" item. A SEP of its own needs a sponsor, a prototype and a
   reference implementation in an official SDK.
-- Build the prototype: velaris-lang's server does not emit this key
+- Build the prototype: sabline-lang's server does not emit this key
   today. It speaks protocol revision 2024-11-05 and would need updating.
 - MCP's AI policy asks contributors to disclose AI assistance; this
   draft was prepared with an AI coding agent under the maintainer's

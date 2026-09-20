@@ -1,24 +1,24 @@
 cff-version: 1.2.0
 message: >-
-  If you use the Velaris capability format, please cite this repository
-  as below. A preprint describing Velaris and this format is
+  If you use the Sabline capability format, please cite this repository
+  as below. A preprint describing Sabline and this format is
   forthcoming; until it is published, this entry is the citation.
-title: "velaris-spec: the Velaris capability format"
+title: "sabline-spec: the Sabline capability format"
 abstract: >-
-  A specification of the effects a Velaris program may declare, the
+  A specification of the effects a Sabline program may declare, the
   grammar an operator uses to grant them, what a runtime must refuse,
-  the velaris.audit/1, velaris.capabilities/1 and velaris.receipt/1 JSON
+  the sabline.audit/1, sabline.capabilities/1 and sabline.receipt/1 JSON
   documents, in-toto predicate types for the audit and for the receipt of
   a run, and a language-independent
   conformance corpus at three levels. Its reference implementation is
-  velaris-lang.
+  sabline-lang.
 type: software
 authors:
   - family-names: Palakurthi
     given-names: Gowri Shankar
-repository-code: "https://github.com/gowrishankar-infra/velaris-spec"
+repository-code: "https://github.com/gowrishankar-infra/sabline-spec"
 license: CC0-1.0
-version: "0.13.0"
+version: "0.14.0"
 date-released: "2026-09-20"
 keywords:
   - specification
@@ -28,10 +28,10 @@ keywords:
   - in-toto
 references:
   - type: software
-    title: "Velaris"
+    title: "Sabline"
     authors:
       - family-names: Palakurthi
         given-names: Gowri Shankar
-    repository-code: "https://github.com/gowrishankar-infra/velaris-lang"
+    repository-code: "https://github.com/gowrishankar-infra/sabline-lang"
     version: 5.0.0
     notes: "The reference implementation."

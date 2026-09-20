@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/velaris-spec/v0.5/schemas/velaris.audit.1.schema.json",
-  "title": "velaris.audit/1",
-  "description": "What a Velaris program declares, names and promises, before it runs: velaris-spec SPEC.md section 8. Within version 1 fields may be added and consumers must ignore fields they do not know, so no object here forbids other properties; fields added after version 1 was first released (2.52) are optional. This schema checks shape. It does not check the rules of SPEC.md section 8 that JSON Schema cannot state - for example that effects is sorted, or that it is the union of the functions' effects.",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/sabline-spec/v0.5/schemas/sabline.audit.1.schema.json",
+  "title": "sabline.audit/1",
+  "description": "What a Sabline program declares, names and promises, before it runs: sabline-spec SPEC.md section 8. Within version 1 fields may be added and consumers must ignore fields they do not know, so no object here forbids other properties; fields added after version 1 was first released (2.52) are optional. This schema checks shape. It does not check the rules of SPEC.md section 8 that JSON Schema cannot state - for example that effects is sorted, or that it is the union of the functions' effects.",
   "type": "object",
   "required": [
     "schema",
-    "velaris_version",
+    "sabline_version",
     "ok",
     "problems",
     "effects",
@@ -17,9 +17,9 @@
   ],
   "properties": {
     "schema": {
-      "const": "velaris.audit/1"
+      "const": "sabline.audit/1"
     },
-    "velaris_version": {
+    "sabline_version": {
       "description": "The version of the implementation that produced the document.",
       "type": "string",
       "minLength": 1
@@ -55,9 +55,9 @@
       "maximum": 100
     },
     "safe_command": {
-      "description": "'velaris <file> --allow ' followed by the grant text of SPEC.md section 8.3, or by '' when that is empty. '<file>' is literal text for the reader to replace.",
+      "description": "'sabline <file> --allow ' followed by the grant text of SPEC.md section 8.3, or by '' when that is empty. '<file>' is literal text for the reader to replace.",
       "type": "string",
-      "pattern": "^velaris <file> --allow .+$"
+      "pattern": "^sabline <file> --allow .+$"
     },
     "warnings": {
       "description": "Sentences for a human reader. Their wording is not part of the format; do not parse them.",
@@ -120,7 +120,7 @@
       }
     },
     "net_hosts": {
-      "description": "Added in 3.0. Hosts named in literal URLs given to fetch, post, fetch_status and request, anywhere in the program as loaded: the host lower-cased with trailing dots removed, or host:port when the URL writes a port. From velaris-lang 3.3.0 an IPv6 host is written in brackets ([::1], [::1]:443), so host:port is unambiguous, and , @ [ ] % in a host are percent-encoded (SPEC.md 5.2, 8.2; Q5 resolved in spec 0.2). any says that some URL was not a literal or had no host.",
+      "description": "Added in 3.0. Hosts named in literal URLs given to fetch, post, fetch_status and request, anywhere in the program as loaded: the host lower-cased with trailing dots removed, or host:port when the URL writes a port. From sabline-lang 3.3.0 an IPv6 host is written in brackets ([::1], [::1]:443), so host:port is unambiguous, and , @ [ ] % in a host are percent-encoded (SPEC.md 5.2, 8.2; Q5 resolved in spec 0.2). any says that some URL was not a literal or had no host.",
       "type": "object",
       "required": [
         "hosts",
@@ -145,7 +145,7 @@
       "type": "boolean"
     },
     "counts": {
-      "description": "Added in 4.2. For fs and net, the largest bound of velaris-spec SPEC.md section 9.4 on the operations of that effect one call to a function defined in the audited file can perform (0 when none of them declares the effect), or null when the text fixes no bound or it exceeds 2^53. The whole field is null when no bound was determined, as when ok is false (SPEC.md 8.2, 8.4).",
+      "description": "Added in 4.2. For fs and net, the largest bound of sabline-spec SPEC.md section 9.4 on the operations of that effect one call to a function defined in the audited file can perform (0 when none of them declares the effect), or null when the text fixes no bound or it exceeds 2^53. The whole field is null when no bound was determined, as when ok is false (SPEC.md 8.2, 8.4).",
       "type": [
         "object",
         "null"
@@ -176,7 +176,7 @@
       "type": "boolean"
     },
     "confinement": {
-      "description": "Added in 0.12 (velaris-lang 8.4). What the operating system holds of a run under safe_command, beside the budget: for each of three systems the level and the reason, stated for a system where every mechanism the producer uses there is available, and the granted Python modules that widen what is asked of the operating system. Derived from the budget alone, so it is the same wherever the audit is made. Null when safe_command's budget does not parse.",
+      "description": "Added in 0.12 (sabline-lang 8.4). What the operating system holds of a run under safe_command, beside the budget: for each of three systems the level and the reason, stated for a system where every mechanism the producer uses there is available, and the granted Python modules that widen what is asked of the operating system. Derived from the budget alone, so it is the same wherever the audit is made. Null when safe_command's budget does not parse.",
       "type": ["object", "null"],
       "required": ["systems", "widened_by"],
       "properties": {
@@ -206,14 +206,14 @@
       }
     },
     "ffi_native": {
-      "description": "Added in 0.9 (velaris-lang 8.0). Per top-level Python module named in the program (the keys are a subset of ffi_modules), whether it or code it ships is native - a compiled extension (.so/.pyd/.dylib) or a module built into the interpreter - decided from the files on disk WITHOUT importing the module. \"native\" when a compiled extension is found; \"unknown\" otherwise, and never \"false\", because a pure-Python module can import a native one without that being visible from its own files. The verdict reflects the packages installed on the machine that produced the audit, so it is not reproducible across machines and an attestation embedding it says only what that machine found. Empty when the program names no module. A producer without this notion may write it empty or omit it (a consumer must ignore fields it does not know).",
+      "description": "Added in 0.9 (sabline-lang 8.0). Per top-level Python module named in the program (the keys are a subset of ffi_modules), whether it or code it ships is native - a compiled extension (.so/.pyd/.dylib) or a module built into the interpreter - decided from the files on disk WITHOUT importing the module. \"native\" when a compiled extension is found; \"unknown\" otherwise, and never \"false\", because a pure-Python module can import a native one without that being visible from its own files. The verdict reflects the packages installed on the machine that produced the audit, so it is not reproducible across machines and an attestation embedding it says only what that machine found. Empty when the program names no module. A producer without this notion may write it empty or omit it (a consumer must ignore fields it does not know).",
       "type": "object",
       "additionalProperties": {
         "enum": ["native", "unknown"]
       }
     },
     "tools": {
-      "description": "Added in 0.13 (velaris-lang 8.5). The tools the program's tool and tool_secret calls name as literal text, and whether any call names one with a value built while running. null when the program could not be loaded.",
+      "description": "Added in 0.13 (sabline-lang 8.5). The tools the program's tool and tool_secret calls name as literal text, and whether any call names one with a value built while running. null when the program could not be loaded.",
       "type": ["object", "null"],
       "required": ["names", "any"],
       "properties": {
@@ -222,7 +222,7 @@
       }
     },
     "secrets": {
-      "description": "Added in 0.7 (velaris-lang 6.0). Which builtins handed this program a value the type system will not let it emit, whether the program ever declassifies one, and with what stated reasons (velaris-spec SPEC.md section 8.6). sources holds builtin names, sorted and without repeats - env and read_file_secret in the reference. declassifies is true when the program as loaded holds at least one declassify call, and declassifications names each one, sorted by function, then line, then reason. The whole field is null when the program could not be loaded; it is not null merely because ok is false. An implementation with no such type system writes empty values. The reasons are text a program's author wrote and nothing checks them, and the rule behind the field bounds explicit flow only.",
+      "description": "Added in 0.7 (sabline-lang 6.0). Which builtins handed this program a value the type system will not let it emit, whether the program ever declassifies one, and with what stated reasons (sabline-spec SPEC.md section 8.6). sources holds builtin names, sorted and without repeats - env and read_file_secret in the reference. declassifies is true when the program as loaded holds at least one declassify call, and declassifications names each one, sorted by function, then line, then reason. The whole field is null when the program could not be loaded; it is not null merely because ok is false. An implementation with no such type system writes empty values. The reasons are text a program's author wrote and nothing checks them, and the rule behind the field bounds explicit flow only.",
       "type": [
         "object",
         "null"
@@ -273,7 +273,7 @@
   },
   "$defs": {
     "effect_name": {
-      "description": "One of io, env, fs, net, clock, rand, ffi, from velaris-spec 0.7 (velaris-lang 6.0) declassify, and from 0.13 (velaris-lang 8.5) tool. From velaris-lang 3.3.0 the reference rejects any other identifier in a uses clause (SPEC.md 3.2, Q1 resolved in spec 0.2), and from 4.1.0 it leaves such a name out of the audit that reports the rejection too (SPEC.md 3.2, resolved in spec 0.4), so a 4.1+ producer's effects are always a subset of the effects of SPEC.md 3.1; the schema still accepts any identifier so that documents from earlier producers (2.52 onward), which could carry an unknown name, remain valid.",
+      "description": "One of io, env, fs, net, clock, rand, ffi, from sabline-spec 0.7 (sabline-lang 6.0) declassify, and from 0.13 (sabline-lang 8.5) tool. From sabline-lang 3.3.0 the reference rejects any other identifier in a uses clause (SPEC.md 3.2, Q1 resolved in spec 0.2), and from 4.1.0 it leaves such a name out of the audit that reports the rejection too (SPEC.md 3.2, resolved in spec 0.4), so a 4.1+ producer's effects are always a subset of the effects of SPEC.md 3.1; the schema still accepts any identifier so that documents from earlier producers (2.52 onward), which could carry an unknown name, remain valid.",
       "type": "string",
       "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
     },

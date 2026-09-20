@@ -1,5 +1,50 @@
 # Changelog
 
+The reference implementation was called **Velaris** until
+0.14.0 / sabline-lang 8.6.0; every entry below 0.14.0 uses the
+name it had at the time.
+
+## 0.14.0 - The reference implementation is renamed - 2026-09-20
+
+Tracks sabline-lang 8.6.0. The reference implementation was called
+**Velaris** and is now called **Sabline**: the name belongs to an unrelated
+company in the same market (velaris.io), and was given up rather than
+contested. This document is renamed with it. Nothing else changed - no
+rule of any section, no field of any document, no conformance case.
+
+Additive: every document valid under 0.13.0 is valid under 0.14.0 and means
+the same, and an implementation that reads 0.13.0's names goes on reading
+them.
+
+- **The document formats are `sabline.*`** where they were `velaris.*`:
+  `sabline.audit/1`, `sabline.capabilities/1`, `sabline.capabilities/0`,
+  `sabline.receipt/1` and the rest (section 8). A producer MUST write the
+  `sabline.*` name. A consumer SHOULD read the `velaris.*` name of the same
+  document at the same version as that document - it is a rename, not a new
+  version - and MUST NOT read it as anything else. The schemas in
+  `schemas/` are renamed to match; their contents are otherwise byte for
+  byte what 0.13.0 published.
+- **Both predicate types are named at sabline.dev** (sections 8.5 and 8.7):
+  `https://sabline.dev/capability/v1` and `https://sabline.dev/receipt/v1`.
+  Each has now been named at three addresses, and a consumer SHOULD read
+  all three as the same type: the new one, `velaris-lang.dev` (0.11.0 to
+  0.14.0, written by sabline-lang 8.3.0 to 8.5.0), and the reference's
+  GitHub Pages address (until 0.11.0, written by 4.2.0 to 8.2.1). Nothing
+  is ever removed from that list; a name that was published and signed goes
+  on being accepted. Both earlier addresses redirect to sabline.dev.
+  Neither `velaris.dev` nor `velaris.io` has ever been this document's
+  domain, and neither names any type it defines.
+- **The repository is `gowrishankar-infra/sabline-spec`**, renamed in
+  place, so the old URL redirects. The reference implementation is
+  `gowrishankar-infra/sabline-lang`, on PyPI and npm as `sabline-lang`.
+- **The conformance corpus is unchanged**: 456 cases, the same ids, the
+  same expectations. A case names no implementation.
+
+An implementation that claims conformance to 0.13.0 conforms to 0.14.0
+without changing anything it computes; what it must change is the name it
+writes in a document's `schema` field and in a Statement's `predicateType`,
+and what it accepts when reading is a superset of what it accepted before.
+
 ## 0.13.0 - Tools a host offers, and a MAC under a secret key - 2026-09-20
 
 Tracks velaris-lang 8.5.0. Additive: a budget, an audit, a baseline and a

@@ -2,7 +2,7 @@
   "id": "L3-check-baseline-provisional-v0",
   "level": 3,
   "kind": "check",
-  "description": "a velaris.capabilities/0 baseline cannot be compared",
+  "description": "a sabline.capabilities/0 baseline cannot be compared",
   "spec": [
     "9",
     "9.6"
@@ -16,7 +16,7 @@
     },
     "root": ".",
     "baseline": {
-      "text": "{\"schema\": \"velaris.capabilities/0\", \"programs\": []}\n"
+      "text": "{\"schema\": \"sabline.capabilities/0\", \"programs\": []}\n"
     },
     "change": {}
   },

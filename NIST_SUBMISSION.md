@@ -36,9 +36,9 @@ that should not be public.
 
 ## Respondent
 
-Palakurthi Gowri Shankar, an individual, maintainer of velaris-lang
-(<https://github.com/gowrishankar-infra/velaris-lang>) and velaris-spec
-(<https://github.com/gowrishankar-infra/velaris-spec>). Contact: [to be
+Palakurthi Gowri Shankar, an individual, maintainer of sabline-lang
+(<https://github.com/gowrishankar-infra/sabline-lang>) and sabline-spec
+(<https://github.com/gowrishankar-infra/sabline-spec>). Contact: [to be
 filled in before sending].
 
 ## What this bears on
@@ -67,7 +67,7 @@ be fully predictable when deployed?".
 ## Summary
 
 An agent that writes code, or calls a tool, can do whatever that code
-or tool can do. Velaris is a small programming language in which that
+or tool can do. Sabline is a small programming language in which that
 is stated where it can be checked: each function's signature declares
 which of seven effects it may perform, the compiler checks the
 declaration across the whole call graph, and the runtime refuses any
@@ -75,9 +75,9 @@ operation outside a budget the operator writes, before the operation
 happens. A repository can commit a baseline of what its programs need,
 and a check fails any change that needs more. The format - the effects,
 the grant grammar, what a runtime must refuse, the audit document and
-the baseline - is published separately under CC0 as velaris-spec, with
+the baseline - is published separately under CC0 as sabline-spec, with
 a conformance corpus of 444 cases any implementation can run, and
-velaris-lang implements it. What this offers the Initiative is that
+sabline-lang implements it. What this offers the Initiative is that
 format, its corpus and its limits, as one worked example of a
 declaration of agent capability that two implementations can be tested
 to agree on.
@@ -111,23 +111,23 @@ step alone.
   not happen and ends the run, and the program cannot catch the
   refusal. The budget is checked against what a run attempts, not what
   the program declares.
-- **An audit before running.** `velaris.audit/1` is a JSON document of
+- **An audit before running.** `sabline.audit/1` is a JSON document of
   what a program declares and names - effects, paths, hosts, modules,
   bounds on file and network operations - and the narrowest budget to
   run it under.
-- **Bound to the bytes it describes.** velaris-spec defines an in-toto
+- **Bound to the bytes it describes.** sabline-spec defines an in-toto
   predicate type that binds an audit to the digests of the source files
-  audited. velaris-lang 4.2.0 and later write such Statements
-  (`velaris attest`); its release workflow signs one for an example
+  audited. sabline-lang 4.2.0 and later write such Statements
+  (`sabline attest`); its release workflow signs one for an example
   program with cosign and with sigstore-python and verifies both. A pull
   request listing the type in in-toto's predicate directory is
   prepared.
 
 ## 3. The ratchet: holding a repository to what it declared
 
-`velaris capabilities init` writes a baseline of every grant a
+`sabline capabilities init` writes a baseline of every grant a
 repository's programs need and the most operations one run can
-perform; `velaris capabilities check` derives the same from the working
+perform; `sabline capabilities check` derives the same from the working
 tree and compares it with the baseline - with the baseline, and never
 with a previous commit. A grant the baseline does not cover, a larger
 count, or an effect added to a recorded function fails the check. A
@@ -142,11 +142,11 @@ divided among commits, the sum is reported.
 
 This is a property of a deterministic comparison, not a detection rate.
 It says nothing about intent, nothing about what a granted module does,
-and nothing about code not written in Velaris.
+and nothing about code not written in Sabline.
 
 ## 4. Interoperability: a format, a corpus, an implementation
 
-- **The format** is velaris-spec (<https://github.com/gowrishankar-infra/velaris-spec>),
+- **The format** is sabline-spec (<https://github.com/gowrishankar-infra/sabline-spec>),
   dedicated to the public domain under CC0 1.0, with JSON Schemas for
   the audit, the baseline and the in-toto predicate. It can be
   implemented without reading the compiler.
@@ -164,35 +164,35 @@ and nothing about code not written in Velaris.
   model, four because they need a Python host. The corpus is generated from the reference implementation's
   test suites and checked for drift in both repositories' CI, so the
   corpus and the implementation cannot say different things.
-- **The reference implementation** is velaris-lang 5.0.0 (MIT), one
+- **The reference implementation** is sabline-lang 5.0.0 (MIT), one
   Python file. It passes the corpus at all three levels, and its test
   suites run on every push on Linux, Windows and macOS.
 - **Agent protocols.** The grammar and its covering rule - when one set
   of grants covers another - could serve as the content of a capability
   declaration on an agent tool. A draft for the Model Context Protocol
-  is in velaris-spec's MCP_PROPOSAL.md; it overlaps an open proposal
+  is in sabline-spec's MCP_PROPOSAL.md; it overlaps an open proposal
   there (SEP-3140) and is written as input to it.
 
 ## 5. What has been measured
 
 On a benchmark of 63 small programs (56 with one deliberate defect, 7
-correct controls), each written in Velaris, in JavaScript for Deno and
-in Python, and run by one harness under the same rules, Velaris caught
+correct controls), each written in Sabline, in JavaScript for Deno and
+in Python, and run by one harness under the same rules, Sabline caught
 54 of the 56 defects, 42 of them before running; Deno caught 32 and
 Python 28; none flagged a correct program. The benchmark was written by
 the project, is small, uses inputs chosen to trigger each defect, and
 was run on one machine. The ratchet has not been measured on any
-repository but velaris-lang's own, nor on the gradual-attack benchmark
-above, whose code is not Velaris; its test suite asserts what it
+repository but sabline-lang's own, nor on the gradual-attack benchmark
+above, whose code is not Sabline; its test suite asserts what it
 computes on scripted histories, including one where six harmless-looking
 changes end in a network call three calls below `main`.
 
 ## 6. Limits
 
-As velaris-lang's threat model states them:
+As sabline-lang's threat model states them:
 
-- **Only code written in Velaris.** Nothing here applies to code the
-  Velaris runtime does not run, and a model asked for Velaris may hand
+- **Only code written in Sabline.** Nothing here applies to code the
+  Sabline runtime does not run, and a model asked for Sabline may hand
   back something else.
 - **A granted `ffi` module is trusted in full.** `ffi:os` is the
   operating system; the grant narrows which modules a call may reach,
@@ -253,10 +253,10 @@ the respondent's direction, and reviewed by the respondent.
 
 ## Sources
 
-- The paper: velaris-lang `paper/velaris.md` (draft, not yet on arXiv).
-- velaris-spec SPEC.md sections 3 to 9 and CONFORMANCE.md; the corpus
+- The paper: sabline-lang `paper/sabline.md` (draft, not yet on arXiv).
+- sabline-spec SPEC.md sections 3 to 9 and CONFORMANCE.md; the corpus
   in `tests/`.
-- velaris-lang THREAT_MODEL.md, `benchmark/RESULTS.md`,
+- sabline-lang THREAT_MODEL.md, `benchmark/RESULTS.md`,
   `check_ratchet.py`.
 - NIST: the AI Agent Standards Initiative page above; the CAISI RFI,
   <https://www.federalregister.gov/documents/2026/01/08/2026-00206/request-for-information-regarding-security-considerations-for-artificial-intelligence-agents>;

@@ -8,7 +8,7 @@
   ],
   "from": "check_ratchet.py CHECKS known-limit-path-as-parameter",
   "requires": [],
-  "known_limit": "A change that does not widen, reported as one. The program reads data/in.csv as before, but a parameter is not fixed text (velaris-spec 9.3 step 4), so the grant it needs is fs:read, any path.",
+  "known_limit": "A change that does not widen, reported as one. The program reads data/in.csv as before, but a parameter is not fixed text (sabline-spec 9.3 step 4), so the grant it needs is fs:read, any path.",
   "input": {
     "tree": {
       "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"

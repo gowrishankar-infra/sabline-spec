@@ -9,7 +9,7 @@
   ],
   "from": "check_ratchet.py CHECKS known-limit-backslash-path",
   "requires": [],
-  "known_limit": "A change that does not widen, reported as one, on Windows. A path holding a backslash is compared whole, because on Windows data/..\\..\\x leaves data; the price is that data\\in.csv, which is inside data there, is reported too (velaris-spec open question Q7).",
+  "known_limit": "A change that does not widen, reported as one, on Windows. A path holding a backslash is compared whole, because on Windows data/..\\..\\x leaves data; the price is that data\\in.csv, which is inside data there, is reported too (sabline-spec open question Q7).",
   "input": {
     "tree": {
       "read.vel": "fn main() uses io, fs {\n    check read_file(\"data/in.csv\") {\n        ok text {\n            print(text)\n        }\n        fail why {\n            print(why)\n        }\n    }\n}\n"

@@ -2,7 +2,7 @@
   "id": "L1-budget-spec-example",
   "level": 1,
   "kind": "budget",
-  "description": "the example of velaris-spec 4: a path, a host with a port, and a count",
+  "description": "the example of sabline-spec 4: a path, a host with a port, and a count",
   "spec": [
     "4",
     "5"

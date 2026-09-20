@@ -4,16 +4,16 @@
 usage: python tools/validate.py [--audits DIR] [--capabilities FILE]
 
 - every file in schemas/ must be a valid JSON Schema (draft 2020-12);
-- every examples/**/*.audit.json must validate as velaris.audit/1;
+- every examples/**/*.audit.json must validate as sabline.audit/1;
 - every examples/*statement.json must be an in-toto Statement v1 of the
   capability/v1 predicate type (SPEC.md 8.5), its predicate valid
   against schemas/capability-predicate.v1.schema.json and its audit
-  against the velaris.audit/1 schema;
+  against the sabline.audit/1 schema;
 - every examples/*receipt.json must be an in-toto Statement v1 of the
   receipt/v1 predicate type (SPEC.md 8.7), its predicate valid against
   schemas/receipt-predicate.v1.schema.json, and there must be one;
 - every examples/*.capabilities.json must validate as
-  velaris.capabilities/1, with its programs sorted by file and unique,
+  sabline.capabilities/1, with its programs sorted by file and unique,
   and every grant list sorted and reduced - rules of SPEC.md section
   9.2 that JSON Schema cannot state. Reduction is checked with the
   covering rule of section 9.5, written out below from the text;
@@ -21,10 +21,10 @@ usage: python tools/validate.py [--audits DIR] [--capabilities FILE]
   tests/case.schema.json, is listed in tests/index.json under its own
   id, level and kind, and no two cases share an id; the index's counts
   are the cases' counts; and every baseline a derive case expects is
-  held to the rules above, as velaris.capabilities/1.
+  held to the rules above, as sabline.capabilities/1.
 
 With --audits DIR, every *.json directly in DIR is validated as
-velaris.audit/1 as well: the way to hold the schema against a
+sabline.audit/1 as well: the way to hold the schema against a
 reference implementation's real output. With --capabilities FILE, that
 baseline is held to the same rules as the examples - the way to hold
 the schema against the baseline a real repository commits.
@@ -38,14 +38,19 @@ from pathlib import Path
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parent.parent
-# 0.11.0: the types are named at velaris-lang.dev; a Statement written by
-# velaris-lang 4.2 to 8.2.1 names them at the earlier address, and is read as
-# the same type (sections 8.5 and 8.7). The examples are those Statements.
-PREDICATE_TYPE = "https://velaris-lang.dev/capability/v1"
-RECEIPT_TYPE = "https://velaris-lang.dev/receipt/v1"
+# 0.14.0: the types are named at sabline.dev. They have been named twice
+# before - at the reference implementation's GitHub Pages address by
+# sabline-lang 4.2 to 8.2.1, and at velaris-lang.dev by 8.3 to 8.5, before
+# the project was renamed Sabline - and a Statement carrying either is read
+# as the same type (sections 8.5 and 8.7). The examples are those
+# Statements. Nothing is ever removed from these tuples: a name only joins.
+PREDICATE_TYPE = "https://sabline.dev/capability/v1"
+RECEIPT_TYPE = "https://sabline.dev/receipt/v1"
 PREDICATE_TYPES = (PREDICATE_TYPE,
+                   "https://velaris-lang.dev/capability/v1",
                    "https://gowrishankar-infra.github.io/velaris-lang/capability/v1")
 RECEIPT_TYPES = (RECEIPT_TYPE,
+                 "https://velaris-lang.dev/receipt/v1",
                  "https://gowrishankar-infra.github.io/velaris-lang/receipt/v1")
 
 
@@ -81,7 +86,7 @@ def norm(p: str) -> str:
 # `declassify` joined them in 0.7; before that "declassify" fell
 # through parts() to the net branch and read as a grant of every
 # host, so a baseline holding it reported every net: grant as
-# redundant. velaris-spec 3.1.
+# redundant. sabline-spec 3.1.
 PLAIN = ("io", "env", "clock", "rand", "declassify")
 
 
@@ -196,9 +201,9 @@ def corpus_problems(caps) -> list:
     cases = Draft202012Validator(schema)
     index = load(tests / "index.json")
     problems = []
-    if index.get("format") != "velaris.conformance-corpus/1":
+    if index.get("format") != "sabline.conformance-corpus/1":
         problems.append("index.json: format is not "
-                        "velaris.conformance-corpus/1")
+                        "sabline.conformance-corpus/1")
     listed = {}
     for e in index.get("cases", []):
         if e["id"] in listed:
@@ -229,8 +234,8 @@ def corpus_problems(caps) -> list:
         seen.add(doc["id"].lower())
         per_level[str(doc["level"])] += 1
         if doc["kind"] == "derive":
-            body = dict(doc["expect"], schema="velaris.capabilities/1",
-                        velaris_version="0", date="2026-01-01")
+            body = dict(doc["expect"], schema="sabline.capabilities/1",
+                        sabline_version="0", date="2026-01-01")
             problems += [f"{rel}: {p}" for p in capabilities_problems(caps, body)]
     problems += [f"index.json lists {i}, which has no file"
                  for i in sorted(set(listed) - {p.stem for p in on_disk})]
@@ -265,18 +270,18 @@ def main(argv: list) -> int:
         except Exception as e:  # SchemaError, with the reason
             report(f"schemas/{path.name} is a valid draft 2020-12 schema", [str(e)])
 
-    audit = schemas.get("velaris.audit.1.schema.json")
-    caps = schemas.get("velaris.capabilities.1.schema.json")
+    audit = schemas.get("sabline.audit.1.schema.json")
+    caps = schemas.get("sabline.capabilities.1.schema.json")
     if audit is None or caps is None:
         print("FAIL  the audit and capabilities/1 schemas must be present and valid")
         return 1
 
     for path in sorted((ROOT / "examples").rglob("*.audit.json")):
-        report(f"{path.relative_to(ROOT).as_posix()} is velaris.audit/1",
+        report(f"{path.relative_to(ROOT).as_posix()} is sabline.audit/1",
                errors_of(audit, load(path)))
 
     for path in sorted((ROOT / "examples").glob("*.capabilities.json")):
-        report(f"{path.relative_to(ROOT).as_posix()} is velaris.capabilities/1",
+        report(f"{path.relative_to(ROOT).as_posix()} is sabline.capabilities/1",
                capabilities_problems(caps, load(path)))
 
     predicate = schemas.get("capability-predicate.v1.schema.json")
@@ -339,12 +344,12 @@ def main(argv: list) -> int:
         where = Path(argv[argv.index("--audits") + 1])
         docs = sorted(where.glob("*.json"))
         bad = [(p.name, errs) for p in docs if (errs := errors_of(audit, load(p)))]
-        report(f"{len(docs)} documents in {where} are velaris.audit/1",
+        report(f"{len(docs)} documents in {where} are sabline.audit/1",
                [f"{name}: {errs[0]}" for name, errs in bad])
 
     if "--capabilities" in argv:
         path = Path(argv[argv.index("--capabilities") + 1])
-        report(f"{path} is velaris.capabilities/1",
+        report(f"{path} is sabline.capabilities/1",
                capabilities_problems(caps, load(path)))
 
     return 1 if failed else 0

@@ -60,6 +60,6 @@
       "hosts": [],
       "any": false
     },
-    "safe_command": "velaris <file> --allow fs:read:data/in.csv,io"
+    "safe_command": "sabline <file> --allow fs:read:data/in.csv,io"
   }
 }

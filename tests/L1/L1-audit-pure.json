@@ -43,6 +43,6 @@
       "hosts": [],
       "any": false
     },
-    "safe_command": "velaris <file> --allow ''"
+    "safe_command": "sabline <file> --allow ''"
   }
 }

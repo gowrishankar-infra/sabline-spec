@@ -46,6 +46,6 @@
       ],
       "any": false
     },
-    "safe_command": "velaris <file> --allow io,net:api.example.com"
+    "safe_command": "sabline <file> --allow io,net:api.example.com"
   }
 }

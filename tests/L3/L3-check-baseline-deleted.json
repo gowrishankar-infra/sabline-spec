@@ -2,7 +2,7 @@
   "id": "L3-check-baseline-deleted",
   "level": 3,
   "kind": "check",
-  "description": "with velaris.capabilities deleted the check fails rather than passing: deleting the file does not turn the check off",
+  "description": "with sabline.capabilities deleted the check fails rather than passing: deleting the file does not turn the check off",
   "spec": [
     "9.6"
   ],
