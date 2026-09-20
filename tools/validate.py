@@ -276,8 +276,8 @@ def main(argv: list) -> int:
         except Exception as e:  # SchemaError, with the reason
             report(f"schemas/{path.name} is a valid draft 2020-12 schema", [str(e)])
 
-    audit = schemas.get("sabline.audit.1.schema.json")
-    caps = schemas.get("sabline.capabilities.1.schema.json")
+    audit = schemas.get("velaris.audit.1.schema.json")
+    caps = schemas.get("velaris.capabilities.1.schema.json")
     if audit is None or caps is None:
         print("FAIL  the audit and capabilities/1 schemas must be present and valid")
         return 1

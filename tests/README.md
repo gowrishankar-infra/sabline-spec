@@ -92,7 +92,7 @@ the file to audit. Write the files into an empty directory and produce
 the file's `sabline.audit/1` document (SPEC.md 8). Every document, in
 every audit case, must:
 
-1. validate against `../schemas/sabline.audit.1.schema.json`;
+1. validate against `../schemas/velaris.audit.1.schema.json`;
 2. have an `effects` that is sorted, has no repeats, and holds only the
    seven effect names;
 3. have a `safe_command` whose grant text - everything after
@@ -154,7 +154,7 @@ shows that the program did run up to the refused operation.
 directory of the tree to record (`.` for the whole tree). Write the
 tree, and write the baseline for `root` with the implementation's own
 writer (SPEC.md 9.2 to 9.4). The document must validate against
-`../schemas/sabline.capabilities.1.schema.json`, and its `surface` and
+`../schemas/velaris.capabilities.1.schema.json`, and its `surface` and
 `programs` must equal `expect` exactly; `sabline_version` and `date`
 are the writer's own and are not compared.
 

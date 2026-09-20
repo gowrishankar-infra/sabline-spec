@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/sabline-spec/v0.5/schemas/sabline.audit.1.schema.json",
+  "$id": "https://raw.githubusercontent.com/gowrishankar-infra/sabline-spec/v0.5/schemas/velaris.audit.1.schema.json",
   "title": "sabline.audit/1",
   "description": "What a Sabline program declares, names and promises, before it runs: sabline-spec SPEC.md section 8. Within version 1 fields may be added and consumers must ignore fields they do not know, so no object here forbids other properties; fields added after version 1 was first released (2.52) are optional. This schema checks shape. It does not check the rules of SPEC.md section 8 that JSON Schema cannot state - for example that effects is sorted, or that it is the union of the functions' effects.",
   "type": "object",

@@ -79,7 +79,7 @@ An implementation conforming at L1 does all of the following.
   `write_any`, `any`, `ffi_any`). Cases: the 17 `L1-audit-*` cases
   that compile.
 - **D5. Emits `sabline.audit/1`** (8) that validates against
-  [schemas/sabline.audit.1.schema.json](schemas/sabline.audit.1.schema.json),
+  [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json),
   whose `effects` holds only names of 3.1 even when `ok` is false,
   and whose `safe_command` is derived as 8.3 says and always parses.
   Cases: all 26 `L1-audit-*` cases.
@@ -151,7 +151,7 @@ following.
   fixed text and reduced, and its `fs` and `net` counts; the surface as
   the union of the programs that compile; a file that does not compile
   recorded as such; a document that validates against
-  [schemas/sabline.capabilities.1.schema.json](schemas/sabline.capabilities.1.schema.json).
+  [schemas/velaris.capabilities.1.schema.json](schemas/velaris.capabilities.1.schema.json).
   Cases: the 14 `L3-derive-*` cases, the 6 `L3-bound-*` cases and the
   3 `L3-reduce-*` cases.
 - **R2. Does not replace a baseline unasked** (9.6): a writer asked to

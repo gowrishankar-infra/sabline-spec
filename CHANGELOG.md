@@ -39,8 +39,11 @@ them.
   `gowrishankar-infra/sabline-lang`, on PyPI and npm as `sabline-lang`.
 - **The conformance corpus is unchanged**: 456 cases, the same ids, the
   same expectations. A case names no implementation.
-- **`tests/index.json` keeps `velaris.conformance-corpus/1`**, and is the
-  one document this version does not rename. The corpus exists for an
+- **The corpus keeps the names a published implementation opens**, and is
+  the one part of this repository that is not renamed: `tests/index.json`
+  keeps the `format` `velaris.conformance-corpus/1`, and the three schemas
+  beside it keep their filenames - `schemas/velaris.audit.1.schema.json`,
+  `velaris.capabilities.1.schema.json` and `velaris.capabilities.0.schema.json`. The corpus exists for an
   implementation in any language to run, and every implementation that
   exists today is a released version of the reference, each of which reads
   that field strictly and none of which can be changed. A corpus that
@@ -48,7 +51,14 @@ them.
   for everyone who has not upgraded - the break this rename is written to
   avoid. The reference reads both names from 8.6.0, and the name the
   corpus is written under moves no sooner than 0.15.0, when a reader that
-  accepts both is the norm rather than the newest release.
+  accepts both is the norm rather than the newest release. The same holds
+  for the three schema files: a released implementation opens them by name
+  (`conform.py`), so renaming them would have been the same break by
+  another route. The reference looks for the `sabline.*` name first and
+  falls back, so it is ready for the move before the move happens. The two
+  predicate schemas, `capability-predicate.v1.schema.json` and
+  `receipt-predicate.v1.schema.json`, are named for the types rather than
+  the project and never carried either name.
 
 An implementation that claims conformance to 0.13.0 conforms to 0.14.0
 without changing anything it computes; what it must change is the name it

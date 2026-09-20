@@ -899,7 +899,7 @@ comment, and - from sabline-lang 3.3.0 - its command line's
 `audit --json` are built on; from 4.2.0 it is also the predicate of the
 in-toto Statements `sabline attest` writes (section 8.5). Its JSON
 Schema is
-[schemas/sabline.audit.1.schema.json](schemas/sabline.audit.1.schema.json);
+[schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json);
 [examples/audits/](examples/audits) holds four documents the reference
 produced.
 
@@ -1098,7 +1098,7 @@ A Statement of this type is an in-toto Statement v1
   MUST produce the audit from exactly the bytes the digests name.
 - **`predicate.audit`** (required): a `sabline.audit/1` document, as
   section 8 defines it and
-  [schemas/sabline.audit.1.schema.json](schemas/sabline.audit.1.schema.json)
+  [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json)
   checks.
 - **`predicate.producer`** (required): `name`, the implementation that
   wrote the audit, and optionally `uri`. Its version is the audit's
@@ -1599,7 +1599,7 @@ grant means the same on every machine:
 
 Within version 1, fields may be added. A consumer MUST ignore a field
 it does not know. The schema,
-[schemas/sabline.capabilities.1.schema.json](schemas/sabline.capabilities.1.schema.json),
+[schemas/velaris.capabilities.1.schema.json](schemas/velaris.capabilities.1.schema.json),
 checks the shape; it cannot check sorting, reduction or the port
 range, which `tools/validate.py` checks for the first two.
 

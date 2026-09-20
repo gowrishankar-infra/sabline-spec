@@ -49,7 +49,7 @@ sections 3 to 7 or 9 changes.
   (sections 6 and 7).
 - **`sabline.audit/1`**: the JSON report of what a program declares and
   names before it runs (section 8,
-  [schemas/sabline.audit.1.schema.json](schemas/sabline.audit.1.schema.json)).
+  [schemas/velaris.audit.1.schema.json](schemas/velaris.audit.1.schema.json)).
 - **`sabline.capabilities/1`**: the baseline in which a repository
   declares the capability surface its programs may have - their
   grants, a bound on their file and network operations, each
@@ -57,7 +57,7 @@ sections 3 to 7 or 9 changes.
   needs more, made against that baseline and never against the
   previous commit, so capability added a little at a time is caught
   as surely as all at once (section 9,
-  [schemas/sabline.capabilities.1.schema.json](schemas/sabline.capabilities.1.schema.json)).
+  [schemas/velaris.capabilities.1.schema.json](schemas/velaris.capabilities.1.schema.json)).
   From 0.3 it is not provisional: the reference implementation writes
   it (`sabline capabilities init`) and checks against it (`sabline
   capabilities check`). The provisional `/0` form of 0.1 and 0.2 is
