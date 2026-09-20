@@ -49,6 +49,8 @@ RECEIPT_TYPE = "https://sabline.dev/receipt/v1"
 PREDICATE_TYPES = (PREDICATE_TYPE,
                    "https://velaris-lang.dev/capability/v1",
                    "https://gowrishankar-infra.github.io/velaris-lang/capability/v1")
+CORPUS_FORMATS = ("velaris.conformance-corpus/1",
+                  "sabline.conformance-corpus/1")
 RECEIPT_TYPES = (RECEIPT_TYPE,
                  "https://velaris-lang.dev/receipt/v1",
                  "https://gowrishankar-infra.github.io/velaris-lang/receipt/v1")
@@ -201,9 +203,13 @@ def corpus_problems(caps) -> list:
     cases = Draft202012Validator(schema)
     index = load(tests / "index.json")
     problems = []
-    if index.get("format") != "sabline.conformance-corpus/1":
-        problems.append("index.json: format is not "
-                        "sabline.conformance-corpus/1")
+    # 0.14.0: the corpus keeps velaris.conformance-corpus/1, the name every
+    # published implementation reads strictly and none of them can be
+    # changed; the reference reads both from 8.6.0, and the name moves no
+    # sooner than 0.15.0 (CHANGELOG). Both are accepted here meanwhile.
+    if index.get("format") not in CORPUS_FORMATS:
+        problems.append("index.json: format is not one of "
+                        + " or ".join(CORPUS_FORMATS))
     listed = {}
     for e in index.get("cases", []):
         if e["id"] in listed:
