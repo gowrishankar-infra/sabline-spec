@@ -6,7 +6,6 @@
   "type": "object",
   "required": [
     "schema",
-    "velaris_version",
     "ok",
     "problems",
     "effects",
@@ -15,6 +14,11 @@
     "safe_command",
     "warnings"
   ],
+  "anyOf": [
+    {"required": ["sabline_version"]},
+    {"required": ["velaris_version"]}
+  ],
+  "$comment": "At least one of sabline_version and velaris_version. The field was velaris_version until 0.14.0, when the reference implementation was renamed from Velaris to Sabline; within version 1 a field may be added and none may disappear, so sabline_version was added beside it rather than replacing it. A document written before 0.14.0 carries the old name, one written by the reference from 8.6.0 carries both, and one written by an implementation that never knew the old name carries the new. velaris_version goes in a version that says so.",
   "properties": {
     "schema": {
       "enum": ["sabline.audit/1", "velaris.audit/1"],
