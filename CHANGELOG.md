@@ -4,6 +4,35 @@ The reference implementation was called **Velaris** until
 0.14.0 / sabline-lang 8.6.0; every entry below 0.14.0 uses the
 name it had at the time.
 
+## Unreleased - a draft section for 9.0
+
+Nothing normative changes. **Section 12 is new and is a draft**: the
+design of `Untrusted of T`, a second mark on a type that bounds what a
+value may *name*, where `Secret of T` (section 8.6) bounds where a value
+may *go*. It is carried here so the design can be read and argued before
+sabline-lang 9.0.0 ships it; it becomes normative in the version of this
+format that tracks 9.0.0.
+
+Nothing is held to it. No conformance case tests it, sections 1 to 11 do
+not depend on it, an implementation cannot claim conformance to it, and
+it may change in any way. Section 12.11 says which cases the corpus will
+need before it stops being a draft.
+
+What it states, in outline: the mark is `Secret of T`'s machinery with a
+different set of refusals (12.2); it is carried by values that arrive
+from outside the program, and not by values that already carry `Secret`
+(12.3); it is refused at the operations that *name a resource* - a URL,
+a path, a module, a tool and its arguments, a database statement, an
+import - and never at one that only emits (12.4); there is deliberately
+no rule about branching, because branching on an untrusted value is
+validation (12.5); the way out is `trust(value, reason)` behind a tenth
+effect, `trust` (12.6); a value may carry both marks, spelled `Secret of
+Untrusted of T` (12.7); and an audit gains `untrusted` and a receipt
+`trustings`, each within version 1 (12.8, 12.9).
+
+The reference's reasoning, and what stops compiling, are in sabline-lang
+`decisions/0004-untrusted.md`.
+
 ## 0.14.0 - The reference implementation is renamed - 2026-09-20
 
 Tracks sabline-lang 8.6.0. The reference implementation was called

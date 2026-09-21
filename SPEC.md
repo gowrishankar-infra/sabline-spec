@@ -61,6 +61,13 @@ and an entry for a MAC under a secret key to its `secrets` (8.2, 8.6), and
 `grants_used`, `key_fingerprint`, `tool_calls` and `tool_ceiling` to a
 receipt (8.7). A budget, an audit, a baseline and a receipt that were valid
 under 0.12.0 are valid and mean the same.
+Section 12 is a **draft**, carried in this document and not part of
+0.14.0's normative content: it states the design of `Untrusted of T`,
+a second mark on a type that bounds what a value may name, which
+sabline-lang 9.0.0 will ship and which the version of this format that
+tracks 9.0.0 will make normative. No conformance case tests it, no
+implementation is held to it, and nothing in sections 1 to 11 depends
+on it. It may change in any way before then.
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
@@ -2015,6 +2022,262 @@ the question.
   (`sabline attest`, section 8.5), and signs none. From 0.11.0 the type
   is named `https://velaris-lang.dev/capability/v1`, and the name above is
   accepted for verification (section 8.5).
+
+## 12. Draft: `Untrusted of T` (9.0, not yet normative)
+
+**This section is a draft and is not normative.** It is not part of
+version 0.14.0 of this format: no conformance case tests it, no
+implementation is held to it, and nothing in sections 1 to 11 depends on
+it. It is published here, in the document that will carry it, so that
+the design can be read and argued before it ships. It becomes normative
+in the version of this format that tracks sabline-lang 9.0.0, and may
+change in any way before then. The reference's own decision record is
+`decisions/0004-untrusted.md` in sabline-lang, which states the
+reasoning this section states only the rules for.
+
+### 12.1 What it is for
+
+Section 8.6 describes `Secret of T`, which bounds where a value may
+**go**. Nothing in this format bounds what a value may **name**.
+
+A budget bounds a set of resources. It does not bound the choice within
+that set, and that choice is where a value from outside the program
+does its work. A run granted `fs:read:./data` and `tool:search@20` may
+read any file under `./data`; if the file it reads is chosen by a
+document a `search` tool returned, the budget has been kept and the
+program has done something nobody asked for. The same shape picks which
+granted host is reached and what the next tool call's arguments say.
+Section 7's list of what the budget does not guarantee is where this
+belongs, and this section is the mechanism that answers it.
+
+`Untrusted of T` is a second mark on a type, alongside `Secret of T`,
+carried by values that arrive from outside the program, and refused at
+the operations that **name a resource**.
+
+### 12.2 The mark
+
+An implementation with such a type MUST apply to `Untrusted of T` the
+rules sabline-lang's SPEC.md section 3.1 states for `Secret of T`, with
+`Untrusted` substituted for `Secret`, except as 12.4 and 12.5 say. In
+summary, and normatively:
+
+- **What carries one.** A value carries the mark when it is one or holds
+  one anywhere inside it: a list of them, a map whose values are them, a
+  record with such a field, a record with a field of such a record. A
+  map's keys never carry one. A function value carries nothing.
+- **What keeps one.** Every pure operation on a value that carries the
+  mark gives an `Untrusted` of the operation's result type, comparisons
+  included. There is no `Untrusted of Untrusted of T`.
+- **What does not.** A container's own shape, rather than its contents:
+  the length of a list *of* untrusted values, the keys of such a map,
+  and whether such a map has a key.
+- **Type variables.** No type variable is bound to a type that carries
+  the mark. A generic function over untrusted values says so in its
+  signature.
+
+### 12.3 Where one comes from
+
+An implementation MUST mark the result of every operation that brings a
+value into the program from outside it, and MUST NOT mark anything else.
+For the reference's builtins (Appendix A):
+
+| Operation | Result |
+|---|---|
+| `fetch`, `post`, `request` | `Untrusted of Text` |
+| `fetch_status` | `Untrusted of Int` |
+| `read_file` | `Untrusted of Text` |
+| `read_line`, `ask` | `Untrusted of Text` |
+| `args` | `Untrusted of List of Text` |
+| `tool` | `Untrusted of Text` |
+| `db_query`, `db_exec` (9.0) | `Untrusted of Text`, `Untrusted of Int` |
+
+An operation whose result already carries `Secret` - in the reference
+`env`, `read_file_secret` and `tool_secret` - is **not** also a source.
+Such a value reaches no operation of 12.4 without `declassify`, which
+already requires an effect, a grant and a written reason and is recorded
+in the audit (8.6); a second mark would be a second written reason for
+one decision. An implementation MAY offer a paired operation whose
+result carries both, for a program whose environment is assembled by
+something it does not trust; the reference's is `env_untrusted`.
+
+An implementation MUST NOT mark the results of calls into the host
+language. The grant that names a host module is the operator's statement
+of trust in that module (section 5.3), and a value that arrives through
+one is outside what this section covers. This is a stated limit, not an
+oversight: content fetched by a granted host module is unmarked.
+
+### 12.4 Where one cannot go
+
+An implementation MUST refuse, at compile time, a value carrying the
+mark given as any of these arguments. In the reference this is **E570**,
+which names the value, the operation and where the mark came from.
+
+| Operation | The argument |
+|---|---|
+| `fetch`, `fetch_status`, `post` | the URL |
+| `request` | the URL |
+| `read_file`, `read_file_secret`, `write_file`, `file_exists` | the path |
+| `py`, `py_int`, `py_float`, `py_json`, `py_new` | the module name, and every name in the attribute chain |
+| `py_do`, `py_field` | the method or field name |
+| `tool`, `tool_secret` | the tool's name, and its arguments |
+| `db_open`, `db_query`, `db_exec` (9.0) | the path, and the statement - never the parameter list |
+| an import | the path |
+
+An implementation MUST NOT refuse the mark at an operation that only
+emits: writing to the console, the body of a request, the content
+written to a file, a failure's reason, an exit status. Those are what
+`Secret of T` covers, and covering both with one mark would make neither
+legible.
+
+An import path that an implementation reads only as a literal at compile
+time cannot carry the mark; the rule is stated so that an implementation
+that later computes one does not open the hole by omission.
+
+### 12.5 No rule about branching
+
+Section 8.6 and sabline-lang's SPEC.md section 3.1 refuse an `if` or
+`while` whose condition carries a `Secret` (E563). **There is no such
+rule for `Untrusted`, and an implementation MUST NOT add one.**
+
+Branching on a secret is an oracle. Branching on an untrusted value is
+validation, and validation is what a program ought to do with one. The
+pattern that needs no way out is to compare the untrusted value and then
+use the program's own literal:
+
+    let name = try json_get(found, "attachment")      // Untrusted of Text
+    if name == "payroll.csv" {
+        return try read_file("./data/payroll.csv")    // the program's word
+    }
+    fail "that attachment is not one this program reads"
+
+That compiles with no way out taken, no effect declared and no grant
+needed, because nothing carrying the mark reaches the operation. An
+implementation's documentation and its error messages SHOULD give this
+before they give 12.6.
+
+### 12.6 The way out
+
+`trust(value, reason)` takes a value carrying the mark and gives back
+the same value without it. It is the only way, and it says so three
+times, as `declassify` does (section 8.6):
+
+- the function performing it declares the effect `trust`, checked across
+  the call graph like any other (section 3.2, E300);
+- `reason` is written as text in the call and not built while running,
+  so an audit can report it without running the program (E571, which is
+  also what a `trust` of a value that does not carry the mark gets, and
+  what an empty reason gets);
+- the operator's budget grants `trust`, or the call is refused at the
+  moment it is reached (E310), like any other effect.
+
+**`trust` is a tenth effect**, added to the list of section 3.1, which
+that section says is closed in each version: `declassify` is why there
+was a 0.7, `tool` why there is a 0.13, and `trust` is why the version
+that ships this section is a new one. It differs from the first seven in
+the same way `declassify` does and for the same reason: it reaches
+nothing outside the program, and it is an effect because it is the only
+operation that removes a mark the type system applied, and because an
+operator who withholds it gets a program that can launder nothing.
+Declaring it, propagating it and refusing it from a budget work exactly
+as for every other effect, and nothing in sections 4 to 7 treats it
+specially. An implementation with no such type has no operation covered
+by `trust`; the effect is still part of the grammar, so a budget naming
+it parses everywhere.
+
+A grant is the bare word `trust`. It takes no scope and no count.
+
+### 12.7 A value that carries both marks
+
+The two marks are independent, and a value carries both when values
+carrying each are combined - a comparison, a concatenation, a record
+with a field of each, a JSON rendering of such a record.
+
+- **The spelling is `Secret of Untrusted of T`**, with `Secret`
+  outermost, and an implementation MUST accept no other spelling of the
+  pair. `Untrusted of Secret of T` is refused, in the reference E572,
+  whose message gives the canonical form; so is a doubled mark of either
+  kind (E562 for `Secret of Secret of T`, E572 for `Untrusted of
+  Untrusted of T`).
+- **The two ways out are independent.** `declassify` removes `Secret`
+  and leaves `Untrusted`; `trust` removes `Untrusted` and leaves
+  `Secret`. A value carrying both needs both calls, both effects, both
+  grants and two written reasons.
+- **Where the marks disagree about an operation, `Secret` wins and is
+  reported.** A value carrying both, given to any operation of 12.4,
+  is refused with the `Secret` code (E560), because a `Secret` reaches
+  no operation that declares an effect at all - the stronger and earlier
+  rule. E570 is given when the value carries `Untrusted` and not
+  `Secret`.
+
+### 12.8 `untrusted`, an object of `sabline.audit/1`
+
+An object added to `sabline.audit/1` within version 1, so a consumer
+that does not know it ignores it (section 8.1), and a producer with no
+such type writes it with empty values. It is `secrets` (8.6) in every
+respect, for the other mark.
+
+| Field | Type | Meaning |
+|---|---|---|
+| `sources` | array of strings | sorted, without repeats: the name of every operation the program as loaded reaches that returns a value carrying the mark |
+| `trusts` | boolean | true when the program as loaded contains at least one `trust` call |
+| `trustings` | array | one object per such call, each with `reason` (the text written in the call), `function` and `line` (integer). Sorted by `function`, then `line`, then `reason`. Empty when `trusts` is false |
+
+The whole field is `null` when the program could not be loaded, and is
+**not** null merely because `ok` is false, for the reason 8.6 gives.
+
+**What it is for.** A consumer asks one question - *does this program
+ever let a value from outside it name a resource* - and `trusts` answers
+it without running the program. `false` means no such value reaches any
+operation of 12.4, by the static rule above. `true` means one may, and
+`trustings` says where and with what stated reason.
+
+**What it does not say.** It does not say the reasons are true; nothing
+checks them. It is not an integrity result: it says nothing about a
+program that validates an untrusted value badly and then uses its own
+literal, which is 12.5's pattern and is invisible here by design. It
+covers only the operations of 12.3, so a value that arrives through a
+granted host module is an ordinary value and `sources` says nothing
+about it. And `trust` is an effect, so it is in `effects` and in
+`safe_command` (sections 3.1, 8.3) like any other, and an operator can
+run the program without granting it - which makes each `trust` a refusal
+at the moment it is reached, not a compile error.
+
+### 12.9 `trustings`, an array of `sabline.receipt/1`
+
+An array added to `sabline.receipt/1` within version 1: one object per
+distinct `trust` call, each with `reason`, `line` and `times` - exactly
+`declassifications` (8.7). `effects_used` may hold `trust`.
+
+The rule of 8.7 has no exception here: a producer MUST NOT put the value
+that was trusted, or anything derived from it, in a receipt. A reason is
+the text written in the program.
+
+### 12.10 What this does not do
+
+- It is not an information-flow result, and no implementation should
+  describe it as one. It bounds which operations a marked value may be
+  an argument of. It says nothing about a value the program derived by
+  branching on a marked one and rebuilding, which 12.5 not only permits
+  but recommends.
+- It does not make a program safe from what it reads. A program that
+  validates badly, or that trusts with a reason that is not true, is
+  refused by nothing here.
+- It covers values the listed operations produced. A value that arrives
+  through a granted host module is an ordinary value (12.3).
+- It is a compile-time distinction with no runtime representation, as
+  `Secret of T` is, so it costs nothing while running and `trust`
+  evaluates to the value itself.
+
+### 12.11 What conformance will require
+
+Nothing yet. When this section becomes normative, the corpus of
+section 10 gains cases at level 1 for the `trust` grant's parsing and
+canonical text (sections 4.2, 4.7), at level 2 for a program refused at
+each operation of 12.4 and a program that validates and is not, and at
+level 3 for the `untrusted` object of an audit and for a baseline whose
+surface widens when a program gains its first `trust` (section 9.6).
+Until those cases exist, an implementation cannot be conformant to this
+section, and MUST NOT claim to be.
 
 ## Appendix A. The reference binding
 
