@@ -45,10 +45,12 @@ them.
   disappear from a version-1 document, which section 8's own rule forbids -
   within a version fields may be added, and none changes meaning or
   disappears without the `schema` value changing. So a producer writes both
-  with the same value, a consumer may read either, and the schemas still
-  require the older name so that every document written before 0.14.0 stays
-  valid. The new name is required of nothing. `velaris_version` goes in a
-  version that says so.
+  with the same value, and a consumer may read either. The schemas require
+  *one of the two* rather than a named one, which is the actual rule: a
+  document written before 0.14.0 carries the old name, one written by the
+  reference from 8.6.0 carries both, and one written by an implementation
+  that never knew the old name carries the new. A document carrying neither
+  is refused. `velaris_version` goes in a version that says so.
 
   The documents in `examples/` keep `velaris_version` alone: each records
   what a particular release wrote - 3.1.1, 4.0.0, 4.2.0 - and those wrote
