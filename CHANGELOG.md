@@ -4,6 +4,35 @@ The reference implementation was called **Velaris** until
 0.14.0 / sabline-lang 8.6.0; every entry below 0.14.0 uses the
 name it had at the time.
 
+## 0.15.0 - How the evidence was arrived at - 2026-10-07
+
+Tracks sabline-lang 8.8.0. One field is added, within version 1 of the
+capability predicate, and no rule changes.
+
+Additive: every document valid under 0.14.0 is valid under 0.15.0 and means
+the same, and a Statement written without the new field is read exactly as
+it was before.
+
+- **`analysisMode` in the capability predicate** (section 8.5), optional,
+  with `static` the only value defined. It says how the evidence in the
+  predicate was arrived at: `static` means the audit was read from the
+  source - its declared types and effects - before the program ran, which
+  is what a `sabline.audit/1` document is. Raised on in-toto #594, where a
+  verifier reading a predicate had no way to tell whether the evidence came
+  from reading the source or from watching a run, and the two bound
+  different things: an audit says what a program *can* touch, a receipt
+  (section 8.7) says what one run *did*.
+- **One value, deliberately.** A producer MUST write `static` or leave the
+  field out, because every predicate of this type carries an audit. A
+  second value waits until there is a predicate of this type that earns
+  one; a value written for a predicate that is still an audit would make
+  the field worse than its absence. A consumer MUST treat a value it does
+  not know as a mode it cannot reason about, and MUST NOT read the absence
+  of the field as `static`.
+- The predicate's schema
+  (`schemas/capability-predicate.v1.schema.json`, published at the
+  predicate type's URL) gains the field as an `enum` of one.
+
 ## 0.14.0 - The reference implementation is renamed - 2026-09-20
 
 Tracks sabline-lang 8.6.0. The reference implementation was called
