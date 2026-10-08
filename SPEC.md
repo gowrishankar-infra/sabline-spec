@@ -1,6 +1,6 @@
 # The Sabline capability format
 
-Version 0.14.0, 2026-09-20. Dedicated to the public domain under CC0 1.0;
+Version 0.15.0, 2026-10-07. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: sabline-lang,
@@ -61,8 +61,13 @@ and an entry for a MAC under a secret key to its `secrets` (8.2, 8.6), and
 `grants_used`, `key_fingerprint`, `tool_calls` and `tool_ceiling` to a
 receipt (8.7). A budget, an audit, a baseline and a receipt that were valid
 under 0.12.0 are valid and mean the same.
+Version 0.15.0 tracks sabline-lang 8.8.0: the capability predicate gains
+`analysisMode` within version 1 (section 8.5), one field with one value,
+`static`, saying that the evidence it carries was read from the source
+before the program ran. Nothing else changes, and a Statement written
+without the field is read exactly as before.
 Section 12 is a **draft**, carried in this document and not part of
-0.14.0's normative content: it states the design of `Untrusted of T`,
+0.15.0's normative content: it states the design of `Untrusted of T`,
 a second mark on a type that bounds what a value may name, which
 sabline-lang 9.0.0 will ship and which the version of this format that
 tracks 9.0.0 will make normative. No conformance case tests it, no
@@ -1098,7 +1103,8 @@ A Statement of this type is an in-toto Statement v1
   "predicate": {
     "producer": {"name": "sabline-lang",
                  "uri": "https://github.com/gowrishankar-infra/sabline-lang"},
-    "specification": "sabline-spec 0.5",
+    "specification": "sabline-spec 0.15.0",
+    "analysisMode": "static",
     "auditedAt": "2026-09-11T00:00:00Z",
     "audit": {"schema": "sabline.audit/1", "...": "..."}
   }
@@ -1119,7 +1125,28 @@ A Statement of this type is an in-toto Statement v1
   wrote the audit, and optionally `uri`. Its version is the audit's
   `sabline_version`.
 - **`predicate.specification`** (optional): the version of this
-  document the producer followed, as `sabline-spec 0.5`.
+  document the producer followed, as `sabline-spec 0.15.0`.
+- **`predicate.analysisMode`** (optional, *new in 0.15.0*): how the
+  evidence in the predicate was arrived at. `static` is the only value
+  defined, and it means the audit was read from the source - its
+  declared types and effects - before the program ran, which is what a
+  `sabline.audit/1` document is (section 8). A producer of this type
+  MUST write `static` or leave the field out, because every predicate
+  of this type carries an audit; the record of a run is a
+  `sabline.receipt/1` document (section 8.7) and is not a predicate of
+  this type. A consumer MUST treat a value it does not know as a mode
+  it cannot reason about, and MUST NOT read the field's absence as
+  `static` - a Statement written before 0.15.0 has no field, and says
+  nothing here either way.
+
+  *Why it is here.* Raised on in-toto #594: a verifier reading a
+  predicate cannot otherwise tell whether the evidence came from
+  reading the source or from watching a run, and the two bound
+  different things. An audit says what a program *can* touch; a receipt
+  says what one run *did*. The field says which of the two it is
+  holding, in the predicate, without the verifier having to know what
+  `sabline.audit/1` is. It is additive within v1 (section 8.1), so it
+  needs no `v2`.
 - **`predicate.auditedAt`** (optional): when the audit was made, RFC
   3339 in UTC, as the producer's clock says.
 - **`predicate.conformance`** (optional): `levels`, the levels of
