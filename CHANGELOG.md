@@ -4,6 +4,26 @@ The reference implementation was called **Velaris** until
 0.14.0 / sabline-lang 8.6.0; every entry below 0.14.0 uses the
 name it had at the time.
 
+## 0.15.1 - 2026-10-08
+
+A text change only: no rule, field, schema or conformance case changes,
+and the corpus is still 456 cases.
+
+- **Section 9.5 lists `tool`.** It enumerates the ways one grant covers
+  another, and when 0.13.0 added `tool` it gained no line for it, though
+  section 5.6 says a grant of `tool` covers any tool grant and section
+  9.5 ends by calling itself "the relation of section 5.5, applied grant
+  by grant". It now says that `tool` covers `tool:T`. The reference has
+  always reduced a baseline that way, and `tools/validate.py` has checked
+  it since 0.13.0, so a baseline holding `tool` beside `tool:search` was
+  never reduced (section 9.2, rule 5); the list in 9.5 was the one place
+  that read otherwise.
+- That is what turned this repository's CI red from 2026-09-28: the
+  baseline sabline-lang commits for itself had `tool` added by hand
+  beside two `tool:T` grants, and the validator refused it, correctly.
+  sabline-lang's baseline is reduced now, and its own CI runs this
+  validator on it.
+
 ## 0.15.0 - How the evidence was arrived at - 2026-10-07
 
 Tracks sabline-lang 8.8.0. One field is added, within version 1 of the

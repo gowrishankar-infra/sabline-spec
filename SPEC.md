@@ -1,6 +1,6 @@
 # The Sabline capability format
 
-Version 0.15.0, 2026-10-07. Dedicated to the public domain under CC0 1.0;
+Version 0.15.1, 2026-10-08. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: sabline-lang,
@@ -66,6 +66,10 @@ Version 0.15.0 tracks sabline-lang 8.8.0: the capability predicate gains
 `static`, saying that the evidence it carries was read from the source
 before the program ran. Nothing else changes, and a Statement written
 without the field is read exactly as before.
+Version 0.15.1 corrects section 9.5, whose list of the ways one grant
+covers another left out `tool` covering `tool:T` - the rule section 5.6
+states, the reference applies and `tools/validate.py` has checked since
+0.13.0. No rule changes.
 Conformance is defined by that corpus (section 10), not by this text.
 
 ## 0. About this document
@@ -1765,6 +1769,8 @@ A grant b covers a grant c when one of these holds:
 
 - b and c are the same text, after the path normalisation N below;
 - b is `ffi` and c is `ffi:M`;
+- b is `tool` and c is `tool:T` (section 5.6; a baseline holds no
+  grant with an argument, section 9.3);
 - b is `fs` and c is any `fs` grant;
 - b is `fs:d` and c is `fs:d:P`;
 - b is `fs:d:Q` and c is `fs:d:P`, and N(P) = N(Q), or - when neither
