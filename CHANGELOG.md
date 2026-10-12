@@ -33,6 +33,53 @@ Untrusted of T` (12.7); and an audit gains `untrusted` and a receipt
 The reference's reasoning, and what stops compiling, are in sabline-lang
 `decisions/0004-untrusted.md`.
 
+## 0.16.0 - A ceiling over every budget on a machine - 2026-10-12
+
+On the `plan/9.0` branch, beside the draft of section 12. Tracks
+sabline-lang's 9.0 pre-releases from 9.0.0-alpha.11, which added the
+organisation ceiling to both of its runtimes (its decisions/0007, item
+32c). One document and one field are added, within version 1 of the
+receipt, and no rule changes.
+
+Additive: every document valid under 0.15.1 is valid under 0.16.0 and means
+the same, and a receipt written without the new field is read exactly as it
+was before.
+
+- **`sabline.ceiling/1`** (section 8.11, new): a JSON object - `schema`,
+  `allow`, an optional `description`, and nothing else - that whoever
+  administers a machine installs. `allow` is a budget, and every budget a
+  run on the machine is given must sit inside it, under the covering of
+  sections 5.5 and 5.6, or the run is refused before its program is read,
+  naming the ceiling, the first grant past it and what it allows. A ceiling
+  refuses or does nothing; it never narrows a budget into another one, and
+  no order of holding several gives a different answer.
+- **A ceiling that cannot be read refuses every run.** A field it does not
+  define makes it not a ceiling - the opposite of a predicate's rule of
+  ignoring what it does not know, on purpose: a field a reader skipped may
+  be one its writer meant to narrow with.
+- **One a person starting a run names is held as well as the
+  administrator's, never instead.** Where an administrator installs one is
+  the producer's to decide; 8.11 records where the reference looks.
+- **`ceilings` in a receipt's `run_parameters`** (section 8.7): each ceiling
+  a run was held to - its path, the sha256 of its bytes, what it allows -
+  for a run refused and for one that ran. A producer that holds runs to
+  ceilings MUST write it; a receipt without it says nothing about them.
+- **Appendix B** lists the reference's E325.
+- **The schema of a ceiling** is new,
+  `schemas/sabline.ceiling.1.schema.json`, with `examples/ceiling.json`,
+  and `tools/validate.py` holds the example to it.
+- **No conformance case.** A case would have to install a ceiling, and the
+  case format has no field for one; the corpus is shared with `main`, so
+  the cases arrive with this version there. Until then 8.11 says no
+  implementation can be conformant to it.
+- **The receipt predicate's schema does not change.** It allows a field it
+  does not name, so a receipt carrying `ceilings` validates under it as it
+  stands; and `tools/check_sync.py` holds it byte for byte to the copy the
+  reference publishes from its `main` - which this repository's `main` is
+  compared with as well, so naming the field there now would turn `main`'s
+  weekly check red for a version `main` does not carry. It names the field
+  when this version reaches `main`.
+
 ## 0.15.1 - 2026-10-08
 
 A text change only: no rule, field, schema or conformance case changes,

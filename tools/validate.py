@@ -12,6 +12,9 @@ usage: python tools/validate.py [--audits DIR] [--capabilities FILE]
 - every examples/*receipt.json must be an in-toto Statement v1 of the
   receipt/v1 predicate type (SPEC.md 8.7), its predicate valid against
   schemas/receipt-predicate.v1.schema.json, and there must be one;
+- every examples/*ceiling.json must validate as sabline.ceiling/1 (SPEC.md
+  8.11), and the schema must refuse a ceiling holding a field 8.11 does
+  not define;
 - every examples/*.capabilities.json must validate as
   sabline.capabilities/1, with its programs sorted by file and unique,
   and every grant list sorted and reduced - rules of SPEC.md section
@@ -346,6 +349,23 @@ def main(argv: list) -> int:
             problems += errors_of(receipt_schema, doc.get("predicate"))
         report(f"{path.relative_to(ROOT).as_posix()} is an in-toto Statement "
                f"of the receipt/v1 predicate", problems)
+
+    # 0.16.0: a ceiling (section 8.11). A field it does not define makes
+    # it no ceiling - the opposite of a predicate's rule - so the schema
+    # is held to refusing one, as well as to accepting the example
+    ceiling = schemas.get("sabline.ceiling.1.schema.json")
+    ceilings = sorted((ROOT / "examples").glob("*ceiling.json"))
+    if ceiling is None or not ceilings:
+        report("schemas/sabline.ceiling.1.schema.json and an example of it",
+               ["the schema or examples/ceiling.json is missing"])
+    else:
+        for path in ceilings:
+            report(f"{path.relative_to(ROOT).as_posix()} is sabline.ceiling/1",
+                   errors_of(ceiling, load(path)))
+        widened = dict(load(ceilings[0]), allow_more="net")
+        report("a ceiling with a field section 8.11 does not define is not "
+               "one", [] if errors_of(ceiling, widened) else
+               ["the schema accepted a field 8.11 does not define"])
 
     index = load(ROOT / "tests" / "index.json")
     report(f"tests/: {len(index.get('cases', []))} conformance cases, each "

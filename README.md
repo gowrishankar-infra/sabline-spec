@@ -83,6 +83,11 @@ sections 3 to 7 or 9 changes.
   program.vel --receipt FILE`, and as a field of a library run), and from
   sabline-lang 8.1.0 its releases carry one signed with cosign and with
   sigstore-python.
+- **`sabline.ceiling/1`** (from 0.16.0, on the `plan/9.0` branch): a file
+  whoever administers a machine installs, which every budget a run on it is
+  given must sit inside, whoever gives it - named in the refusal and in the
+  run's receipt (section 8.11,
+  [schemas/sabline.ceiling.1.schema.json](schemas/sabline.ceiling.1.schema.json)).
 - **Conformance** at three levels - L1 Declaration, L2 Enforcement, L3
   Ratchet - defined by a corpus of 456 JSON cases that an
   implementation in any language runs its own way, with a runner
@@ -119,12 +124,13 @@ and lists it in section 11 as an open question.
 | [SPEC.md](SPEC.md) | the specification |
 | [CONFORMANCE.md](CONFORMANCE.md) | the three levels of conformance, the behaviours each requires, and how to claim one |
 | [tests/](tests) | the conformance corpus: 456 cases, the runner contract ([tests/README.md](tests/README.md)) and the case schema |
-| [schemas/](schemas) | JSON Schema (draft 2020-12) for both documents and for the two predicates |
+| [schemas/](schemas) | JSON Schema (draft 2020-12) for both documents, for the two predicates, and for a ceiling |
 | [examples/audits/](examples/audits) | four `sabline.audit/1` documents produced by sabline-lang 3.1.1, unedited |
 | [examples/sabline-lang.capabilities.json](examples/sabline-lang.capabilities.json) | the `sabline.capabilities/1` baseline sabline-lang 4.0.0 writes for those four programs |
 | [examples/capability-statement.json](examples/capability-statement.json) | an in-toto Statement of the predicate type: what `sabline attest examples/effects.vel` writes at sabline-lang v4.2.0 |
 | [examples/run-receipt.json](examples/run-receipt.json) | an in-toto Statement of the receipt predicate type: what `sabline examples/effects.vel --receipt` writes at sabline-lang v8.1.0, with the budget the release workflow grants it |
 | [examples/refused-receipt.json](examples/refused-receipt.json) | the same program's receipt when its budget leaves out `fs`: one refusal, and the run stopped by it |
+| [examples/ceiling.json](examples/ceiling.json) | a `sabline.ceiling/1` file (section 8.11), as an administrator would install it |
 | [PRIOR_ART.md](PRIOR_ART.md) | the published work this sits beside, and how it differs |
 | [REGISTRY_SUBMISSION.md](REGISTRY_SUBMISSION.md) | the pull request listing the predicate type with in-toto: its branch is pushed, and the steps left before it is opened |
 | [MCP_PROPOSAL.md](MCP_PROPOSAL.md) | a draft, not sent: a capability declaration for Model Context Protocol tools |

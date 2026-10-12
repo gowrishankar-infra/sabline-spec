@@ -1,6 +1,6 @@
 # The Sabline capability format
 
-Version 0.15.1, 2026-10-08. Dedicated to the public domain under CC0 1.0;
+Version 0.16.0, 2026-10-12. Dedicated to the public domain under CC0 1.0;
 see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Reference implementation: sabline-lang,
@@ -70,8 +70,15 @@ Version 0.15.1 corrects section 9.5, whose list of the ways one grant
 covers another left out `tool` covering `tool:T` - the rule section 5.6
 states, the reference applies and `tools/validate.py` has checked since
 0.13.0. No rule changes.
+Version 0.16.0 is on this repository's `plan/9.0` branch and tracks
+sabline-lang's 9.0 pre-releases from 9.0.0-alpha.11: section 8.11 is new -
+`sabline.ceiling/1`, a file whoever administers a machine installs, which
+holds every budget a run on it is given to what it allows - and a receipt's
+`run_parameters` gains `ceilings` within version 1 (section 8.7), naming
+each one a run was held to; Appendix B lists the reference's E325. No rule
+of sections 3 to 7 or 9 changes, and no conformance case does.
 Section 12 is a **draft**, carried in this document and not part of
-0.15.1's normative content: it states the design of `Untrusted of T`,
+0.16.0's normative content: it states the design of `Untrusted of T`,
 a second mark on a type that bounds what a value may name, which
 sabline-lang 9.0.0 will ship and which the version of this format that
 tracks 9.0.0 will make normative. No conformance case tests it, no
@@ -99,7 +106,9 @@ This document specifies:
   digests of the files audited (section 8.5);
 - `sabline.receipt/1`, a record of one run of a program that holds none
   of the values it handled, and an in-toto predicate type that carries it
-  with the digests of the files that ran (section 8.7).
+  with the digests of the files that ran (section 8.7);
+- `sabline.ceiling/1`, a file that holds every budget a run on a machine
+  is given to what it allows, whoever starts the run (section 8.11).
 
 It does not specify the rest of the Sabline language - types,
 contracts, proofs, failure - or the time and memory limits a runtime
@@ -525,6 +534,11 @@ without one granted all seven effects. A tool that takes budgets from
 callers SHOULD have a ceiling, and SHOULD make it no wider than `io`
 unless its operator says otherwise.
 
+From 0.16.0 a machine may also carry a ceiling of its own, which holds
+every budget a run on it is given, whoever gives it - an operator, a
+program calling a library, a door's caller - under the same relation
+(section 8.11).
+
 ### 4.7 Canonical text
 
 Informative. The reference writes a parsed budget back as text - to
@@ -795,7 +809,8 @@ the ceiling, as canonical text: patterns are not compared for inclusion.
 
 The reference uses this relation for the ceilings of its HTTP door and
 its MCP server (`--max-allow`): a request may ask for any budget the
-ceiling covers. Section 9 uses it, grant by grant, for baselines. A budget C covers a
+ceiling covers. From 0.16.0 it holds every run's budget to a machine's
+ceilings by it too (section 8.11). Section 9 uses it, grant by grant, for baselines. A budget C covers a
 budget A when all of the following hold:
 
 1. C grants every effect A grants.
@@ -1344,7 +1359,7 @@ A receipt is an in-toto Statement v1 of that type:
 | `startedAt` | string | optional: when the run started, RFC 3339 in UTC, by the producer's clock |
 | `wall_time_ms` | number | how long the run took, in milliseconds, by the producer's clock |
 | `budget` | string | the budget the run was given, in the grammar of section 4 |
-| `run_parameters` | object | `seed` (integer or null) and `freeze_time` (RFC 3339 or null), which fix the run's randomness and clock; `timeout` (seconds or null) and `max_memory_mb` (integer or null), the limits it ran under; optionally `max_read_bytes`; and `confinement`, a word for the operating-system confinement the run had - `"none"` when the budget was the only boundary. From 0.12.0 the word is a level: `"full"` when the operating system held every file, network and process limit of the budget, `"partial"` when it held some, `"none"` when it held nothing; and three optional fields say more - `confinement_reason`, text naming each limit that was not held and why (or why nothing was asked); `confinement_layers`, an array of the producer's names for the mechanisms it applied; and `os_policy_sha256`, the lowercase hex sha256 of the policy the producer derived from the budget and asked the operating system to hold, or null. A receipt written before 0.12.0 has none of the three, and its `confinement` is `"none"` or names a mechanism (section 8.9). Optionally, from 0.11.0, `profile`, the name of a profile the run was held to beyond its budget, as `"eval"` (section 8.9) |
+| `run_parameters` | object | `seed` (integer or null) and `freeze_time` (RFC 3339 or null), which fix the run's randomness and clock; `timeout` (seconds or null) and `max_memory_mb` (integer or null), the limits it ran under; optionally `max_read_bytes`; and `confinement`, a word for the operating-system confinement the run had - `"none"` when the budget was the only boundary. From 0.12.0 the word is a level: `"full"` when the operating system held every file, network and process limit of the budget, `"partial"` when it held some, `"none"` when it held nothing; and three optional fields say more - `confinement_reason`, text naming each limit that was not held and why (or why nothing was asked); `confinement_layers`, an array of the producer's names for the mechanisms it applied; and `os_policy_sha256`, the lowercase hex sha256 of the policy the producer derived from the budget and asked the operating system to hold, or null. A receipt written before 0.12.0 has none of the three, and its `confinement` is `"none"` or names a mechanism (section 8.9). Optionally, from 0.11.0, `profile`, the name of a profile the run was held to beyond its budget, as `"eval"` (section 8.9). From 0.16.0, `ceilings`: an array with one object for each ceiling of section 8.11 the run was held to, in the order they were held - `path`, where the producer read it; `sha256`, the lowercase hex sha256 of the bytes read, or null when there were none to read; `allow`, what it allows as canonical text (section 4.7), or null for one that could not be read - and empty when the producer holds runs to ceilings and none was installed. A receipt without `ceilings` says nothing about ceilings, either way |
 | `effects_used` | object or null | each effect and how many operations of it the budget let through; `null` when the producer could not tell, as when the run was stopped from outside |
 | `grants_used` | array | optional, from 0.13.0: one object per grant of the budget that let at least one operation through - `grant`, the grant as canonical text (section 4.7), without a count; `times`, how many operations it let through. Sorted by `grant`. It is the operator's text and MUST NOT hold the path, host, module or argument the program gave: `net:api.example.com:443`, never the URL. An operation is counted under the first grant, in the budget's order, that permits it |
 | `refusals` | array | one object per distinct refusal: `code`; `effect`, one of the nine names of section 3.1, or null; `line`; `stopped`, whether the refusal ended the run (a redirect refused under section 6 G4 does not); `times` |
@@ -1562,6 +1577,110 @@ The reference exchanges calls and answers as JSON objects, one to a line,
 on the run's standard input and output (sabline-lang EMBEDDING.md,
 `sabline.tools-door/1`). That exchange is the reference's and is not part
 of this format.
+
+### 8.11 sabline.ceiling/1, a ceiling over every budget on a machine
+
+*New in 0.16.0 (sabline-lang 9.0.0-alpha.11; this version is on this
+repository's `plan/9.0` branch, beside the draft of section 12).* A
+budget is given by whoever starts a run: an operator on a command line, a
+program calling a library, a caller of a door. A **ceiling** is given by
+whoever administers the machine, once, and holds every one of them: no
+budget a run is given may grant what a ceiling does not. It generalises the
+ceilings of section 4.6, each of which holds one door's callers, to every
+way a run can start.
+
+**The document** is a JSON object:
+
+```json
+{"schema": "sabline.ceiling/1",
+ "allow": "io,fs:read:/srv/data,net:*.corp.com:443@100",
+ "description": "what a run on this machine may be given"}
+```
+
+| Field | Type | Meaning |
+|---|---|---|
+| `schema` | string | `"sabline.ceiling/1"` |
+| `allow` | string | a budget, in the grammar of section 4: the most any run's budget on the machine may grant - effect by effect, and module, path, host, tool and count |
+| `description` | string | optional: for the people who read the file. It changes nothing |
+
+A document that holds any other field is **not a ceiling**. This is the
+opposite of the rule sections 8.5 and 8.7 give a predicate, whose reader
+ignores a field it does not know, and it is on purpose: a field a reader
+does not know may be one its writer meant to narrow with, and a ceiling
+read as wider than its writer meant is the one failure a ceiling must not
+have. [schemas/sabline.ceiling.1.schema.json](schemas/sabline.ceiling.1.schema.json)
+is the schema, and [examples/ceiling.json](examples/ceiling.json) a
+ceiling.
+
+**The rule.** Before a run is given a budget B, every ceiling C the run is
+held to MUST cover B - section 5.5, with section 5.6's covering for `tool`
+grants. When one does not, the run MUST be refused before its program is
+read, and so before anything of it runs, and the refusal MUST name the
+ceiling - where it was read from - the first grant of B it does not cover,
+and what it allows. A ceiling refuses a run or does nothing to it: it never
+narrows a budget into another one, so a run inside every ceiling is given B
+exactly as it would be with none, and what it may do is then inside each
+ceiling and B at once. Each ceiling is asked the same question of the same
+budget, so no order of asking them can give a different answer.
+
+**A ceiling that cannot be read MUST refuse every run** - no file where
+one was named, bytes that are not UTF-8, text that is not a JSON object,
+another `schema`, a field 8.11 does not define, an `allow` that is not a
+budget - and the refusal MUST say what is wrong with it. A ceiling that
+cannot be read cannot be held, and the one thing it must never do is let a
+run through wider than it was meant to.
+
+**Paths in `allow`** are resolved as section 5.1 resolves a budget's, where
+the run is. A ceiling SHOULD write each path whole: a relative one names a
+different directory for each run that is held to it.
+
+**Where it is named.** A run refused for a reason found in neither the
+command that started it nor the program's source is the hardest refusal to
+act on. So a producer that holds runs to ceilings MUST name every ceiling a
+run was held to in that run's receipt (`run_parameters.ceilings`, section
+8.7) - for a run that was refused and for one that ran - and SHOULD name
+them in whatever report it gives of a program before it runs.
+
+**Where a ceiling is found** is not part of this format: a producer decides
+where its administrator installs one. A producer that also reads a ceiling
+from a place the person starting a run chooses - an environment variable, a
+flag - MUST hold that one **as well as** any its administrator installed,
+never instead of one. A ceiling can only narrow, so a second one cannot
+widen the first, and nothing the person starting a run sets can take the
+administrator's away.
+
+**What a ceiling is not.** It is a rule a runtime keeps, not a boundary
+the operating system holds: a process that does not read it is not held by
+it, and whoever can write the file can widen it. It bounds what a budget
+may grant, not what a granted effect does (section 7).
+
+*Reference behaviour (sabline-lang 9.0.0-alpha.11).* The reference reads
+one ceiling for the system - `/etc/sabline/ceiling.json` on Linux and other
+POSIX systems, `/Library/Application Support/Sabline/ceiling.json` on
+macOS, and `Sabline\ceiling.json` in the folder Windows names ProgramData,
+found through the system's own interface and not the environment - and,
+held as well, the file its environment variable `SABLINE_CEILING` names. It
+holds every run to them, in both of its runtimes and at every way a run
+starts: its command line, `sabline test`, its library with and without
+limits, its worker pools and so its HTTP door and MCP server, its
+evaluation profile (section 8.9) and its replay of a recorded run. The
+refusal is its code E325 (Appendix B), and a refused run's receipt holds
+E325 in `refusals` with the effect of the first grant past the ceiling, or
+`null` for a ceiling that could not be read. It reads at most 1 MiB of a
+file as a ceiling, and refuses a larger one as one that cannot be read. It
+also accepts, in `allow`, its command line's shorthand `all` (section 4.6),
+for a ceiling that caps nothing; `all` is not part of the grammar of
+section 4, and another producer need not accept it. `sabline ceiling`
+shows each ceiling installed, what it allows, its sha256, or why it cannot
+be read, and `sabline audit` names them, with any effect a program needs
+that one does not grant.
+
+**Conformance.** No case of section 10 tests a ceiling yet: a case would
+have to install one, and the case format of `tests/case.schema.json` has
+no field to carry it. The corpus is shared with this document's `main`
+branch, so the cases arrive when this version does. Until they exist an
+implementation cannot be conformant to this section, and MUST NOT claim to
+be.
 
 ## 9. sabline.capabilities/1
 
@@ -2402,8 +2521,34 @@ attempted outside the budget, refused by the operating system's confinement.
 It is given only under the reference's fault-injection hook, which exists so
 its suites can show the kernel refusing; no program reaches it.
 
+The reference's 9.0, from its pre-release 9.0.0-alpha.11, adds **E325**: a
+run refused before its program is read because a ceiling of section 8.11
+does not cover its budget, or cannot be read. A program cannot handle it,
+and no budget it is given can avoid it: only whoever administers the
+machine can. A receipt records it in `refusals` with the effect of the
+first grant past the ceiling, or `null` for a ceiling that could not be
+read.
+
 ## Appendix C. Changes
 
+- **0.16.0**, 2026-10-12, on this repository's `plan/9.0` branch: tracks
+  sabline-lang's 9.0 pre-releases from 9.0.0-alpha.11. **8.11 is new**:
+  `sabline.ceiling/1`, a file whoever administers a machine installs, which
+  every budget a run on it is given must sit inside (the covering of 5.5
+  and 5.6) or the run is refused before its program is read; a ceiling
+  that cannot be read refuses every run; one a person starting a run names
+  is held as well as the administrator's, never instead. Its schema is
+  `schemas/sabline.ceiling.1.schema.json`. **8.7**: `run_parameters` gains
+  `ceilings` within version 1, naming each ceiling a run was held to.
+  **4.6 and 5.5** point to it. **Appendix B** lists the reference's E325.
+  Everything valid under 0.15.1 is valid and means the same. No rule of
+  sections 3 to 7 or 9 changes, no conformance case changes - section 8.11
+  says why it has none yet - and section 2 still quotes sabline-lang
+  SPEC.md sections 6, 7 and 7.1 word for word. The receipt predicate's
+  schema is unchanged: it allows a field it does not name, so a receipt
+  carrying `ceilings` is valid under it, and it is held byte for byte to
+  the copy the reference publishes from its `main`, which this document's
+  `main` is compared with too.
 - **0.13.0**, 2026-09-20: tracks sabline-lang 8.5.0. A ninth effect,
   `tool` (sections 3.1, 4.1, 5.6), with a provisional manifest of tools
   (8.10); `hmac_sha256` and `hmac_sha256_chain` as operations of

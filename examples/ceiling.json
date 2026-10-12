@@ -1,0 +1,5 @@
+{
+  "schema": "sabline.ceiling/1",
+  "allow": "io,clock,fs:read:/srv/data,fs:write:/srv/out,net:*.corp.example:443@100",
+  "description": "What a run on a build machine may be given: its console, the clock, the data it reads, the directory it writes, and a hundred requests to the organisation's own hosts."
+}

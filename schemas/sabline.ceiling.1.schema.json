@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sabline.dev/ceiling/1/schema.json",
+  "title": "sabline.ceiling/1",
+  "description": "A ceiling over every budget on a machine: whoever administers the machine installs it, and every budget a run on it is given must sit inside 'allow', or the run is refused before its program is read. sabline-spec SPEC.md section 8.11 defines it. Unlike a predicate, a ceiling holding a field this schema does not define is not a ceiling: a field its reader skipped may be one its writer meant to narrow with.",
+  "type": "object",
+  "required": ["schema", "allow"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "sabline.ceiling/1"},
+    "allow": {
+      "description": "A budget, in the grammar of section 4: the most any run's budget on the machine may grant. Paths are resolved where the run is, so a ceiling should write each one whole.",
+      "type": "string"
+    },
+    "description": {
+      "description": "For the people who read the file. It changes nothing.",
+      "type": "string"
+    }
+  }
+}
